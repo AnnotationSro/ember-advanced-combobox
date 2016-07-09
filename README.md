@@ -1,4 +1,4 @@
-# Ember-combobox
+# Ember-advanced-combobox
 
 ## WIP
 
