@@ -1,0 +1,82 @@
+<div>
+Single select
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedSingle
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedSingle')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{selectedSingleFormatted}}
+</div>
+<p>
+
+</p>
+
+<div>
+Single select without filtering
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedSingle
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedSingle')
+  canFilter=false
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{selectedSingleFormatted}}
+</div>
+<p>
+
+</p>
+
+<div>
+Multi select
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedMulti
+  itemKey='a'
+  itemLabel='b'
+  multiselect=true
+  onSelected=(action 'onSelectedMulti')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{selectedMultiFormatted}}
+</div>
+
+<p>
+
+</p>
+
+<div>
+Async value
+{{combo-box
+  valuePromise=asyncValueList
+  selected=comboSelectedSingle
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedSingle')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{selectedSingleFormatted}}
+</div>
+
+<p>
+
+</p>
+
+<button {{action 'actionToggleLabelOnly'}}>Toggle label only</button>
+<button {{action 'actionToggleDisabled'}}>Toggle disabled</button>
+<button {{action 'actionCreateAsyncValueList'}}>Create async value</button>
+<button {{action 'actionRemoveValueList'}}>Clear value list</button>

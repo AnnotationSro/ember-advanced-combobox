@@ -1,0 +1,46 @@
+.advanced-combo-box{
+  display: inline-block;
+}
+
+.advanced-combo-box.combobox-disabled:not(.combobox-label-only) .input-group{
+    background-color: grey;
+}
+
+ .advanced-combo-box.combobox-disabled:not(.combobox-label-only) .combo-input{
+  background-color: grey;
+}
+
+.advanced-combo-box .input-group{
+  border: 1px solid black;
+}
+
+.advanced-combo-box input{
+  border: none;
+  width: calc( 100% - 25px);
+  outline: none;
+  padding-left: 5px;
+}
+
+.advanced-combo-box .dropdown{
+  border: 1px solid black;
+  margin: 0;
+  position: absolute;
+  list-style: none;
+  padding: 0;
+}
+
+.advanced-combo-box .dropdown li:hover{
+  background-color: grey;
+}
+
+.advanced-combo-box .dropdown-hidden{
+  display: none;
+}
+
+.advanced-combo-box.combobox-label-only .dropdown-icon{
+  visibility: hidden;
+}
+
+.advanced-combo-box.combobox-label-only .combo-input{
+  cursor: default;
+}
