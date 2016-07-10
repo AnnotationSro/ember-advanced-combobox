@@ -11,7 +11,7 @@ Single select
   disabled=disabled
   labelOnly=labelOnly
 }}
-{{selectedSingleFormatted}}
+{{comboSelectedSingle}}
 </div>
 <p>
 
@@ -30,7 +30,46 @@ Single select without filtering
   disabled=disabled
   labelOnly=labelOnly
 }}
-{{selectedSingleFormatted}}
+{{comboSelectedSingle}}
+</div>
+<p>
+
+</p>
+
+<div>
+Single select - only 1 item in value list
+{{combo-box
+  valueList=oneItemValueList
+  selected=oneItemSelectedSingle
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onOneItemSelected')
+  canFilter=false
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{oneItemSelectedSingle}}
+</div>
+<p>
+
+</p>
+
+<div>
+Single select without filtering - preselect
+{{combo-box
+  valueList=comboValueList
+  selected=comboPreSelectedSingle
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  preselectFirst=true
+  onSelected=(action 'onPreSelectedSingle')
+  canFilter=false
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{comboPreSelectedSingle}}
 </div>
 <p>
 
@@ -49,7 +88,7 @@ Multi select
   disabled=disabled
   labelOnly=labelOnly
 }}
-{{selectedMultiFormatted}}
+{{comboSelectedSingle}}
 </div>
 
 <p>
@@ -69,7 +108,7 @@ Async value
   disabled=disabled
   labelOnly=labelOnly
 }}
-{{selectedSingleFormatted}}
+{{comboSelectedSingle}}
 </div>
 
 <p>

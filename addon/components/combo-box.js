@@ -1,6 +1,15 @@
 import Ember from 'ember';
 import layout from '../templates/components/combo-box';
 
+
+/**
+ * TODO dropdown position (above or below)
+ * TODO hide dropdown on scroll
+ * TODO dropdown size - width
+ * TODO if new selected items are the same as old, do not call callback
+ * TODO filtering
+ */
+
 function get(object, property){
   if (object.get){
     return object.get(property);
@@ -32,6 +41,7 @@ export default Ember.Component.extend({
   multiselect: false,
   onSelected: Ember.K,
   canFilter: false,
+  preselectFirst: false,
 
 //internals
   selectedValueLabel: null,
@@ -43,26 +53,28 @@ export default Ember.Component.extend({
 
     this.initSelectedValues();
 
+
     this.createSelectedLabel(this.get('internalSelectedList'));
     this.set('inputValue', this.get('selectedValueLabel'));
+
   }),
 
   initSelectedValues(){
-    //find initiallySelected items and assgn them into internalSelectedList
-    let initiallySelected = this.get('selected');
+    //find selected items and assgn them into internalSelectedList
+    let selected = this.get('selected');
 
-    if (Ember.isPresent(initiallySelected)){
-          let selectedItems;
-      if (Array.isArray(initiallySelected)){
+    if (Ember.isPresent(selected)){
+      let selectedItems;
+      if (Array.isArray(selected)){
         selectedItems = [];
-         initiallySelected.forEach((itemKey)=>{
+         selected.forEach((itemKey)=>{
            let item = this.findItemByKey(itemKey);
            if (item){
             selectedItems.push(item);
            }
         });
       } else {
-          let item = this.findItemByKey(initiallySelected);
+          let item = this.findItemByKey(selected);
           if (item){
             selectedItems = [item];
           }
@@ -72,6 +84,8 @@ export default Ember.Component.extend({
       this.createSelectedLabel(itemsArray);
       this.set('inputValue', this.get('selectedValueLabel'));
     }
+
+    this._automaticallySelect();
   },
 
   findItemByKey(key){
@@ -110,10 +124,11 @@ export default Ember.Component.extend({
 
 
   valueListObserver: Ember.observer('valueList.[]', function(){
+    this._automaticallySelect();
+
     this.set('internalSelectedList', null);
     this.get('onSelected')(null);
-    this.createSelectedLabel(null);
-    this.set('inputValue', this.get('selectedValueLabel'));
+
     this.initSelectedValues();
   }),
 
@@ -157,7 +172,7 @@ export default Ember.Component.extend({
 
       this.set('inputValue', '');
 
-      this._toggleDropdown();
+      this._showDropdown();
       Ember.run.scheduleOnce('afterRender', this, function() {
         Ember.$(this.element).find('.combo-input-with-dropdown').focus();
       });
@@ -212,32 +227,51 @@ export default Ember.Component.extend({
     Ember.$(this.element).find('.dropdown').removeClass('dropdown-hidden');
     this.set('dropdownVisible', true);
 
+    this.set('oldInternalSelection', new Ember.A(this.get('internalSelectedList')));
     if (this.get('canFilter')){
       this.set('inputValue', null);
     }else{
       this.set('inputValue', 'TODO vyberte'); //todo label -------
     }
+    this._initDropdownCloseListeners();
   },
 
-  _hideDropdown(){
+  _hideDropdown(acceptSelected){
     Ember.$(this.element).find('.dropdown').addClass('dropdown-hidden');
     this.set('dropdownVisible', false);
 
-    //call selection callback
-    let selectedItems = this.get('internalSelectedList');
-    this.createSelectedLabel(selectedItems);
-    this.set('inputValue', this.get('selectedValueLabel'));
+    if (acceptSelected){
+      Ember.Logger.debug('accepting selection');
+      //call selection callback
+      let selectedItems = this.get('internalSelectedList');
+      this.createSelectedLabel(selectedItems);
+      this.set('inputValue', this.get('selectedValueLabel'));
 
-    if (this.get('multiselect')){
-      this.get('onSelected')(selectedItems);//TODO FIXME this should be called with values only, not whole objects----------
-    }else{
-      if (Ember.isEmpty(selectedItems)){
-        this.get('onSelected')(null);
-      }else{
-        this.get('onSelected')(selectedItems[0]);
+      if (this.get('multiselect')){
+        this.get('onSelected')(this.convertItemListToValueList(selectedItems));//TODO FIXME this should be called with values only, not whole objects----------
+      } else {
+        if (Ember.isEmpty(this.convertItemListToValueList(selectedItems))){
+          this.get('onSelected')(null);
+        } else {
+          this.get('onSelected')(this.convertItemListToValueList(selectedItems)[0]);
+        }
       }
+    } else {
+      Ember.Logger.debug('reverting selection');
+      //selection is not accepted -> revert internal selection
+      this.set('internalSelectedList', this.get('oldInternalSelection'));
+      this.createSelectedLabel(this.get('internalSelectedList'));
+      this.set('inputValue', this.get('selectedValueLabel'));
     }
+    this._destroyDropdownCloseListeners();
 
+  },
+
+  convertItemListToValueList(itemList){
+    if (Ember.isEmpty(itemList)){
+      return null;
+    }
+    return itemList.map((item)=> this._getItemKey(item));
   },
 
   createSelectedLabel(items){
@@ -259,14 +293,6 @@ export default Ember.Component.extend({
       }
     }
     this.set('selectedValueLabel', label);
-  },
-
-  _toggleDropdown(){
-    if (this.get('dropdownVisible')){
-      this._hideDropdown();
-    }else{
-      this._showDropdown();
-    }
   },
 
   _addOrRemoveFromSelected(item){
@@ -296,13 +322,100 @@ export default Ember.Component.extend({
   _selectItem(item){
     this._addOrRemoveFromSelected(item);
     if (!this.get('multiselect')){
-      this._hideDropdown();
+      this._hideDropdown(true);
     }
+  },
+
+  /**
+   * register event listeners to handle clicking outside of combobox to close it
+   */
+  _initDropdownCloseListeners(){
+    Ember.run.scheduleOnce('afterRender', this, ()=> {
+
+      var hideDropdown = (event) => {
+
+        //click on arrow button
+        let $combo = Ember.$(this.element);
+        if (isElementClicked($combo.find('.dropdown-icon'), event)) {
+          this._hideDropdown(false);
+          return;
+        }
+
+        //click into input
+        if (isElementClicked($combo.find('.combo-input'), event)) {
+          if (this.get('canFilter')) {
+            //do nothing - let the user enter the filter
+            return;
+          } else {
+            this._hideDropdown(false);
+          }
+        }
+
+        //click somewhere outside the combobox
+        if (!isElementClicked($combo, event)) {
+          if (this.get('dropdownVisible')) {
+
+            //multiselect checkboxes should not trigger dropdown collapse
+
+            if (Ember.$(event.target).hasClass('do-not-hide-dropdown')) {
+              return;
+            }
+
+            if (this.get('multiselect')){
+              this._hideDropdown(true);
+            } else {
+              this._hideDropdown(false);
+            }
+
+          }
+        }
+
+        return true;
+      };
+
+      if (this.get('dropdownVisible')) {
+        Ember.$('body').on(`click.hideDropdown_${this.elementId}`, hideDropdown);
+      }
+    });
+
+    function isElementClicked($element, event) {
+    	if (!$element.is(event.target) && $element.has(event.target).length === 0) {
+    		return false;
+    	}
+    	return true;
+
+    }
+  },
+
+  /**
+   * - if there is only one item in valueList -> select it
+   * - if "preselectFirst" is set to true, select first item in valueList
+   */
+  _automaticallySelect(){
+    let valueList = this.get('valueList');
+    if (Ember.isEmpty(valueList)){
+      return;
+    }
+    if (valueList.length === 1){
+        //only 1 item in value list
+        this._selectItem(getObjectFromArray(valueList, 0));
+        return;
+    }
+
+    if (this.get('preselectFirst') === true){
+      //preselect item
+      this._selectItem(getObjectFromArray(valueList, 0));
+      return;
+    }
+  },
+
+  _destroyDropdownCloseListeners(){
+      Ember.$('body').off(`click.hideDropdown_${this.elementId}`);
   },
 
   actions:{
     actionDropdownButton(){
-      this._toggleDropdown();
+      this._showDropdown();
     },
 
     actionItemSelect(item){
