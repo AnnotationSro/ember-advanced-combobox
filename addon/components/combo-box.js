@@ -3,14 +3,15 @@ import layout from '../templates/components/combo-box';
 
 
 /**
- * TODO dropdown position (above or below)
  * TODO hide dropdown on scroll
- * TODO dropdown size - width
- * TODO if new selected items are the same as old, do not call callback
  * TODO filtering
+ * TODO ordering values in valueList
  */
 
 function get(object, property){
+  if (!object){
+    return null;
+  }
   if (object.get){
     return object.get(property);
   }else{
@@ -25,6 +26,40 @@ function getObjectFromArray(array, index){
   return array[index];
 }
 
+
+const SPACE = 5;
+
+function positionDropdown($dropdown, $input) {
+
+	let {left, top} = $input[0].getBoundingClientRect();
+
+	if (top + $dropdown.outerHeight() + SPACE <= Ember.$(window).height()) {
+		//dropdown has enough space to be rendered below the input
+
+		showDropdownBelowInput($dropdown, left, top, $input.outerHeight());
+	} else {
+		//try and show dropdown above input
+		if ($dropdown.outerHeight() + SPACE <= Ember.$(window).height()) {
+			showDropdownAboveInput($dropdown, left, top, $dropdown.outerHeight());
+		} else {
+			//still cannot position a dropdown
+			showDropdownBelowInput($dropdown, left, top, $input.outerHeight());
+		}
+	}
+
+
+	function showDropdownBelowInput($dropdown, left, top, inputHeight) {
+		$dropdown.css('left', `${left}px`);
+		$dropdown.css('top', `${top + inputHeight + SPACE}px`);
+
+	}
+
+	function showDropdownAboveInput($dropdown, left, top, dropdownHeight) {
+
+		$dropdown.css('left', `${left}px`);
+		$dropdown.css('top', `${top - dropdownHeight - SPACE}px`);
+	}
+}
 
 export default Ember.Component.extend({
   classNames: ['advanced-combo-box'],
@@ -64,28 +99,32 @@ export default Ember.Component.extend({
     let selected = this.get('selected');
 
     if (Ember.isPresent(selected)){
-      let selectedItems;
-      if (Array.isArray(selected)){
-        selectedItems = [];
-         selected.forEach((itemKey)=>{
-           let item = this.findItemByKey(itemKey);
-           if (item){
-            selectedItems.push(item);
-           }
-        });
-      } else {
-          let item = this.findItemByKey(selected);
-          if (item){
-            selectedItems = [item];
-          }
-      }
-      let itemsArray =  new Ember.A(selectedItems);
+      let itemsArray =  this._itemKeysListToItemObjects(selected);
       this.set('internalSelectedList', itemsArray);
       this.createSelectedLabel(itemsArray);
       this.set('inputValue', this.get('selectedValueLabel'));
     }
 
     this._automaticallySelect();
+  },
+
+  _itemKeysListToItemObjects(itemKeyList){
+    let items;
+    if (Array.isArray(itemKeyList)){
+      items = [];
+       itemKeyList.forEach((itemKey)=>{
+         let item = this.findItemByKey(itemKey);
+         if (item){
+          itemKeyList.push(item);
+         }
+      });
+    } else {
+        let item = this.findItemByKey(itemKeyList);
+        if (item){
+          items = [item];
+        }
+    }
+    return new Ember.A(items);
   },
 
   findItemByKey(key){
@@ -103,7 +142,16 @@ export default Ember.Component.extend({
   },
 
   selectedObserver: Ember.observer('selected', function(){
-    let itemsArray = this._createArray(this.get('selected'));
+    let selected = this.get('selected');
+    if (Ember.isEmpty(selected)){
+      this.set('internalSelectedList', null);
+      this.createSelectedLabel(null);
+      this.set('inputValue', this.get('selectedValueLabel'));
+      return;
+    }
+    let itemsArray = this._createArray(selected);
+    itemsArray = itemsArray.map((itemKey)=> this.findItemByKey(itemKey));
+
     this.set('internalSelectedList', itemsArray);
     this.createSelectedLabel(itemsArray);
     this.set('inputValue', this.get('selectedValueLabel'));
@@ -184,6 +232,8 @@ export default Ember.Component.extend({
     if (this.get('dropdownVisible') && this.get('canFilter')){
       //TODO filter dropdown ------------------------------------------------------
       console.log(this.get('inputValue'));
+
+      this._changeDropdownPosition();
     }
   }),
 
@@ -231,9 +281,22 @@ export default Ember.Component.extend({
     if (this.get('canFilter')){
       this.set('inputValue', null);
     }else{
-      this.set('inputValue', 'TODO vyberte'); //todo label -------
+      this.set('inputValue', 'TODO vyberte'); //TODO label -------
     }
     this._initDropdownCloseListeners();
+
+    this._changeDropdownPosition();
+  },
+
+  _changeDropdownPosition(){
+    Ember.run.scheduleOnce('afterRender', this, function(){
+      let $element = Ember.$(this.element);
+      let $dropdown = $element.find('.dropdown');
+      let $input = $element.find('.combo-input');
+      positionDropdown($dropdown, $input);
+
+      $dropdown.css('width', $input.outerWidth());
+    });
   },
 
   _hideDropdown(acceptSelected){
@@ -241,33 +304,52 @@ export default Ember.Component.extend({
     this.set('dropdownVisible', false);
 
     if (acceptSelected){
-      Ember.Logger.debug('accepting selection');
       //call selection callback
       let selectedItems = this.get('internalSelectedList');
-      this.createSelectedLabel(selectedItems);
-      this.set('inputValue', this.get('selectedValueLabel'));
 
-      if (this.get('multiselect')){
-        this.get('onSelected')(this.convertItemListToValueList(selectedItems));//TODO FIXME this should be called with values only, not whole objects----------
-      } else {
-        if (Ember.isEmpty(this.convertItemListToValueList(selectedItems))){
-          this.get('onSelected')(null);
+      if (!this._equalsSelectedList(selectedItems, this._itemKeysListToItemObjects(this.get('selected')))){
+        //onSelected callback call only if old selected items are NOT the same as new ones
+        if (this.get('multiselect')){
+          this.get('onSelected')(this.convertItemListToKeyList(selectedItems));//TODO FIXME this should be called with values only, not whole objects----------
         } else {
-          this.get('onSelected')(this.convertItemListToValueList(selectedItems)[0]);
+          if (Ember.isEmpty(this.convertItemListToKeyList(selectedItems))){
+            this.get('onSelected')(null);
+          } else {
+            this.get('onSelected')(this.convertItemListToKeyList(selectedItems)[0]);
+          }
         }
       }
     } else {
-      Ember.Logger.debug('reverting selection');
       //selection is not accepted -> revert internal selection
       this.set('internalSelectedList', this.get('oldInternalSelection'));
-      this.createSelectedLabel(this.get('internalSelectedList'));
-      this.set('inputValue', this.get('selectedValueLabel'));
     }
+
+    this.createSelectedLabel(this.get('internalSelectedList'));
+    this.set('inputValue', this.get('selectedValueLabel'));
     this._destroyDropdownCloseListeners();
 
   },
 
-  convertItemListToValueList(itemList){
+  _equalsSelectedList(list1, list2){
+    if (list1.length !== list2.length){
+      return false;
+    }
+
+    for (let i=0;i<list1.length;i++){
+      let item1 = getObjectFromArray(list1, i);
+      let item2 = getObjectFromArray(list2, i);
+
+      if (this._getItemKey(item1) !== this._getItemKey(item2)){
+        return false;
+      }
+
+      return true;
+    }
+
+    return Ember.compare(list1, list2) === 0;
+  },
+
+  convertItemListToKeyList(itemList){
     if (Ember.isEmpty(itemList)){
       return null;
     }
@@ -286,8 +368,12 @@ export default Ember.Component.extend({
     }else{
       if (items.map){
         //multiple items are selected
-        label = items.map((item)=>this._getItemLabel(item)).join(','); //TODO if more than 1 item, show count instead of labels
-      }else{
+        if (items.length === 1){
+            label = this._getItemLabel(getObjectFromArray(items, 0));
+        } else {
+          label = items.map((item)=>this._getItemLabel(item)).join(','); //TODO if more than 1 item, show count instead of labels
+        }
+      } else {
         //single item is selected
         label = this._getItemLabel(items);
       }
