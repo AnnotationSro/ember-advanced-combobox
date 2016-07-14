@@ -1,23 +1,13 @@
 import Ember from 'ember';
 import layout from '../templates/components/combo-box';
+import isHtmlSafe from 'ember-string-ishtmlsafe-polyfill';
+import {accentRemovalHelper} from '../helpers/accent-removal-helper';
 
 
 /**
- * TODO hide dropdown on scroll
  * TODO filtering
  * TODO ordering values in valueList
  */
-
-function get(object, property){
-  if (!object){
-    return null;
-  }
-  if (object.get){
-    return object.get(property);
-  }else{
-    return object[property];
-  }
-}
 
 function getObjectFromArray(array, index){
   if (array.objectAt){
@@ -107,6 +97,52 @@ export default Ember.Component.extend({
 
     this._automaticallySelect();
   },
+
+  filteredValueList: Ember.computed('inputValue', 'valueList.[]', function () {
+
+    let valueList = this.get('valueList');
+
+    //TODO sorting ------------------------------------------------------------------------------
+    // if (Ember.isPresent(this.get('orderBy'))) {
+    //   let orderBy = this.get('orderBy');
+    //   valueList = _.orderBy(valueList, (itemList)=> {
+    //     return itemList.get('item').get(orderBy);
+    //   });
+    // }
+
+    if (!this.get('canFilter')) {
+      return valueList;
+    }
+
+    if (Ember.isEmpty(valueList)){
+      return valueList;
+    }
+
+    var filterQuery  = this.get('inputValue');
+    if (Ember.isEmpty(filterQuery)) {
+      //no filter is entered
+      return valueList;
+
+    } else {
+      if (isHtmlSafe(filterQuery)){
+        filterQuery = filterQuery.toString();
+      }
+      filterQuery = accentRemovalHelper(String(filterQuery).toLowerCase());
+
+      //filter the list
+      let filteredValueList = valueList.filter((value)=>{
+        let valueLabel = this._getItemLabel(value);
+        if (isHtmlSafe(valueLabel)){
+          valueLabel = valueLabel.toString();
+        }
+
+        valueLabel = accentRemovalHelper(String(valueLabel).toLowerCase());
+        return valueLabel.indexOf(filterQuery) > -1;
+      });
+
+      return filteredValueList;
+    }
+  }),
 
   _itemKeysListToItemObjects(itemKeyList){
     let items;
@@ -230,9 +266,6 @@ export default Ember.Component.extend({
 
   filterObserver: Ember.observer('inputValue', function(){
     if (this.get('dropdownVisible') && this.get('canFilter')){
-      //TODO filter dropdown ------------------------------------------------------
-      console.log(this.get('inputValue'));
-
       this._changeDropdownPosition();
     }
   }),
@@ -257,7 +290,7 @@ export default Ember.Component.extend({
 
   _getItemKey(item){
     if (Ember.isPresent(this.get('itemKey'))){
-      return get(item, this.get('itemKey'));
+      return Ember.get(item, this.get('itemKey'));
     }else{
       //if no itemKey is specified, use the item object itself
       return item;
@@ -266,7 +299,7 @@ export default Ember.Component.extend({
 
   _getItemLabel(item){
     if (Ember.isPresent(this.get('itemLabel'))){
-      return get(item, this.get('itemLabel'));
+      return Ember.get(item, this.get('itemLabel'));
     }else{
       //if no itemLabel is specified, use the item object itself
       return item;
@@ -286,6 +319,9 @@ export default Ember.Component.extend({
     this._initDropdownCloseListeners();
 
     this._changeDropdownPosition();
+    Ember.$(window).on(`scroll.combobox-scroll-${this.elementId}`, ()=>{
+      this._hideDropdown();
+    });
   },
 
   _changeDropdownPosition(){
@@ -301,6 +337,7 @@ export default Ember.Component.extend({
 
   _hideDropdown(acceptSelected){
     Ember.$(this.element).find('.dropdown').addClass('dropdown-hidden');
+    Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
     this.set('dropdownVisible', false);
 
     if (acceptSelected){

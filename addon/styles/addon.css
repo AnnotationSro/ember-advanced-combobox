@@ -24,7 +24,8 @@
 .advanced-combo-box .dropdown{
   border: 1px solid black;
   margin: 0;
-  position: absolute;
+  position: fixed;
+  z-index: 99999;
   list-style: none;
   padding: 0;
   background: white;

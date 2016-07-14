@@ -4,7 +4,7 @@
   <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton'}}></i>
   </div>
   <ul class="dropdown dropdown-hidden">
-    {{#each valueList as |value|}}
+    {{#each filteredValueList as |value|}}
       <li class="dropdown-item" {{action 'actionItemSelect' value bubbles=false}}>
         {{get value itemLabel}}
       </li>
