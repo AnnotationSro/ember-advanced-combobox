@@ -1,6 +1,11 @@
 import Ember from 'ember';
 
 export function accentRemovalHelper(str/*, hash*/) {
+
+  if (Ember.isNone(str)){
+    return str;
+  }
+
   return str.replace(/[^\u0000-\u007E]/g, function(a){
      return diacriticsMap[a] || a;
   });

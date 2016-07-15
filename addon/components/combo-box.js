@@ -84,6 +84,10 @@ export default Ember.Component.extend({
     this.set('inputValue', this.get('selectedValueLabel'));
   }),
 
+  onDestroy:Ember.on('didDestroyElement', function(){
+      Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
+  }),
+
   initSelectedValues(){
     //find selected items and assgn them into internalSelectedList
     let selected = this.get('selected');
@@ -101,14 +105,6 @@ export default Ember.Component.extend({
   filteredValueList: Ember.computed('inputValue', 'sortedValueList.[]', function () {
 
     let valueList = this.get('sortedValueList');
-
-    //TODO sorting ------------------------------------------------------------------------------
-    // if (Ember.isPresent(this.get('orderBy'))) {
-    //   let orderBy = this.get('orderBy');
-    //   valueList = _.orderBy(valueList, (itemList)=> {
-    //     return itemList.get('item').get(orderBy);
-    //   });
-    // }
 
     if (!this.get('canFilter')) {
       return valueList;
@@ -196,11 +192,9 @@ export default Ember.Component.extend({
   valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function(){
     if (Ember.isPresent(this.get('valuePromise'))){
       //TODO show loader if dropdown visible ------------
-      console.log('valuePromise - resolveing......');
       this.get('valuePromise').then((result)=>{
         this.set('valueList', result);
         this.initSelectedValues();
-        console.log('valuePromise resolved.');
           //TODO hide loader if dropdown visible ------------
       });
     }
@@ -314,7 +308,7 @@ export default Ember.Component.extend({
     if (this.get('canFilter')){
       this.set('inputValue', null);
     }else{
-      this.set('inputValue', 'TODO vyberte'); //TODO label -------
+      this.set('inputValue', 'TODO choose label'); //TODO label -------
     }
     this._initDropdownCloseListeners();
 
