@@ -4,11 +4,6 @@ import isHtmlSafe from 'ember-string-ishtmlsafe-polyfill';
 import {accentRemovalHelper} from '../helpers/accent-removal-helper';
 
 
-/**
- * TODO filtering
- * TODO ordering values in valueList
- */
-
 function getObjectFromArray(array, index){
   if (array.objectAt){
     return array.objectAt(index);
@@ -67,6 +62,7 @@ export default Ember.Component.extend({
   onSelected: Ember.K,
   canFilter: false,
   preselectFirst: false,
+  orderBy: null,
 
 //internals
   selectedValueLabel: null,
@@ -74,14 +70,18 @@ export default Ember.Component.extend({
   internalSelectedList: Ember.A([]),
 
 
+  sortedValueList: Ember.computed.sort('valueList', 'sortDefinition'),
+  sortDefinition: Ember.computed('orderBy', 'itemKey', function() {
+    return [ this.get('orderBy')?this.get('orderBy'):this.get('itemKey') ];
+  }),
+
+
   initCombobox: Ember.on('init', function(){
 
     this.initSelectedValues();
 
-
     this.createSelectedLabel(this.get('internalSelectedList'));
     this.set('inputValue', this.get('selectedValueLabel'));
-
   }),
 
   initSelectedValues(){
@@ -98,9 +98,9 @@ export default Ember.Component.extend({
     this._automaticallySelect();
   },
 
-  filteredValueList: Ember.computed('inputValue', 'valueList.[]', function () {
+  filteredValueList: Ember.computed('inputValue', 'sortedValueList.[]', function () {
 
-    let valueList = this.get('valueList');
+    let valueList = this.get('sortedValueList');
 
     //TODO sorting ------------------------------------------------------------------------------
     // if (Ember.isPresent(this.get('orderBy'))) {

@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
 
-  comboValueList: [{a:'hello', b:1}, {a:'hello2', b:2}],
+  comboValueList: [{a:'hello1', b:"a"}, {a:'hello3', b:"c"}, {a:'hello2', b:"b"}, {a:'hello21', b:"bb"}],
   comboSelectedSingle: null,
   comboPreSelectedSingle: null,
   initialComboSelectedSingle: null,
@@ -49,7 +49,7 @@ export default Ember.Controller.extend({
     },
 
     actionCreateAsyncValueList(){
-      let valueList = [{a:'hello', b:1}, {a:'hello2', b:2}];
+      let valueList = [{a:'hello2', b:'b'}, {a:'hello1', b:'a'}];
 
       this.set('asyncValueList', new Ember.RSVP.Promise(function(resolve){
         setTimeout(function(){
