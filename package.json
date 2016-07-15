@@ -1,7 +1,7 @@
 {
   "name": "ember-advanced-combobox",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "Swiss-knife ember combobox",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,12 +11,15 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "",
+  "repository": {
+   "type": "git",
+   "url": "https://github.com/AnnotationSro/ember-advanced-combobox"
+  },
+  "homepage": "https://github.com/AnnotationSro/ember-advanced-combobox",
+  "author": "Annotation",
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
-  "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "0.7.1",
