@@ -10,7 +10,7 @@ moduleForComponent('combo-box', 'Integration | Component | combo box', {
 
 test('it shows and hides dropdown when clicked into input', function(assert) {
 
-  let valueList = [{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}];
+  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -46,7 +46,7 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  let valueList = [{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}];
+  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -81,7 +81,7 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
 
 test('it renders plain JSON array as valueList', function(assert) {
 
-  let valueList = [{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}];
+  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -161,7 +161,7 @@ test('it renders Ember Object array as valueList', function(assert) {
 
 test('it sorts plain JSON array', function(assert) {
 
-  let valueList = [{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}];
+  let valueList = new Ember.A([{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
