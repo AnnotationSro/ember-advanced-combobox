@@ -71,10 +71,12 @@ export default Ember.Component.extend({
 
 
   sortedValueList: Ember.computed.sort('valueList', 'sortDefinition'),
-  sortDefinition: Ember.computed('orderBy', 'itemKey', function() {
-    return [ this.get('orderBy')?this.get('orderBy'):this.get('itemKey') ];
+  sortDefinition: Ember.computed('orderBy', function() {
+    if (Ember.isPresent(this.get('orderBy'))){
+      return [this.get('orderBy')];
+    }
+    return [''];
   }),
-
 
   initCombobox: Ember.on('init', function(){
 
@@ -86,6 +88,7 @@ export default Ember.Component.extend({
 
   onDestroy:Ember.on('didDestroyElement', function(){
       Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
+      this._destroyDropdownCloseListeners();
   }),
 
   initSelectedValues(){
@@ -218,9 +221,9 @@ export default Ember.Component.extend({
   }),
 
   //we cannot use {{input readonly=readonly}} because of bug https://github.com/emberjs/ember.js/issues/11828
-  inputNotClickableObserver: Ember.on('init', Ember.observer('disabled', 'labelOnly', 'valueList.[]', 'canFilter', function(){
+  inputNotClickableObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', function(){
     let notClickable = false;
-    if (this.get('disabled')){
+    if (this.get('_disabledCombobox')){
       notClickable = true;
     }
     if (this.get('labelOnly')){
@@ -243,7 +246,7 @@ export default Ember.Component.extend({
 
     Ember.$(this.element).find('.combo-input').on('click tap', ()=>{
       //comobobox input was clicked (or taped) on
-      if (this.get('disabled') || this.get('labelOnly')){
+      if (this.get('_disabledCombobox') || this.get('labelOnly')){
         //no clicking on input allowed
         return;
       }
@@ -310,6 +313,7 @@ export default Ember.Component.extend({
     }else{
       this.set('inputValue', 'TODO choose label'); //TODO label -------
     }
+
     this._initDropdownCloseListeners();
 
     this._changeDropdownPosition();
@@ -532,7 +536,9 @@ export default Ember.Component.extend({
 
   actions:{
     actionDropdownButton(){
-      this._showDropdown();
+      if (!this.get('_disabledCombobox')){
+        this._showDropdown();
+      }
     },
 
     actionItemSelect(item){
