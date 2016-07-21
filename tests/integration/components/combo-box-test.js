@@ -31,13 +31,14 @@ test('it shows and hides dropdown when clicked into input', function(assert) {
   `);
 
   //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 1);
+  assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
 
   Ember.run(()=>{
     this.$('.combo-input').click();
-
+  });
+  Ember.run(()=>{
     //dropdown should be visible
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
   });
 
 });
@@ -67,13 +68,14 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
   `);
 
   //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 1);
+  assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
 
   Ember.run(()=>{
     this.$('.dropdown-icon').click();
-
+  });
+  Ember.run(()=>{
     //dropdown should be visible
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
   });
 
 });
@@ -106,7 +108,7 @@ test('it renders plain JSON array as valueList', function(assert) {
   //open dropdown
   Ember.run(()=>{
     this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, valueList.length);
   });
 
@@ -153,7 +155,7 @@ test('it renders Ember Object array as valueList', function(assert) {
   //open dropdown
   Ember.run(()=>{
     this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, valueList.length);
   });
 
@@ -188,7 +190,7 @@ test('it sorts plain JSON array', function(assert) {
   //open dropdown
   Ember.run(()=>{
     this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
     assert.equal($($items[0]).html().trim(), 'labela');
     assert.equal($($items[1]).html().trim(), 'labelaa');
@@ -240,7 +242,7 @@ test('it sorts Ember Object array', function(assert) {
   //open dropdown
   Ember.run(()=>{
     this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
     assert.equal($($items[0]).html().trim(), 'labela');
     assert.equal($($items[1]).html().trim(), 'labelaa');
@@ -302,7 +304,7 @@ test('it resolves valueList Promise ', function(assert) {
 
         this.$('.dropdown-icon').click();
 
-        assert.equal($this.find('.dropdown.dropdown-hidden').length, 0);
+        assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
         assert.equal($this.find('.dropdown-item').length, valueList.length);
         done();
      });
@@ -328,7 +330,7 @@ test('it handles empty valueList - cliking on dropdown button', function(assert)
   //open dropdown - should not work
   Ember.run(()=>{
     this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 1);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
   });
 
 });
@@ -350,7 +352,7 @@ test('it handles empty valueList - cliking on combobox input', function(assert) 
   //open dropdown - should not work
   Ember.run(()=>{
     this.$('.combo-input').click();
-    assert.equal(this.$().find('.dropdown.dropdown-hidden').length, 1);
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
   });
 
 });
