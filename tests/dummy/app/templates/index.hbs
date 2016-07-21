@@ -107,13 +107,34 @@ Async value
   canFilter=true
   disabled=disabled
   labelOnly=labelOnly
+  noValueLabel="I am async combobox"
 }}
 {{comboSelectedSingle}}
+</div>
+
+
+<p>
+
+</p>
+
+<div>
+
+Labelonly combobox
+{{combo-box
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  canFilter=true
+  disabled=disabled
+  labelOnly=true
+  noValueLabel="I am label only combobox with no value"
+}}
 </div>
 
 <p>
 
 </p>
+
 
 <button {{action 'actionToggleLabelOnly'}}>Toggle label only</button>
 <button {{action 'actionToggleDisabled'}}>Toggle disabled</button>

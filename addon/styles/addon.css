@@ -35,8 +35,16 @@
   background-color: grey;
 }
 
-.advanced-combo-box .dropdown-hidden{
+.advanced-combo-box.dropdown-hidden .dropdown{
   display: none;
+}
+
+.advanced-combo-box.dropdown-hidden :not(.dropdown-icon) {
+  cursor: default;
+}
+
+.advanced-combo-box:not(.combobox-disabled) .dropdown-icon{
+  cursor: pointer;
 }
 
 .advanced-combo-box.combobox-label-only .dropdown-icon{
