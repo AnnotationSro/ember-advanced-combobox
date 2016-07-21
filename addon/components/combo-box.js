@@ -75,7 +75,7 @@ export default Ember.Component.extend({
   dropdownVisible: false,
   internalSelectedList: Ember.A([]),
 
-  inputValueBeforeLabelOnly: null, //temporary value of inputValue before labelOnly mode
+  configurationService: Ember.inject.service('adv-combobox-configuration-service'),
 
   sortedValueList: Ember.computed.sort('valueList', function(a, b) {
     let orderBy = this.get('orderBy');
@@ -228,10 +228,12 @@ export default Ember.Component.extend({
 
   valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function() {
     if (Ember.isPresent(this.get('valuePromise'))) {
-      //TODO show loader if dropdown visible ------------
+
+      this.set('inputValue', this.get('configurationService').getAsyncLoaderStartLabel());
+      
       this.get('valuePromise').then((result) => {
         this.set('valueList', result);
-        //TODO hide loader if dropdown visible ------------
+        this.set('inputValue', this.get('selectedValueLabel'));
       });
     }
   })),
@@ -359,7 +361,7 @@ export default Ember.Component.extend({
     if (this.get('canFilter')) {
       this.set('inputValue', null);
     } else {
-      this.set('inputValue', 'TODO choose label'); //TODO label -------
+      this.set('inputValue', this.get('configurationService').getChooseLabel());
     }
 
     this._initDropdownCloseListeners();
@@ -433,7 +435,7 @@ export default Ember.Component.extend({
       if (Ember.isEmpty(this.get('valueList'))) {
         label = ''; //no valueList
       } else {
-        label = "Empty value"; //TODO empty value -------------------------------------
+        label = this.get("configurationService").getEmptySelectionLabel();
       }
     } else {
       if (items.map) {
@@ -441,7 +443,7 @@ export default Ember.Component.extend({
         if (items.length === 1) {
           label = this._getItemLabel(getObjectFromArray(items, 0));
         } else {
-          label = items.map((item) => this._getItemLabel(item)).join(','); //TODO if more than 1 item, show count instead of labels
+          label = this.get("configurationService").getMultiselectValueLabel() + items.length;
         }
       } else {
         //single item is selected

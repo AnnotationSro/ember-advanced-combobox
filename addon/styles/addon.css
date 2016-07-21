@@ -8,6 +8,7 @@
 
  .advanced-combo-box.combobox-disabled:not(.combobox-label-only) .combo-input{
   background-color: grey;
+  color: white;
 }
 
 .advanced-combo-box .input-group{

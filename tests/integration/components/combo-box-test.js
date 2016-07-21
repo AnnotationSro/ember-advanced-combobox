@@ -3,10 +3,21 @@ import hbs from 'htmlbars-inline-precompile';
 import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 
-moduleForComponent('combo-box', 'Integration | Component | combo box', {
-  integration: true
+const i18nMock = Ember.Service.extend({
+  t(key){
+    return `dummy-translated-message for ${key}`;
+  }
 });
 
+
+moduleForComponent('combo-box', 'Integration | Component | combo box', {
+  integration: true,
+
+  beforeEach: function () {
+    this.register('service:i18n', i18nMock);
+    this.inject.service('i18n');
+  }
+});
 
 test('it shows and hides dropdown when clicked into input', function(assert) {
 
