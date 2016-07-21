@@ -230,7 +230,7 @@ export default Ember.Component.extend({
     if (Ember.isPresent(this.get('valuePromise'))) {
 
       this.set('inputValue', this.get('configurationService').getAsyncLoaderStartLabel());
-      
+
       this.get('valuePromise').then((result) => {
         this.set('valueList', result);
         this.set('inputValue', this.get('selectedValueLabel'));
@@ -389,8 +389,7 @@ export default Ember.Component.extend({
 
     if (acceptSelected) {
       //call selection callback
-      let selectedItems = this.get('internalSelectedList');
-      this._callOnSelectedCallback(this.convertItemListToKeyList(selectedItems), this._itemKeysListToItemObjects(this.get('selected')));
+      this._callOnSelectedCallback(this.get('internalSelectedList'), this.get('oldInternalSelection'));
     } else {
       //selection is not accepted -> revert internal selection
       this.set('internalSelectedList', this.get('oldInternalSelection'));
