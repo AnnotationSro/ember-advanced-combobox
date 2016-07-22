@@ -424,6 +424,72 @@ test('it calls selected callback', function(assert) {
 });
 
 
+test('it calls selected callback - multiselect', function(assert) {
+
+  let obj1 = Ember.Object.extend({}).create({
+    key: 'a',
+    label:"label1"
+  });
+  let obj2 = Ember.Object.extend({}).create({
+    key: 'b',
+    label:"label2"
+  });
+  let obj3 = Ember.Object.extend({}).create({
+    key: 'c',
+    label:"label3"
+  });
+
+  let valueList = new Ember.A([obj1, obj2, obj3]);
+
+  var done = assert.async();
+
+  this.set('valueList', valueList);
+  this.set('selected', 'b');
+  this.on('onSelected', function(value){
+    assert.ok(value);
+    assert.equal(value.length, 2);
+    assert.equal(value[0].get('key'), obj1.get('key'));
+    assert.equal(value[0].get('label'), obj1.get('label'));
+    assert.equal(value[0], obj1);
+
+    assert.equal(value[1].get('key'), obj2.get('key'));
+    assert.equal(value[1].get('label'), obj2.get('label'));
+    assert.equal(value[1], obj1);
+    done();
+  });
+
+  // Template block usage:
+  this.render(hbs`
+    {{combo-box
+      valueList=valueList
+      selected=selected
+      onSelected=(action 'onSelected')
+      itemKey='key'
+      itemLabel='label'
+      multiselect=true
+      canFilter=false
+    }}
+  `);
+
+  let $this = this.$();
+
+  //open dropdown
+  Ember.run(()=>{
+    this.$('.dropdown-icon').click();
+  });
+  Ember.run(()=>{
+    Ember.$($this.find('.dropdown-item')[0]).click();
+    // Ember.$($this.find('.dropdown-item')[1]).click();
+  });
+  Ember.run(()=>{
+    Ember.$($this.find('.dropdown-item')[1]).click();
+  });
+  // close dropdown = confirm selection
+  Ember.run(()=>{
+    this.$('.dropdown-icon').click();
+  });
+});
+
 test('it does not call selected callback because user selected value that was already selected', function(assert) {
   assert.expect(0);
 

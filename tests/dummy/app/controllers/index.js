@@ -20,19 +20,22 @@ export default Ember.Controller.extend({
 
   actions: {
     onSelectedSingle(selectedValues){
-      this.set('comboSelectedSingle', selectedValues.a);
+      this.set('comboSelectedSingleFormatted', JSON.stringify(selectedValues));
+      this.set('comboSelectedSingle', selectedValues);
     },
 
     onOneItemSelected(item){
+      this.set('oneItemSelectedSingleFormatted', JSON.stringify(item));
       this.set('oneItemSelectedSingle', item);
     },
 
     onPreSelectedSingle(selectedValues){
         this.set('comboPreSelectedSingle', selectedValues);
+        this.set('comboPreSelectedSingleFormatted', JSON.stringify(selectedValues));
     },
 
     onSelectedMulti(selectedValues){
-
+debugger;
       this.set('comboSelectedMulti', selectedValues);
 
       if (Ember.isPresent(selectedValues)){
