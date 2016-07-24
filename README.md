@@ -10,6 +10,13 @@ Ember combobox that can:
 **Beware** ember >=2.0.0 is supported
 
 
+## Installation
+
+```
+ember install ember-advanced-combobox
+```
+
+
 ## Usage
 
 ```
