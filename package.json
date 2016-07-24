@@ -1,6 +1,6 @@
 {
   "name": "ember-advanced-combobox",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Swiss-knife ember combobox",
   "directories": {
     "doc": "doc",
@@ -12,8 +12,8 @@
     "test": "ember try:testall"
   },
   "repository": {
-   "type": "git",
-   "url": "https://github.com/AnnotationSro/ember-advanced-combobox"
+    "type": "git",
+    "url": "https://github.com/AnnotationSro/ember-advanced-combobox"
   },
   "homepage": "https://github.com/AnnotationSro/ember-advanced-combobox",
   "author": "Annotation",
@@ -54,6 +54,6 @@
     "configPath": "tests/dummy/config",
     "versionCompatibility": {
       "ember": ">= 2.0.0"
-   }
+    }
   }
 }
