@@ -2,16 +2,12 @@
 
 [![Build Status](https://travis-ci.org/AnnotationSro/ember-advanced-combobox.svg?branch=master)](https://travis-ci.org/AnnotationSro/ember-advanced-combobox)
 
+Ember combobox that can:
+ - filter items
+ - sort items
+ - multiselect items
 
 **Beware** ember >=2.0.0 is supported
-
-## WIP
-
-**Here be dragons** _enter at your own risk_.
-
----------------------
-#### TODO
-- **mobile-friendly version**
 
 
 ## Usage
