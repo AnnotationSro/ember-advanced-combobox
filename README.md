@@ -11,8 +11,6 @@
 
 ---------------------
 #### TODO
-- labels e.g. for async loading of value list, for multiselect, ...
-- MORE TESTS !!!
 - **mobile-friendly version**
 
 
