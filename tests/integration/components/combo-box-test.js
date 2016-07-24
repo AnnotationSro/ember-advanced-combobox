@@ -430,7 +430,7 @@ test('it calls selected callback', function(assert) {
 });
 
 
-test('it calls miltiselect selected callback - adds new selected items', function(assert) {
+test('it calls multiselect selected callback - adds new selected items', function(assert) {
 
   let obj1 = Ember.Object.extend({}).create({
     key: 'a',
@@ -501,7 +501,7 @@ test('it calls miltiselect selected callback - adds new selected items', functio
 /**
  * user clicks on already selected item -> it sould not be selected at the end
  */
-test('it calls miltiselect selected callback - removes selected items', function(assert) {
+test('it calls multiselect selected callback - removes selected items', function(assert) {
 
   let obj1 = Ember.Object.extend({}).create({
     key: 'a',
