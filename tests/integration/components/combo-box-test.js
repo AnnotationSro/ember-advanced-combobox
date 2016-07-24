@@ -9,6 +9,12 @@ const i18nMock = Ember.Service.extend({
   }
 });
 
+function stripComments(str){
+  if (Ember.isNone(str)){
+    return str;
+  }
+  return str.replace(/<!--(.*?)-->/gm, "");
+}
 
 moduleForComponent('combo-box', 'Integration | Component | combo box', {
   integration: true,
@@ -203,9 +209,9 @@ test('it sorts plain JSON array', function(assert) {
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
-    assert.equal($($items[0]).html().trim(), 'labela');
-    assert.equal($($items[1]).html().trim(), 'labelaa');
-    assert.equal($($items[2]).html().trim(), 'labelb');
+    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments($($items[2]).html()).trim(), 'labelb');
   });
 
 });
@@ -255,9 +261,9 @@ test('it sorts Ember Object array', function(assert) {
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
-    assert.equal($($items[0]).html().trim(), 'labela');
-    assert.equal($($items[1]).html().trim(), 'labelaa');
-    assert.equal($($items[2]).html().trim(), 'labelc');
+    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments($($items[2]).html()).trim(), 'labelc');
   });
 
 });
@@ -424,7 +430,78 @@ test('it calls selected callback', function(assert) {
 });
 
 
-test('it calls selected callback - multiselect', function(assert) {
+test('it calls miltiselect selected callback - adds new selected items', function(assert) {
+
+  let obj1 = Ember.Object.extend({}).create({
+    key: 'a',
+    label:"label1"
+  });
+  let obj2 = Ember.Object.extend({}).create({
+    key: 'b',
+    label:"label2"
+  });
+  let obj3 = Ember.Object.extend({}).create({
+    key: 'c',
+    label:"label3"
+  });
+
+  let valueList = new Ember.A([obj1, obj2, obj3]);
+
+  var done = assert.async();
+
+  this.set('valueList', valueList);
+  this.set('selected', 'c');
+  this.on('onSelected', function(value){
+    assert.ok(value);
+
+    assert.equal(value.length, 3);
+    assert.equal(value[0].get('key'), obj3.get('key'));
+    assert.equal(value[0].get('label'), obj3.get('label'));
+
+    assert.equal(value[1].get('key'), obj1.get('key'));
+    assert.equal(value[1].get('label'), obj1.get('label'));
+
+    assert.equal(value[2].get('key'), obj2.get('key'));
+    assert.equal(value[2].get('label'), obj2.get('label'));
+    done();
+  });
+
+  // Template block usage:
+  this.render(hbs`
+    {{combo-box
+      valueList=valueList
+      selected=selected
+      onSelected=(action 'onSelected')
+      itemKey='key'
+      itemLabel='label'
+      multiselect=true
+      canFilter=false
+    }}
+  `);
+
+  let $this = this.$();
+
+  //open dropdown
+  Ember.run(()=>{
+    this.$('.dropdown-icon').click();
+  });
+  Ember.run(()=>{
+    Ember.$($this.find('.dropdown-item')[0]).click();
+    // Ember.$($this.find('.dropdown-item')[1]).click();
+  });
+  Ember.run(()=>{
+    Ember.$($this.find('.dropdown-item')[1]).click();
+  });
+  // close dropdown = confirm selection
+  Ember.run(()=>{
+    this.$('.dropdown-icon').click();
+  });
+});
+
+/**
+ * user clicks on already selected item -> it sould not be selected at the end
+ */
+test('it calls miltiselect selected callback - removes selected items', function(assert) {
 
   let obj1 = Ember.Object.extend({}).create({
     key: 'a',
@@ -447,14 +524,11 @@ test('it calls selected callback - multiselect', function(assert) {
   this.set('selected', 'b');
   this.on('onSelected', function(value){
     assert.ok(value);
-    assert.equal(value.length, 2);
+    assert.equal(value.length, 1);
     assert.equal(value[0].get('key'), obj1.get('key'));
     assert.equal(value[0].get('label'), obj1.get('label'));
     assert.equal(value[0], obj1);
 
-    assert.equal(value[1].get('key'), obj2.get('key'));
-    assert.equal(value[1].get('label'), obj2.get('label'));
-    assert.equal(value[1], obj1);
     done();
   });
 

@@ -35,13 +35,12 @@ export default Ember.Controller.extend({
     },
 
     onSelectedMulti(selectedValues){
-debugger;
-      this.set('comboSelectedMulti', selectedValues);
+      this.set('comboSelectedMulti', selectedValues.map((o) => o.a));
 
       if (Ember.isPresent(selectedValues)){
-        this.set('selectedMultiFormatted', selectedValues.map((o) => JSON.stringify(o)).join(','));
+        this.set('comboSelectedMultiFormatted', selectedValues.map((o) => JSON.stringify(o)).join(','));
       }else{
-      this.set('selectedMultiFormatted', null);
+      this.set('comboSelectedMultiFormatted', null);
     }
     },
     actionToggleLabelOnly(){

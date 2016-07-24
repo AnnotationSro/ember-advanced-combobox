@@ -73,7 +73,7 @@ export default Ember.Component.extend({
   //internals
   selectedValueLabel: null,
   dropdownVisible: false,
-  internalSelectedSet: new Ember.Set(), //indices of currently selected items in valueList
+  internalSelectedList: new Ember.A([]),
 
   configurationService: Ember.inject.service('adv-combobox-configuration-service'),
 
@@ -92,7 +92,7 @@ export default Ember.Component.extend({
 
     this.initSelectedValues();
 
-    this.createSelectedLabel(this.get('internalSelectedSet'));
+    this.createSelectedLabel(this.get('internalSelectedList'));
     this.set('inputValue', this.get('selectedValueLabel'));
 
     this._handleLabelOnlyNoValue();
@@ -105,12 +105,12 @@ export default Ember.Component.extend({
   }),
 
   initSelectedValues() {
-    //find selected items and assgn them into internalSelectedSet
+    //find selected items and assgn them into internalSelectedList
     let selected = this.get('selected');
 
     if (Ember.isPresent(selected)) {
       let itemsArray = this._itemKeysListToItemObjects(selected);
-      this.set('internalSelectedSet', new Ember.Set(itemsArray));
+      this.set('internalSelectedList', itemsArray);
       this.createSelectedLabel(itemsArray);
       this.set('inputValue', this.get('selectedValueLabel'));
     }
@@ -119,7 +119,7 @@ export default Ember.Component.extend({
   },
 
   labelOnlyObserver: Ember.observer('labelOnly', function() {
-    let selectedItems = this.get('internalSelectedSet');
+    let selectedItems = this.get('internalSelectedList');
     if (this.get('labelOnly')) {
       this._handleLabelOnlyNoValue();
     } else {
@@ -213,7 +213,7 @@ export default Ember.Component.extend({
   selectedObserver: Ember.observer('selected', function() {
     let selected = this.get('selected');
     if (Ember.isEmpty(selected)) {
-      this.set('internalSelectedSet', new Ember.Set());
+      this.set('internalSelectedList', new Ember.A([]));
       this.createSelectedLabel(null);
       this.set('inputValue', this.get('selectedValueLabel'));
       return;
@@ -221,7 +221,7 @@ export default Ember.Component.extend({
     let itemsArray = this._createArray(selected);
     itemsArray = itemsArray.map((itemKey) => this.findItemByKey(itemKey));
 
-    this.set('internalSelectedSet', new Ember.Set(itemsArray));
+    this.set('internalSelectedList', this._createArray(itemsArray));
     this.createSelectedLabel(itemsArray);
     this.set('inputValue', this.get('selectedValueLabel'));
   }),
@@ -240,20 +240,17 @@ export default Ember.Component.extend({
 
 
   valueListObserver: Ember.observer('valueList.[]', function() {
-    let oldSelected = this.get('internalSelectedSet');
+    let oldSelected = new Ember.A(this.get('internalSelectedList').toArray());
     this.initSelectedValues();
-
-    this._callOnSelectedCallback(this.get('internalSelectedSet'), oldSelected);
+    this._callOnSelectedCallback(this.get('internalSelectedList'), oldSelected);
 
   }),
 
-  _callOnSelectedCallback(newSelectedSet, oldSelectedSet) {
+  _callOnSelectedCallback(newSelectedList, oldSelectedList) {
     //call onSelected callback only if selected items actually changed
-    if (this._equalsSelectedSet(oldSelectedSet, newSelectedSet)) {
+    if (this._equalsSelectedList(oldSelectedList, newSelectedList)) {
       return;
     }
-
-    let newSelectedList = newSelectedSet.toArray(); //order of selected items is not guaranteed!!!
 
     if (this.get('multiselect')) {
       this.get('onSelected')(newSelectedList);
@@ -362,7 +359,8 @@ export default Ember.Component.extend({
   _showDropdown() {
     this.set('dropdownVisible', true);
 
-    this.set('oldInternalSelection', new Ember.Set(this.get('internalSelectedSet'))); //create a copy
+    this.set('oldInternalSelection', new Ember.A(this.get('internalSelectedList').toArray())); //create a copy
+
     if (this.get('canFilter')) {
       this.set('inputValue', null);
     } else {
@@ -394,34 +392,33 @@ export default Ember.Component.extend({
 
     if (acceptSelected) {
       //call selection callback
-      this._callOnSelectedCallback(this.get('internalSelectedSet'), this.get('oldInternalSelection'));
+      this._callOnSelectedCallback(this.get('internalSelectedList'), this.get('oldInternalSelection'));
     } else {
       //selection is not accepted -> revert internal selection
-      this.set('internalSelectedSet', this.get('oldInternalSelection'));
+      this.set('internalSelectedList', this.get('oldInternalSelection'));
     }
 
-    this.createSelectedLabel(this.get('internalSelectedSet').toArray());
+    this.createSelectedLabel(this.get('internalSelectedList'));
     this.set('inputValue', this.get('selectedValueLabel'));
     this._destroyDropdownCloseListeners();
 
   },
 
-  _equalsSelectedSet(set1, set2) {
-    debugger;
-    if (Ember.isNone(set1) && Ember.isNone(set2)){
+  _equalsSelectedList(list1, list2) {
+    if (Ember.isNone(list1) && Ember.isNone(list2)){
       //both of them are null/undefined
       return true;
     }
-    if (Ember.isNone(set1) || Ember.isNone(set2)){
+    if (Ember.isNone(list1) || Ember.isNone(list2)){
       //just one of them is null/undefined
       return false;
     }
-    if (set1.length !== set2.length) {
+    if (list1.length !== list2.length) {
       return false;
     }
 
-    let without = set1.without(set2);
-    return (without.length===0);
+    let removeObjects = list1.removeObjects(list2);
+    return (removeObjects.length===0);
   },
 
   convertItemListToKeyList(itemList) {
@@ -459,15 +456,15 @@ export default Ember.Component.extend({
   _addOrRemoveFromSelected(item) {
     if (!this.get('multiselect')) {
       //single select combobox does not perform any selected items removal
-      this.get('internalSelectedSet').clear();
-      this.get('internalSelectedSet').add(item);
+      this.get('internalSelectedList').clear();
+      this._addOrRemoveFromList(this.get('internalSelectedList'), item);
     } else {
       //if multiselect combobox, first check if object is not already in selected list
-      let selectedList = this.get('internalSelectedSet');
+      let selectedList = this.get('internalSelectedList');
       if (Ember.isNone(selectedList)) {
-        this.set('internalSelectedSet', new Ember.Set());
+        this.set('internalSelectedList', new Ember.A([]));
       }else{
-        selectedList.remove(item);
+        this._addOrRemoveFromList(this.get('internalSelectedList'), item);
       }
     }
   },
@@ -476,6 +473,17 @@ export default Ember.Component.extend({
     this._addOrRemoveFromSelected(item);
     if (!this.get('multiselect')) {
       this._hideDropdown(true);
+    }
+  },
+
+  _addOrRemoveFromList(list, item){
+    let itemPos = list.indexOf(item);
+    if (itemPos === -1){
+      //item is not in the list - we should add it
+      list.addObject(item);
+    } else {
+      //item is in the list - we should remove it
+      list.removeAt(itemPos, 1);
     }
   },
 

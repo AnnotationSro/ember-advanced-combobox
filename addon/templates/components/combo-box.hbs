@@ -6,6 +6,13 @@
   <ul class="dropdown dropdown-hidden">
     {{#each filteredValueList as |value|}}
       <li class="dropdown-item" {{action 'actionItemSelect' value bubbles=false}}>
+        {{#if multiselect}}
+          {{#if (isItemSelected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
+            <i class="fa fa-check-square-o" aria-hidden="true"></i>
+          {{else}}
+            <i class="fa fa-square-o" aria-hidden="true"></i>
+          {{/if}}
+        {{/if}}
         {{get value itemLabel}}
       </li>
     {{/each}}
