@@ -13,8 +13,13 @@ module.exports = {
   },
 
   afterInstall: function () {
-    return this.addAddonToProject(
-          {name: 'ember-string-ishtmlsafe-polyfill', target: '^1.0.0'}
-    );
+
+    var that = this;
+        return this.addAddonToProject({name: 'ember-string-ishtmlsafe-polyfill', target: '^1.0.0'})
+        .then(function(){
+          return that.addBowerPackagesToProject([
+            {name: "ember-cli-font-awesome", target: "~1.5.0"}
+          ]);
+        }); 
   }
 };
