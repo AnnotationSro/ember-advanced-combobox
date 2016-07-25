@@ -18,8 +18,8 @@ module.exports = {
         return this.addAddonToProject({name: 'ember-string-ishtmlsafe-polyfill', target: '^1.0.0'})
         .then(function(){
           return that.addBowerPackagesToProject([
-            {name: "ember-cli-font-awesome", target: "~1.5.0"}
+            {name: "ember-font-awesome", target: "~2.1.0"}
           ]);
-        }); 
+        });
   }
 };
