@@ -201,7 +201,12 @@ export default Ember.Component.extend({
     if (Ember.isNone(items)) {
       return null;
     }
-    for (let i = 0; i < items.length; i++) {
+    let itemsLength = items.length;
+    if (typeof itemsLength !== 'number'){
+      //it looks like valueList.length is a computedProperty
+      itemsLength = items.get('length');
+    }
+    for (let i = 0; i < itemsLength; i++) {
       if (this._getItemKey(getObjectFromArray(items, i)) === key) {
         return getObjectFromArray(items, i);
       }
