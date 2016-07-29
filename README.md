@@ -83,6 +83,6 @@ Configuration service `ember-advanced-combobox/adv-combobox-configuration-servic
 ```
   comboboxConfig: Ember.inject.service('adv-combobox-configuration-service');
 
-  this.get('comboboxConfig').set("emptySelectionLabel", "some value");
+  this.get('comboboxConfig').setConfiguration("emptySelectionLabel", "some value");
 
 ```
