@@ -113,7 +113,9 @@ export default Ember.Component.extend({
       this.set('internalSelectedList', itemsArray);
       this.createSelectedLabel(itemsArray);
       this.set('inputValue', this.get('selectedValueLabel'));
-    }
+    } else {
+    	this.set('internalSelectedList', Ember.A([]));
+	  }
 
     this._automaticallySelect();
   },
