@@ -76,7 +76,7 @@ export default Ember.Component.extend({
   selectedValueLabel: null,
   dropdownVisible: false,
   internalSelectedList: new Ember.A([]),
-
+  valuePromiseResolving: false,
   configurationService: Ember.inject.service('adv-combobox-configuration-service'),
 
   sortedValueList: Ember.computed.sort('valueList', function(a, b) {
@@ -242,10 +242,11 @@ export default Ember.Component.extend({
 
   valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function() {
     if (Ember.isPresent(this.get('valuePromise'))) {
-
+      this.set('valuePromiseResolving', true);
       this.set('inputValue', this.get('configurationService').getAsyncLoaderStartLabel());
 
       this.get('valuePromise').then((result) => {
+        this.set('valuePromiseResolving', false);
         this.set('valueList', result);
         this.set('inputValue', this.get('selectedValueLabel'));
       });
@@ -342,6 +343,14 @@ export default Ember.Component.extend({
     if (this.get('dropdownVisible') && this.get('canFilter')) {
       this._changeDropdownPosition();
     }
+  }),
+
+  asyncLoaderStartLabel: Ember.computed(function(){
+    return this.get('configurationService').getAsyncLoaderStartLabel();
+  }),
+
+  emptyValueListLabel: Ember.computed(function(){
+    return this.get('configurationService').getEmptyValueListLabel();
   }),
 
   /**

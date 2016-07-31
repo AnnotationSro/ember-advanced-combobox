@@ -23,6 +23,11 @@ export default Ember.Controller.extend({
 
     onDropdownShow(){
       console.log('onDropdownShow');
+      this.set('complexValuePromise', new Ember.RSVP.Promise((resolve)=>{
+        setTimeout(()=>{
+          resolve(this.get('comboValueList'));
+        },3000);
+      }));
     },
 
     onDropdownHide(){

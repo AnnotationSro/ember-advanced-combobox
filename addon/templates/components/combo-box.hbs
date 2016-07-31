@@ -15,5 +15,13 @@
         {{/if}}
         {{get value itemLabel}}
       </li>
+    {{else}}
+        {{!-- filteredValueList is empty = either because of filter or valuePromise is not yet resolved --}}
+        {{#if valuePromiseResolving}}
+          <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+          {{asyncLoaderStartLabel}}
+        {{else}}
+          {{emptyValueListLabel}}  
+        {{/if}}
     {{/each}}
   </ul>

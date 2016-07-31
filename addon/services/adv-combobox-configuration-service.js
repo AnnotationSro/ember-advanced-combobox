@@ -27,5 +27,9 @@ export default Ember.Service.extend({
 
   getAsyncLoaderStartLabel(){
     return configuration.getConfig().asyncLoaderStartLabel;
+  },
+
+  getEmptyValueListLabel(){
+    return configuration.getConfig().emptyValueList;
   }
 });

@@ -4,7 +4,8 @@ let CONFIG_PROPERTIES = {
   emptySelectionLabel: "",
   chooseLabel: "Choose:",
   multiselectValueLabel: "Selected items: ",
-  asyncLoaderStartLabel: "Loading..."
+  asyncLoaderStartLabel: "Loading...",
+  emptyValueList: 'No items'
 };
 
 export default {

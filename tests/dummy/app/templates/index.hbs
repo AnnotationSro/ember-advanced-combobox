@@ -141,13 +141,14 @@ Labelonly combobox
 --}}
 <div>
 
-Labelonly combobox with no valueList label
+Complex combobox with callbacks and valuePromise that resolves after dropdown is shown
 {{combo-box
   itemKey='a'
   itemLabel='b'
   multiselect=false
   canFilter=true
   disabled=disabled
+  valuePromise=complexValuePromise
   labelOnly=labelOnlyWithNoValue
   noValueLabel="I am label only combobox with no value"
   onDropdownShow=(action 'onDropdownShow')
@@ -160,6 +161,7 @@ labelOnly: {{labelOnly}}
 <p>
 
 </p>
+
 
 
 <button {{action 'actionToggleLabelOnly'}}>Toggle label only</button>
