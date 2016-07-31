@@ -61,6 +61,7 @@ Also note that if there is only one item in the `valueList`, it will be automati
 | chooseLabel           | Label shown when dropdown is visible                                                                   | "Choose:"          |
 | multiselectValueLabel | Label shown when there are multiple values selected -  it appends number of selected items at the end  | "Selected items: " |
 | asyncLoaderStartLabel | Label shown when valuePromise is being evaluated                                                       | "Loading..."       |
+| emptyValueList        | Label shown when there are no items in dropdown                                                        | "No items"       |
 
 There are 2 ways to configure the combobox: using `config/environment.js` or by injecting service `ember-advanced-combobox/adv-combobox-configuration-service`:
 
@@ -74,7 +75,8 @@ Add this to your `config/environment.js` file:
     emptySelectionLabel: "",
     chooseLabel: "Choose:",
     multiselectValueLabel: "Selected items: ",
-    asyncLoaderStartLabel: "Loading..."
+    asyncLoaderStartLabel: "Loading...",
+    emptyValueList: "No items"
   }
   //---------------------------
 
