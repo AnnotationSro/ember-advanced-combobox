@@ -12,6 +12,7 @@ export default Ember.Controller.extend({
   oneItemValueList: [{a:'hello', b:'I am the only one here'}],
   disabled:false,
   labelOnly:false,
+  labelOnlyWithNoValue: true,
 
   init(){
     this._super(...arguments);
@@ -19,6 +20,15 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+
+    onDropdownShow(){
+      console.log('onDropdownShow');
+    },
+
+    onDropdownHide(){
+      console.log('onDropdownHide');
+    },
+
     onSelectedSingle(selectedValues){
       this.set('comboSelectedSingleFormatted', JSON.stringify(selectedValues));
       this.set('comboSelectedSingle', selectedValues);
@@ -45,6 +55,9 @@ export default Ember.Controller.extend({
     },
     actionToggleLabelOnly(){
       this.toggleProperty('labelOnly');
+    },
+    actionToggleLabelOnlyWithNoValue(){
+      this.toggleProperty('labelOnlyWithNoValue');
     },
     actionToggleDisabled(){
       this.toggleProperty('disabled');

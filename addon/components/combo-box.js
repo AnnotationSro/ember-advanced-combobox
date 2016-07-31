@@ -69,6 +69,8 @@ export default Ember.Component.extend({
   preselectFirst: false,
   orderBy: null,
   noValueLabel: null, //label shown in labelOnly mode when there is no valueList available
+  onDropdownShow: Ember.K,
+  onDropdownHide: Ember.K,
 
   //internals
   selectedValueLabel: null,
@@ -125,8 +127,13 @@ export default Ember.Component.extend({
     if (this.get('labelOnly')) {
       this._handleLabelOnlyNoValue();
     } else {
-      this.createSelectedLabel(selectedItems);
-      this.set('inputValue', this.get('selectedValueLabel'));
+      let noValueLabel = this.get('noValueLabel');
+      if (Ember.isNone(this.get('valueList')) && Ember.isPresent(noValueLabel) && noValueLabel.length > 0){
+        this.set('inputValue', noValueLabel);
+      }else{
+        this.createSelectedLabel(selectedItems);
+        this.set('inputValue', this.get('selectedValueLabel'));
+      }
     }
   }),
 
@@ -270,8 +277,21 @@ export default Ember.Component.extend({
     }
   },
 
-  _disabledCombobox: Ember.computed('disabled', 'valueList.[]', function() {
-    if (this.get('disabled') || Ember.isEmpty(this.get('valueList'))) {
+  _disabledCombobox: Ember.computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', function() {
+    if (this.get('disabled')){
+      return true;
+    }
+
+    if (this.get('labelOnly')){
+      return false;
+    }
+
+    if (Ember.isEmpty(this.get('valueList'))) {
+      //if there is no valueList, but 'noValueLabel' is specified, then combobox is not in disabled state - it should show 'noValueLabel' instead
+      if (Ember.isPresent(this.get('noValueLabel'))){
+        return false;
+      }
+
       return true;
     }
     return false;
@@ -366,6 +386,8 @@ export default Ember.Component.extend({
   _showDropdown() {
     this.set('dropdownVisible', true);
 
+    this.get('onDropdownShow')();
+
     this.set('oldInternalSelection', new Ember.A(this.get('internalSelectedList').toArray())); //create a copy
 
     if (this.get('canFilter')) {
@@ -394,6 +416,9 @@ export default Ember.Component.extend({
   },
 
   _hideDropdown(acceptSelected) {
+
+    this.get('onDropdownHide')();
+
     Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
     this.set('dropdownVisible', false);
 

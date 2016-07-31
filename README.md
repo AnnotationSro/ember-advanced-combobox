@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/AnnotationSro/ember-advanced-combobox.svg?branch=master)](https://travis-ci.org/AnnotationSro/ember-advanced-combobox)
 
-Ember combobox that can:
+Ember combobox that can (beside others):
  - filter items
  - sort items
  - multiselect items
@@ -17,7 +17,7 @@ ember install ember-advanced-combobox
 ```
 
 
-## Usage
+## Example Usage
 
 ```
 {{combo-box
@@ -29,6 +29,7 @@ ember install ember-advanced-combobox
   onSelected=(action 'onSelected')
   canFilter=true
   disabled=disabled
+  onDropdownShow=(action 'onDropdownShow')
 }}
 ```
 
@@ -46,6 +47,8 @@ ember install ember-advanced-combobox
 | disabled             | boolean value                                                                                                                                         |
 | orderBy              | Name of the property of valueList items to be used to sort the items in dropdown. If `orderBy` is not provided, items in dropdown will not be sorted. |
 | preselectFirst       | boolean value; if `true` combobox will automatically select the first item in the dropdown.                                                           |
+| onDropdownShow       | Action callback called when dropdown is going to show                                                           |
+| onDropdownHide       | Action callback called when dropdown is going to hide                                                             |
 
 Also note that if there is only one item in the `valueList`, it will be automatically selected.
 

@@ -620,3 +620,66 @@ test('it does not call selected callback because user selected value that was al
   });
 
 });
+
+
+test('it calls onDropdownShow/Hide callbacks', function(assert) {
+  assert.expect(2);
+
+  let obj1 = Ember.Object.extend({}).create({
+    key: 'a',
+    label:"label1"
+  });
+  let obj2 = Ember.Object.extend({}).create({
+    key: 'b',
+    label:"label2"
+  });
+  let obj3 = Ember.Object.extend({}).create({
+    key: 'c',
+    label:"label3"
+  });
+
+  let valueList = new Ember.A([obj1, obj2, obj3]);
+
+  var done = assert.async();
+
+  this.set('valueList', valueList);
+  this.set('selected', 'a');
+  this.on('onDropdownShow', function(){
+    assert.ok(true);
+  });
+
+  this.on('onDropdownHide', function(){
+    assert.ok(true);
+  });
+
+  // Template block usage:
+  this.render(hbs`
+    {{combo-box
+      valueList=valueList
+      selected=selected
+      itemKey='key'
+      itemLabel='label'
+      multiselect=false
+      canFilter=false
+      onDropdownHide=(action 'onDropdownHide')
+      onDropdownShow=(action 'onDropdownShow')
+    }}
+  `);
+
+  let $this = this.$();
+
+  //open dropdown
+  Ember.run(()=>{
+    this.$('.dropdown-icon').click();
+  });
+  Ember.run(()=>{
+    Ember.$($this.find('.dropdown-item')[0]).click();
+  });
+
+  wait().then(() => {
+     Ember.run(()=>{
+         done();
+    });
+  });
+
+});

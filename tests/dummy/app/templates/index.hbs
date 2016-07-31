@@ -1,3 +1,5 @@
+{{!--
+
 <div>
 Single select
 {{combo-box
@@ -130,6 +132,30 @@ Labelonly combobox
   noValueLabel="I am label only combobox with no value"
 }}
 </div>
+
+<p>
+
+</p>
+
+
+--}}
+<div>
+
+Labelonly combobox with no valueList label
+{{combo-box
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnlyWithNoValue
+  noValueLabel="I am label only combobox with no value"
+  onDropdownShow=(action 'onDropdownShow')
+  onDropdownHide=(action 'onDropdownHide')
+}}
+</div>
+labelOnly: {{labelOnly}}
+<button {{action 'actionToggleLabelOnlyWithNoValue'}}>Toggle label only for this combobox</button>
 
 <p>
 
