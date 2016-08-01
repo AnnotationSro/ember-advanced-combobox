@@ -683,3 +683,79 @@ test('it calls onDropdownShow/Hide callbacks', function(assert) {
   });
 
 });
+
+
+test('it filters valueList', function(assert) {
+
+  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+
+  this.set('valueList', valueList);
+  this.set('selected', null);
+  // that.on('onSelected', function(value){
+  //   debugger;
+  // });
+
+  // Template block usage:
+  this.render(hbs`
+    {{combo-box
+      valueList=valueList
+      selected=selected
+      itemKey='key'
+      itemLabel='label'
+      multiselect=false
+      canFilter=true
+    }}
+  `);
+
+  let $this = this.$();
+
+  $this.find('.dropdown-icon').click();
+  $this.find('input').val('label1');
+  $this.find('input').trigger('keyup');
+
+
+  //open dropdown
+  Ember.run(()=>{
+    assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
+    assert.equal($this.find('.dropdown-item').length, 2);
+  });
+
+});
+
+test('it filters valueList with previously selected value', function(assert) {
+
+  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+
+  this.set('valueList', valueList);
+  this.set('selected', 'b');
+  // that.on('onSelected', function(value){
+  //   debugger;
+  // });
+
+  // Template block usage:
+  this.render(hbs`
+    {{combo-box
+      valueList=valueList
+      selected=selected
+      itemKey='key'
+      itemLabel='label'
+      multiselect=false
+      canFilter=true
+    }}
+  `);
+
+  let $this = this.$();
+
+  $this.find('.dropdown-icon').click();
+  $this.find('input').val('label1');
+  $this.find('input').trigger('keyup');
+
+
+  //open dropdown
+  Ember.run(()=>{
+    assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
+    assert.equal($this.find('.dropdown-item').length, 2);
+  });
+
+
+});

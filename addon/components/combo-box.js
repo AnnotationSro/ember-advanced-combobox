@@ -298,6 +298,7 @@ export default Ember.Component.extend({
         return false;
       }
 
+      this.set('inputValue', '');
       return true;
     }
     return false;
@@ -405,7 +406,7 @@ export default Ember.Component.extend({
     this.set('oldInternalSelection', new Ember.A(this.get('internalSelectedList').toArray())); //create a copy
 
     if (this.get('canFilter')) {
-      this.set('inputValue', null);
+      this.set('inputValue', '');
     } else {
       this.set('inputValue', this.get('configurationService').getChooseLabel());
     }
