@@ -53,7 +53,7 @@ function positionDropdown($dropdown, $input) {
 
 export default Ember.Component.extend({
   classNames: ['advanced-combo-box'],
-  classNameBindings: ['labelOnly:combobox-label-only', '_disabledCombobox:combobox-disabled', 'dropdownVisible:dropdown-visible:dropdown-hidden'],
+  classNameBindings: ['labelOnly:combobox-label-only', '_disabledCombobox:combobox-disabled', 'dropdownVisible:dropdown-visible:dropdown-hidden', ],
   layout,
 
   disabled: false,
@@ -99,6 +99,11 @@ export default Ember.Component.extend({
 
     this._handleLabelOnlyNoValue();
 
+  }),
+
+  setDropdownWidth: Ember.on('didInsertElement', function(){
+    let $element = Ember.$(this.element);
+    $element.find('.dropdown').css('min-width', $element.css('width'));
   }),
 
   onDestroy: Ember.on('didDestroyElement', function() {
