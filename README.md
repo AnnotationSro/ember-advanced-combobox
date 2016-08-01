@@ -21,6 +21,8 @@ ember install ember-advanced-combobox
 
 ```
 {{combo-box
+  id='sampleCombo'
+  class='my-combo'
   valueList=valueList
   selected=selectedItem
   itemKey='itemKey'
