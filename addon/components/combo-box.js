@@ -119,7 +119,9 @@ export default Ember.Component.extend({
       let itemsArray = this._itemKeysListToItemObjects(selected);
       this.set('internalSelectedList', itemsArray);
       this.createSelectedLabel(itemsArray);
-      this.set('inputValue', this.get('selectedValueLabel'));
+      if (!this.get('dropdownVisible')){
+        this.set('inputValue', this.get('selectedValueLabel'));
+      }
     } else {
     	this.set('internalSelectedList', Ember.A([]));
 	  }
@@ -242,7 +244,9 @@ export default Ember.Component.extend({
 
     this.set('internalSelectedList', this._createArray(itemsArray));
     this.createSelectedLabel(itemsArray);
-    this.set('inputValue', this.get('selectedValueLabel'));
+    if (!this.get('dropdownVisible')){
+      this.set('inputValue', this.get('selectedValueLabel'));
+    }
   }),
 
   valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function() {
@@ -285,6 +289,7 @@ export default Ember.Component.extend({
 
   _disabledCombobox: Ember.computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', function() {
     if (this.get('disabled')){
+      this.set('inputValue', '');
       return true;
     }
 
@@ -297,7 +302,7 @@ export default Ember.Component.extend({
       if (Ember.isPresent(this.get('noValueLabel'))){
         return false;
       }
-
+      
       this.set('inputValue', '');
       return true;
     }
