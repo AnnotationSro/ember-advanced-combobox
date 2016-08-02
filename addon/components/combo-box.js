@@ -279,7 +279,6 @@ export default Ember.Component.extend({
 
 
 	valueListObserver: Ember.observer('valueList.[]', function() {
-		let oldSelected = new Ember.A(this.get('internalSelectedList').toArray());
 		this.initSelectedValues();
 		if (Ember.isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible')){
 			this.set('inputValue', this.get('configurationService').getChooseLabel());
@@ -325,6 +324,7 @@ export default Ember.Component.extend({
 			this.set('inputValue', '');
 			return true;
 		}
+    this.set('inputValue', this.get('selectedValueLabel'));
 		return false;
 	}),
 

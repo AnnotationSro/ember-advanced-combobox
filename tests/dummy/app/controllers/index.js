@@ -36,12 +36,12 @@ export default Ember.Controller.extend({
 
     onSelectedSingle(selectedValues){
       this.set('comboSelectedSingleFormatted', JSON.stringify(selectedValues));
-      this.set('comboSelectedSingle', selectedValues);
+      this.set('comboSelectedSingle', selectedValues.a);
     },
 
     onOneItemSelected(item){
       this.set('oneItemSelectedSingleFormatted', JSON.stringify(item));
-      this.set('oneItemSelectedSingle', item);
+      this.set('oneItemSelectedSingle', item.a);
     },
 
     onPreSelectedSingle(selectedValues){
