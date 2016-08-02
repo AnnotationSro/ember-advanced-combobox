@@ -307,7 +307,6 @@ export default Ember.Component.extend({
 
 	_disabledCombobox: Ember.computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', function() {
 		if (this.get('disabled')){
-			this.set('inputValue', '');
 			return true;
 		}
 
@@ -321,11 +320,22 @@ export default Ember.Component.extend({
 				return false;
 			}
 
-			this.set('inputValue', '');
 			return true;
 		}
-    this.set('inputValue', this.get('selectedValueLabel'));
+
 		return false;
+	}),
+
+	disabledComboboxObserver: Ember.observer('_disabledCombobox', function(){
+		if (this.get('_disabledCombobox') === true){
+			//combobox has become disabled
+			this.set('oldInputValue', this.get('inputValue'));
+			this.set('inputValue', '');
+		}
+		if (this.get('_disabledCombobox') === false && Ember.isPresent(this.get('oldInputValue'))){
+			//combobox is no longer disabled
+			this.set('inputValue', this.get('oldInputValue'));
+		}
 	}),
 
 	//we cannot use {{input readonly=readonly}} because of bug https://github.com/emberjs/ember.js/issues/11828
