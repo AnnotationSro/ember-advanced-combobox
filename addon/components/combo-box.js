@@ -63,6 +63,7 @@ export default Ember.Component.extend({
   selected: null,
   itemKey: null,
   itemLabel: null,
+  itemLabelForSelectedPreview: null, //similar to 'itemLabel', but this one is used when creating selected preview label (if not speficied, defaults to 'itemLabel')
   multiselect: false,
   onSelected: Ember.K,
   canFilter: false,
@@ -109,6 +110,11 @@ export default Ember.Component.extend({
   onDestroy: Ember.on('didDestroyElement', function() {
     Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
     this._destroyDropdownCloseListeners();
+  }),
+
+  //if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
+  internalItemLabelForSelectedPreview: Ember.computed('itemLabelForSelectedPreview', 'itemLabel', function(){
+    return this.get('itemLabelForSelectedPreview') || this.get('itemLabel');
   }),
 
   initSelectedValues() {
@@ -200,7 +206,7 @@ export default Ember.Component.extend({
       itemKeyList.forEach((itemKey) => {
         let item = this.findItemByKey(itemKey);
         if (item) {
-          itemKeyList.push(item);
+          items.push(item);
         }
       });
     } else {
@@ -217,11 +223,7 @@ export default Ember.Component.extend({
     if (Ember.isNone(items)) {
       return null;
     }
-    let itemsLength = items.length;
-    if (typeof itemsLength !== 'number'){
-      //it looks like valueList.length is a computedProperty
-      itemsLength = items.get('length');
-    }
+    let itemsLength = this.getValueListLength();
     for (let i = 0; i < itemsLength; i++) {
       if (this._getItemKey(getObjectFromArray(items, i)) === key) {
         return getObjectFromArray(items, i);
@@ -229,6 +231,19 @@ export default Ember.Component.extend({
     }
 
     return null;
+  },
+
+  getValueListLength(){
+    if (Ember.isEmpty(this.get('valueList'))){
+      return 0;
+    }
+
+    let itemsLength = this.get('valueList').length;
+    if (typeof itemsLength !== 'number'){
+      //it looks like valueList.length is a computedProperty
+      itemsLength = this.get('valueList.length');
+    }
+    return itemsLength;
   },
 
   selectedObserver: Ember.observer('selected', function() {
@@ -302,7 +317,7 @@ export default Ember.Component.extend({
       if (Ember.isPresent(this.get('noValueLabel'))){
         return false;
       }
-      
+
       this.set('inputValue', '');
       return true;
     }
@@ -403,6 +418,14 @@ export default Ember.Component.extend({
     }
   },
 
+  _getPropertyFromItem(item, property){
+    if (Ember.isPresent(property)) {
+      return Ember.get(item, property);
+    } else {
+      return item;
+    }
+  },
+
   _showDropdown() {
     this.set('dropdownVisible', true);
 
@@ -493,13 +516,13 @@ export default Ember.Component.extend({
       if (items.map) {
         //multiple items are selected
         if (items.length === 1) {
-          label = this._getItemLabel(getObjectFromArray(items, 0));
+          label = this._getPropertyFromItem(getObjectFromArray(items, 0), this.get('internalItemLabelForSelectedPreview'));
         } else {
           label = this.get("configurationService").getMultiselectValueLabel() + items.length;
         }
       } else {
         //single item is selected
-        label = this._getItemLabel(items);
+        label = this._getPropertyFromItem(items, this.get('internalItemLabelForSelectedPreview'));
       }
     }
     this.set('selectedValueLabel', label);
@@ -614,7 +637,7 @@ export default Ember.Component.extend({
     if (Ember.isEmpty(valueList)) {
       return;
     }
-    if (valueList.length === 1) {
+    if (this.getValueListLength() === 1) {
       //only 1 item in value list
       this._selectItem(getObjectFromArray(valueList, 0));
       return;
