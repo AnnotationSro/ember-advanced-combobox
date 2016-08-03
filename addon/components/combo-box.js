@@ -326,18 +326,6 @@ export default Ember.Component.extend({
 		return false;
 	}),
 
-	disabledComboboxObserver: Ember.observer('_disabledCombobox', function(){
-		if (this.get('_disabledCombobox') === true){
-			//combobox has become disabled
-			this.set('oldInputValue', this.get('inputValue'));
-			this.set('inputValue', '');
-		}
-		if (this.get('_disabledCombobox') === false && Ember.isPresent(this.get('oldInputValue'))){
-			//combobox is no longer disabled
-			this.set('inputValue', this.get('oldInputValue'));
-		}
-	}),
-
 	//we cannot use {{input readonly=readonly}} because of bug https://github.com/emberjs/ember.js/issues/11828
 	inputNotClickableObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', function() {
 		let notClickable = false;
