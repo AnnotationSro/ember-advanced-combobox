@@ -251,7 +251,9 @@ export default Ember.Component.extend({
 		if (Ember.isEmpty(selected)) {
 			this.set('internalSelectedList', new Ember.A([]));
 			this.createSelectedLabel(null);
-			this.set('inputValue', this.get('selectedValueLabel'));
+			if (!this.get('canFilter') || !this.get('dropdownVisible')) {
+				this.set('inputValue', this.get('selectedValueLabel'));
+			}
 			return;
 		}
 		let itemsArray = this._createArray(selected);
