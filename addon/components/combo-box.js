@@ -45,7 +45,6 @@ function positionDropdown($dropdown, $input) {
 	}
 
 	function showDropdownAboveInput($dropdown, left, top, dropdownHeight) {
-
 		$dropdown.css('left', `${left}px`);
 		$dropdown.css('top', `${top - dropdownHeight - SPACE}px`);
 	}
@@ -53,7 +52,7 @@ function positionDropdown($dropdown, $input) {
 
 export default Ember.Component.extend({
 	classNames: ['advanced-combo-box'],
-	classNameBindings: ['labelOnly:combobox-label-only', '_disabledCombobox:combobox-disabled', 'dropdownVisible:dropdown-visible:dropdown-hidden', ],
+	classNameBindings: ['labelOnly:combobox-label-only', '_disabledCombobox:combobox-disabled', 'dropdownVisible:dropdown-visible:dropdown-hidden', 'isComboFocused:combo-focused'],
 	layout,
 
 	disabled: false,
@@ -105,6 +104,17 @@ export default Ember.Component.extend({
 	setDropdownWidth: Ember.on('didInsertElement', function(){
 		let $element = Ember.$(this.element);
 		$element.find('.dropdown').css('min-width', $element.css('width'));
+	}),
+
+	setInputFocus: Ember.on('didInsertElement', function(){
+		let $element = Ember.$(this.element);
+		let $inputElement = $element.find('.combo-input');
+		$inputElement.focus(()=>{
+			this.set('isComboFocused', true);
+		});
+		 $inputElement.blur(()=>{
+			 this.set('isComboFocused', false);
+		 });
 	}),
 
 	onDestroy: Ember.on('didDestroyElement', function() {
