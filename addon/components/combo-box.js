@@ -108,7 +108,7 @@ export default Ember.Component.extend({
 
 	setInputFocus: Ember.on('didInsertElement', function(){
 		let $element = Ember.$(this.element);
-		let $inputElement = $element.find('.combo-input');
+			let $inputElement = $element.find('.dropdown-icon');
 		$inputElement.focus(()=>{
 			this.set('isComboFocused', true);
 		});

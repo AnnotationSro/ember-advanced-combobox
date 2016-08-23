@@ -1,7 +1,7 @@
 <div class="input-group">
 
-  {{input class="combo-input" value=inputValue}}
-  <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
+  {{input class="combo-input" value=inputValue tabindex="-1"}}
+  <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" tabindex="0" {{action 'actionDropdownButton' bubbles=false}}></i>
   </div>
   <ul class="dropdown dropdown-hidden">
     {{#each filteredValueList as |value|}}
