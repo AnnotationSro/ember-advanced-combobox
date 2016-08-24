@@ -127,6 +127,10 @@ export default Ember.Component.extend({
 		return this.get('itemLabelForSelectedPreview') || this.get('itemLabel');
 	}),
 
+	tabbable: Ember.computed('labelOnly', '_disabledCombobox', function(){
+		 return this.get('labelOnly') || this.get('_disabledCombobox');
+	}),
+
 	initSelectedValues() {
 		//find selected items and assgn them into internalSelectedList
 		let selected = this.get('selected');
