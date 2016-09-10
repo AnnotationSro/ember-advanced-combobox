@@ -665,13 +665,18 @@ export default Ember.Component.extend({
 		}
 		if (this.getValueListLength() === 1) {
 			//only 1 item in value list
-			this._selectItem(getObjectFromArray(valueList, 0));
+			//
+			Ember.run.next(this, function() {
+				this._selectItem(getObjectFromArray(valueList, 0));
+			});
 			return;
 		}
 
 		if (this.get('preselectFirst') === true) {
 			//preselect item
-			this._selectItem(getObjectFromArray(valueList, 0));
+			Ember.run.next(this, function() {
+				this._selectItem(getObjectFromArray(valueList, 0));
+			});
 			return;
 		}
 	},

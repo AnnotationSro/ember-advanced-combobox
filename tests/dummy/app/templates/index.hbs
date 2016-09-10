@@ -1,3 +1,4 @@
+
 <div>
 Single select
 {{combo-box
@@ -21,16 +22,16 @@ Single select
 Single select without filtering
 {{combo-box
   valueList=comboValueList
-  selected=comboSelectedSingle
+  selected=comboSelectedSingleWithoutFilter
   itemKey='a'
   itemLabel='b'
   multiselect=false
-  onSelected=(action 'onSelectedSingle')
+  onSelected=(action 'onSelectedSingleWithoutWilter')
   canFilter=false
   disabled=disabled
   labelOnly=labelOnly
 }}
-{{comboSelectedSingleFormatted}}
+{{comboSelectedSingleFormattedWithoutFilter}}
 </div>
 <p>
 
@@ -40,16 +41,16 @@ Single select without filtering
 Single select - only 1 item in value list
 {{combo-box
   valueList=oneItemValueList
-  selected=oneItemSelectedSingle
+  selected=oneItemSelectedSingle1
   itemKey='a'
   itemLabel='b'
   multiselect=false
-  onSelected=(action 'onOneItemSelected')
+  onSelected=(action 'onOneItemSelected1')
   canFilter=false
   disabled=disabled
   labelOnly=labelOnly
 }}
-{{oneItemSelectedSingleFormatted}}
+{{oneItemSelectedSingleFormatted1}}
 </div>
 <p>
 
@@ -99,17 +100,17 @@ Multi select
 Async value
 {{combo-box
   valuePromise=asyncValueList
-  selected=comboSelectedSingle
+  selected=comboSelectedSingleAsync
   itemKey='a'
   itemLabel='b'
   multiselect=false
-  onSelected=(action 'onSelectedSingle')
+  onSelected=(action 'onSelectedSingleAsync')
   canFilter=true
   disabled=disabled
   labelOnly=labelOnly
   noValueLabel="I am async combobox"
 }}
-{{comboSelectedSingleFormatted}}
+{{comboSelectedSingleFormattedAsync}}
 </div>
 
 

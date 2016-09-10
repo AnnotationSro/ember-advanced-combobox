@@ -318,8 +318,7 @@ test('it resolves valueList Promise ', function(assert) {
  wait().then(() => {
   valueListPromise.then(function(){
     Ember.run(()=>{
-
-        this.$('.dropdown-icon').click();
+        $this.find('.dropdown-icon').click();
 
         assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
         assert.equal($this.find('.dropdown-item').length, valueList.length);
