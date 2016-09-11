@@ -108,7 +108,7 @@ export default Ember.Component.extend({
 
 	setInputFocus: Ember.on('didInsertElement', function(){
 		let $element = Ember.$(this.element);
-		let $inputElement = $element.find('.combo-input');
+			let $inputElement = $element.find('.input-group');
 		$inputElement.focus(()=>{
 			this.set('isComboFocused', true);
 		});
@@ -125,6 +125,10 @@ export default Ember.Component.extend({
 	//if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
 	internalItemLabelForSelectedPreview: Ember.computed('itemLabelForSelectedPreview', 'itemLabel', function(){
 		return this.get('itemLabelForSelectedPreview') || this.get('itemLabel');
+	}),
+
+	tabbable: Ember.computed('labelOnly', '_disabledCombobox', function(){
+		 return this.get('labelOnly') || this.get('_disabledCombobox');
 	}),
 
 	initSelectedValues() {
