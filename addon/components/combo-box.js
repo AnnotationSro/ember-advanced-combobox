@@ -440,7 +440,7 @@ export default Ember.Component.extend({
 	},
 
 	_getPropertyFromItem(item, property){
-		if (Ember.isPresent(property)) {
+		if (Ember.isPresent(property) && Ember.isPresent(item)) {
 			return Ember.get(item, property);
 		} else {
 			return item;

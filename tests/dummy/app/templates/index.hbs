@@ -160,6 +160,21 @@ labelOnly: {{labelOnly}}
 
 </p>
 
+Null valueList
+<div>
+  {{combo-box
+    valueList=null
+    selected=comboPreSelectedSingle
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    preselectFirst=true
+    canFilter=false
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+</div>
+
 
 
 <button {{action 'actionToggleLabelOnly'}}>Toggle label only</button>
