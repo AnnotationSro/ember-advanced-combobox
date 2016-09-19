@@ -207,7 +207,7 @@ export default Ember.Component.extend({
 	 */
 	_handleLabelOnlyNoValue() {
 		if (this.get('labelOnly')) {
-			if (Ember.isNone(this.get('internalSelectedList'))) {
+			if (Ember.isEmpty(this.get('internalSelectedList'))) {
 				this.set('inputValue', this.get('noValueLabel'));
 			}
 		}
