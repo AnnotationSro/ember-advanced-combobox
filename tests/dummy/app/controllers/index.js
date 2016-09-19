@@ -3,6 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
 
   comboValueList: [{a:'hello1', b:"a"}, {a:'hello3', b:"c"}, {a:'hello2', b:"b"}, {a:'hello21', b:"bb"}],
+  comboValueListMany: [],
   comboSelectedSingle: null,
   comboPreSelectedSingle: null,
   comboSelectedSingleWithoutFilter: null,
@@ -20,6 +21,9 @@ export default Ember.Controller.extend({
   init(){
     this._super(...arguments);
     this.comboSelectedSingle = 'hello';
+    for (let i=0;i<50;i++){
+      this.get('comboValueListMany').push({a:''+i,b:''+i});
+    }
   },
 
   actions: {

@@ -33,6 +33,7 @@
   list-style: none;
   padding: 0;
   background: white;
+  overflow-y: auto;
 }
 
 .advanced-combo-box .dropdown li:hover{
