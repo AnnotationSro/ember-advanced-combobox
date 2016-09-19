@@ -203,11 +203,13 @@ export default Ember.Component.extend({
 	}),
 
 	/**
-	 * if combobox is in labelOnly mode and there is no valueList, show noValueLabel
+	 * if combobox is in labelOnly mode and there is no internalSelectedList, show noValueLabel
 	 */
 	_handleLabelOnlyNoValue() {
 		if (this.get('labelOnly')) {
+			if (Ember.isNone(this.get('internalSelectedList'))) {
 				this.set('inputValue', this.get('noValueLabel'));
+			}
 		}
 	},
 
