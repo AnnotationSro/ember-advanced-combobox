@@ -49,14 +49,26 @@ function positionDropdown($dropdown, $input) {
 	}
 }
 
-//note: works only if dropdown is positioned below the input (which is I guess sufficient)
-function adjustDropdownMaxHeight($dropdown){
+function adjustDropdownMaxHeight($dropdown, $input){
 		let dropdownTop = $dropdown[0].getBoundingClientRect().top;
+		let dropdownBottom = $dropdown[0].getBoundingClientRect().bottom;
+		let inputTop = $input[0].getBoundingClientRect().top;
 		let dropdownHeight = parseFloat($dropdown.css('maxHeight'), 10) || $dropdown.height();
-		if (dropdownTop + dropdownHeight >= window.innerHeight){
-			$dropdown.css({'maxHeight': (window.innerHeight-dropdownTop)+'px'});
+
+		if (dropdownTop>inputTop) {
+			//dropdown is below the input
+			if (dropdownTop + dropdownHeight >= window.innerHeight) {
+				$dropdown.css({'maxHeight': (window.innerHeight - dropdownTop) + 'px'});
+			} else {
+				$dropdown.css({'maxHeight': ''});
+			}
 		}else{
-			$dropdown.css({'maxHeight': ''});
+			if (dropdownHeight >= dropdownBottom) {
+				$dropdown.css({'maxHeight': dropdownBottom + 'px'});
+			} else {
+				$dropdown.css({'maxHeight': ''});
+			}
+			positionDropdown($dropdown, $input);
 		}
 }
 
@@ -484,7 +496,7 @@ export default Ember.Component.extend({
 			let $dropdown = $element.find('.dropdown');
 			let $input = $element.find('.combo-input');
 			positionDropdown($dropdown, $input);
-			adjustDropdownMaxHeight($dropdown);
+			adjustDropdownMaxHeight($dropdown, $input);
 		});
 	},
 
