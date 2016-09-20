@@ -1,13 +1,7 @@
 /*jshint node:true*/
 module.exports = {
   useVersionCompatibility: true,
-  scenarios: [
-    {
-      name: 'default',
-      bower: {
-        dependencies: { }
-      }
-    },
+  scenarios: [  
     {
       name: 'ember-release',
       bower: {
