@@ -470,6 +470,10 @@ export default Ember.Component.extend({
 	},
 
 	_showDropdown() {
+		if (this.get('dropdownVisible')){
+			//dropdown is already visible
+			return;
+		}
 		this.set('dropdownVisible', true);
 
 		this.get('onDropdownShow')();
@@ -501,6 +505,8 @@ export default Ember.Component.extend({
 	},
 
 	_hideDropdown(acceptSelected) {
+
+		Ember.$(this.element).find('.dropdown').css({ 'maxHeight': '' });
 
 		this.get('onDropdownHide')();
 
