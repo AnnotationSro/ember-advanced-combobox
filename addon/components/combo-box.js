@@ -50,6 +50,8 @@ function positionDropdown($dropdown, $input) {
 }
 
 function adjustDropdownMaxHeight($dropdown, $input){
+		$dropdown.css({'maxHeight': ''});
+
 		let dropdownTop = $dropdown[0].getBoundingClientRect().top;
 		let dropdownBottom = $dropdown[0].getBoundingClientRect().bottom;
 		let inputTop = $input[0].getBoundingClientRect().top;
