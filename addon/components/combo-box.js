@@ -60,17 +60,24 @@ function adjustDropdownMaxHeight($dropdown, $input){
 		if (dropdownTop>inputTop) {
 			//dropdown is below the input
 			if (dropdownTop + dropdownHeight >= window.innerHeight) {
-				$dropdown.css({'maxHeight': (window.innerHeight - dropdownTop) + 'px'});
-			} else {
-				$dropdown.css({'maxHeight': ''});
+				$dropdown.css({'maxHeight': calculateMaxDropdownHeight($dropdown, $input) + 'px'});
+				positionDropdown($dropdown, $input);
 			}
 		}else{
 			if (dropdownHeight >= dropdownBottom) {
-				$dropdown.css({'maxHeight': dropdownBottom + 'px'});
-			} else {
-				$dropdown.css({'maxHeight': ''});
+				$dropdown.css({'maxHeight': calculateMaxDropdownHeight($dropdown, $input) + 'px'});
+				positionDropdown($dropdown, $input);
 			}
-			positionDropdown($dropdown, $input);
+		}
+
+		function calculateMaxDropdownHeight($dropdown, $input){
+			let inputBottom = $input[0].getBoundingClientRect().bottom;
+			let inputTop = $input[0].getBoundingClientRect().top;
+
+			return Math.max(
+				window.innerHeight - inputBottom - SPACE, //dropdown below the input
+				inputTop - SPACE	//dropdown above the input
+			);
 		}
 }
 
