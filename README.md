@@ -6,6 +6,7 @@ Ember combobox that can (beside others):
  - filter items
  - sort items
  - multiselect items
+ - mobile support ("almost" as native)
 
 **Beware** ember >=2.0.0 is supported
 
@@ -54,6 +55,14 @@ ember install ember-advanced-combobox
 
 Also note that if there is only one item in the `valueList`, it will be automatically selected.
 
+## Styling
+
+Most often you would like to style the mobile version of combobox. To do this you can make use of following CSS classes:
+  - ```.combobox-mobile-dialog ``` - dialog itself (container for all other elements)
+  - ```.header ``` - DIV above the dialog
+  - ```.footer ``` - DIV below the dialog (contains buttons)
+  - ```.btn-cancel ``` - button to cancel dialog
+  - ```.btn-accept ``` - button to confirm selection (for multiselect combobox only)
 
 ## Global configuration
 
@@ -64,6 +73,9 @@ Also note that if there is only one item in the `valueList`, it will be automati
 | multiselectValueLabel | Label shown when there are multiple values selected -  it appends number of selected items at the end  | "Selected items: " |
 | asyncLoaderStartLabel | Label shown when valuePromise is being evaluated                                                       | "Loading..."       |
 | emptyValueList        | Label shown when there are no items in dropdown                                                        | "No items"       |
+| mobileFilterPlaceholder| Placeholder for filter input in mobile dropdown                                                       | "Enter filter here" |
+| mobileOkButton| Text for "OK" button in mobile dropdown                                                                        | "Confirm"          |
+| mobileCancelButton| Text for "Cancel" button in mobile dropdown                                                                | "Cancel"          |
 
 There are 2 ways to configure the combobox: using `config/environment.js` or by injecting service `ember-advanced-combobox/adv-combobox-configuration-service`:
 

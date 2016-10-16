@@ -31,5 +31,17 @@ export default Ember.Service.extend({
 
   getEmptyValueListLabel(){
     return configuration.getConfig().emptyValueList;
+  },
+
+  getMobileFilterPlaceholder(){
+    return configuration.getConfig().mobileFilterPlaceholder;
+  },
+
+  getMobileOkButton(){
+    return configuration.getConfig().mobileOkButton;
+  },
+
+  getMobileCancelButton(){
+    return configuration.getConfig().mobileCancelButton;
   }
 });

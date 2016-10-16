@@ -4,24 +4,26 @@
   <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
   </div>
   <ul class="dropdown dropdown-hidden">
-    {{#each filteredValueList as |value|}}
-      <li class="dropdown-item" {{action 'actionItemSelect' value bubbles=false}}>
-        {{#if multiselect}}
-          {{#if (is-item-selected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
-            <i class="fa fa-check-square-o" aria-hidden="true"></i>
-          {{else}}
-            <i class="fa fa-square-o" aria-hidden="true"></i>
-          {{/if}}
-        {{/if}}
-        {{get value itemLabel}}
-      </li>
-    {{else}}
-        {{!-- filteredValueList is empty = either because of filter or valuePromise is not yet resolved --}}
-        {{#if valuePromiseResolving}}
-          <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
-          {{asyncLoaderStartLabel}}
-        {{else}}
-          <li class="dropdown-item">{{emptyValueListLabel}}</li>
-        {{/if}}
-    {{/each}}
+    {{partial 'components/item-list'}}
   </ul>
+  {{#if mobileDropdownVisible}}
+    {{#modal-dialog close="toggleModal"
+                  targetAttachment="center"
+                  containerClassNames="combobox-mobile-dialog"
+                  translucentOverlay=true}}
+                  <div class="header">
+                  </div>
+                  {{#if canFilter}}
+                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder}}
+                  {{/if}}
+                  <div class="dropdown">
+                    {{partial 'components/item-list'}}
+                  </div>
+                  <div class="footer">
+                    <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>
+                    {{#if multiselect}}
+                      <button class="btn-accept" {{action 'actionAcceptMobile'}}>{{mobileOkButton}}</button>
+                    {{/if}}
+                  </div>
+  {{/modal-dialog}}
+  {{/if}}

@@ -397,8 +397,16 @@ export default Ember.Component.extend({
 
 	initInputClickHandler: Ember.on('didInsertElement', function() {
 
-		Ember.$(this.element).find('.combo-input').on('click tap', () => {
-			//comobobox input was clicked (or taped) on
+		Ember.$(this.element).find(' *').on('touchstart', (event)=>{
+			event.stopPropagation();
+			if (this.get('_disabledCombobox')) {
+				return;
+			}
+			this._showMobileDropdown();
+		});
+
+		Ember.$(this.element).find('.combo-input').on('click', () => {
+			//comobobox input was clicked on
 			if (this.get('_disabledCombobox') || this.get('labelOnly')) {
 				//no clicking on input allowed
 				return;
@@ -426,6 +434,18 @@ export default Ember.Component.extend({
 
 	emptyValueListLabel: Ember.computed(function(){
 		return this.get('configurationService').getEmptyValueListLabel();
+	}),
+
+	mobileFilterPlaceholder: Ember.computed(function(){
+		return this.get('configurationService').getMobileFilterPlaceholder();
+	}),
+
+	mobileOkButton: Ember.computed(function(){
+		return this.get('configurationService').getMobileOkButton();
+	}),
+
+	mobileCancelButton: Ember.computed(function(){
+		return this.get('configurationService').getMobileCancelButton();
 	}),
 
 	/**
@@ -503,6 +523,20 @@ export default Ember.Component.extend({
 		});
 	},
 
+	_showMobileDropdown(){
+		this.set('mobileDropdownVisible', true);
+
+		this.get('onDropdownShow')();
+
+		this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
+
+		if (this.get('canFilter')) {
+			this.set('inputValue', '');
+		} else {
+			this.set('inputValue', this.get('configurationService').getChooseLabel());
+		}
+	},
+
 	_changeDropdownPosition() {
 		Ember.run.scheduleOnce('afterRender', this, function() {
 			let $element = Ember.$(this.element);
@@ -521,6 +555,7 @@ export default Ember.Component.extend({
 
 		Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
 		this.set('dropdownVisible', false);
+		this.set('mobileDropdownVisible', false);
 
 		if (acceptSelected) {
 			//call selection callback
@@ -741,6 +776,14 @@ export default Ember.Component.extend({
 
 		actionItemSelect(item) {
 			this._selectItem(item);
+		},
+
+		actionCancelMobile(){
+			this.set('mobileDropdownVisible', false);
+		},
+
+		actionAcceptMobile(){
+			this._hideDropdown(true);
 		}
 	}
 });

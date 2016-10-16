@@ -5,7 +5,10 @@ let CONFIG_PROPERTIES = {
   chooseLabel: "Choose:",
   multiselectValueLabel: "Selected items: ",
   asyncLoaderStartLabel: "Loading...",
-  emptyValueList: 'No items'
+  emptyValueList: 'No items',
+  mobileFilterPlaceholder: 'Enter filter here',
+  mobileOkButton: 'Confirm',
+  mobileCancelButton: 'Cancel'
 };
 
 export default {

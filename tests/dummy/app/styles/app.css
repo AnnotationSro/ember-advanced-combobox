@@ -1,3 +1,16 @@
 div.combo-focused .input-group{
   border: 1px solid red;
 }
+
+.combobox-mobile-dialog .header{
+  background-color: blue;
+  height: 10px;
+}
+
+.combobox-mobile-dialog .footer{
+  background-color: red;
+}
+
+.combobox-mobile-dialog .intput-filter{
+
+}
