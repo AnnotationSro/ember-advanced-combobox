@@ -7,6 +7,7 @@ Ember combobox that can (beside others):
  - sort items
  - multiselect items
  - mobile support ("almost" as native)
+ - lazy loading of combobox items
 
 **Beware** ember >=2.0.0 is supported
 
@@ -22,27 +23,25 @@ ember install ember-advanced-combobox
 
 ## Example Usage
 
+
 ```
-{{combo-box
-  id='sampleCombo'
-  class='my-combo'
+{{combo-box  
   valueList=valueList
   selected=selectedItem
   itemKey='itemKey'
-  itemLabel='itemLabel'
-  multiselect=false
-  onSelected=(action 'onSelected')
-  canFilter=true
-  disabled=disabled
-  onDropdownShow=(action 'onDropdownShow')
+  itemLabel='itemLabel'  
+  onSelected=(action 'onSelected')  
 }}
 ```
+
+__For more usage examples see dummy application.__
 
 
 | Configuration option | Description                                                                                                                                           |
 |----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| valueList            | Array of items in combobox - can be a plain JSON array or Ember MutableArray                                                                          |
-| valuePromise         | Promise - when evaluated, the result will be used as `valueList` (note: either `valueList` or `valuePromise` must be provided)                        |
+| valueList            | Array of items in combobox - can be a plain JSON array or Ember MutableArray (note: either `valueList`, `valuePromise` or `lazyCallback` must be provided)                                                                          |
+| valuePromise         | Promise - when evaluated, the result will be used as `valueList` (note: either `valueList`, `valuePromise` or `lazyCallback` must be provided)                        |
+| lazyCallback         |callback to retrieve new combobox list items - usefull for lazy-loaded comboboxes (note: either `valueList`, `valuePromise` or `lazyCallback` must be provided)
 | itemKey              | Name of the property of valueList items to be used is key to identify items                                                                           |
 | itemLabel            | Name of the property of valueList items to be used as label                                                                                           |
 | selected             | Key of currently selected item                                                                                                                        |
@@ -55,7 +54,7 @@ ember install ember-advanced-combobox
 | onDropdownShow       | Action callback called when dropdown is going to show                                                           |
 | onDropdownHide       | Action callback called when dropdown is going to hide                                                             |
 
-Also note that if there is only one item in the `valueList`, it will be automatically selected.
+Also note that if there is only one item available in combobox, it will be automatically selected.
 
 ## Styling
 

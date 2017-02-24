@@ -23,6 +23,7 @@
   border: none;
   width: calc( 100% - 25px);
   outline: none;
+  text-overflow: ellipsis;
 }
 
 .advanced-combo-box .dropdown{

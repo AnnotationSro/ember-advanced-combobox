@@ -15,8 +15,7 @@ module.exports = {
   afterInstall: function () {
       return this.addAddonsToProject({
         packages: [
-          {name: 'ember-string-ishtmlsafe-polyfill', target: '^1.0.0'},
-          {name: 'ember-cli-font-awesome', target: '^1.5.0'}
+          {name: 'ember-string-ishtmlsafe-polyfill', target: '^1.0.0'}
         ]
       });
   }

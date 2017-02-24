@@ -1,6 +1,22 @@
 <input>
 
 <div>
+Lazy select (queries server after user types something into filter)
+{{combo-box
+  selected=comboSelectedLazy
+  itemKey='a'
+  itemLabel='b'
+  onSelected=(action 'onLazySingle')
+  disabled=disabled
+  lazyCallback=(action 'lazyCallback')
+}}
+{{oneItemSelectedLazyFormatted}}
+</div>
+ <p>
+
+</p>
+
+<div>
 Single select
 {{combo-box
   valueList=comboValueList
@@ -159,9 +175,8 @@ labelOnly: {{labelOnly}}
 <p>
 
 </p>
-
-Null valueList
 <div>
+  Null valueList
   {{combo-box
     valueList=null
     selected=comboPreSelectedSingle
@@ -174,6 +189,8 @@ Null valueList
     labelOnly=labelOnly
   }}
 </div>
+<p>
+</p>
 
 <div id="manyItems">
 Many items - automatic scrollbar
@@ -188,7 +205,6 @@ Many items - automatic scrollbar
  <p>
 
 </p>
-
 
 
 <button {{action 'actionToggleLabelOnly'}}>Toggle label only</button>
