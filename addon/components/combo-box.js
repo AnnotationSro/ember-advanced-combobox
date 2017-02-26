@@ -516,9 +516,8 @@ export default Ember.Component.extend({
     this.get('onDropdownShow')();
 
     this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
-
     if (this.get('canFilter')) {
-      if (Ember.isNone('lazyCallback')) {
+      if (Ember.isNone(this.get('lazyCallback'))) {
         //when we are using layzCallback, do not clear inputValue, otherwise clear it
         this.set('inputValue', '');
       }
