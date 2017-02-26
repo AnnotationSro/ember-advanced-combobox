@@ -77,6 +77,8 @@ Most often you would like to style the mobile version of combobox. To do this yo
 | mobileFilterPlaceholder| Placeholder for filter input in mobile dropdown                                                       | "Enter filter here" |
 | mobileOkButton| Text for "OK" button in mobile dropdown                                                                        | "Confirm"          |
 | mobileCancelButton| Text for "Cancel" button in mobile dropdown                                                                | "Cancel"          |
+| lazyDebounceTime | debounce time (in msec) when typing - used for lazy loading of comobobox items | 1000 |
+| minLazyCharacters | minimum number of characters to trigger lazy load fetch | 3 |
 
 There are 2 ways to configure the combobox: using `config/environment.js` or by injecting service `ember-advanced-combobox/adv-combobox-configuration-service`:
 
@@ -91,7 +93,12 @@ Add this to your `config/environment.js` file:
     chooseLabel: "Choose:",
     multiselectValueLabel: "Selected items: ",
     asyncLoaderStartLabel: "Loading...",
-    emptyValueList: "No items"
+    emptyValueList: 'No items',
+    mobileFilterPlaceholder: 'Enter filter here',
+    mobileOkButton: 'Confirm',
+    mobileCancelButton: 'Cancel',
+    lazyDebounceTime: 1000,
+    minLazyCharacters: 3
   }
   //---------------------------
 
