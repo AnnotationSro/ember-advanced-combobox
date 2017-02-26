@@ -13,6 +13,14 @@ export default Ember.Service.extend({
     return configuration;
   },
 
+  getMinLazyCharacters(){
+    return configuration.getConfig().minLazyCharacters;
+  },
+
+  getLazyDebounceTime(){
+    return configuration.getConfig().lazyDebounceTime;
+  },
+
   getChooseLabel(){
     return configuration.getConfig().chooseLabel;
   },

@@ -329,7 +329,6 @@ export default Ember.Component.extend({
       this.get('valuePromise').then((result) => {
         this.set('valuePromiseResolving', false);
         this.set('valueList', result);
-        this.set('inputValue', this.get('selectedValueLabel'));
       });
     }
   })),
@@ -777,14 +776,43 @@ export default Ember.Component.extend({
     Ember.$('body').off(`click.hideDropdown_${this.elementId}`);
   },
 
+  cancelLazyDebounce() {
+    if (Ember.isPresent(this.get('lazyDebounce'))) {
+      clearTimeout(this.get('lazyDebounce'));
+      this.set('lazyDebounce', null);
+    }
+  },
+
+  setLazyDebounce(inputValue) {
+    this.cancelLazyDebounce();
+
+    const debounceTime = this.get('configurationService').getLazyDebounceTime();
+    Ember.Logger.debug('scheduling lazy');
+
+    let debounceTimer = setTimeout(() => {
+      Ember.Logger.debug('running lazy');
+      this.cancelLazyDebounce();
+      let promise = this.get('lazyCallback')(inputValue);
+      this.set('valueList', null);
+      this.set('valuePromise', promise);
+    }, debounceTime);
+
+    this.set('lazyDebounce', debounceTimer);
+  },
+
   actions: {
 
     inputValueChanged() {
       let lazyCallback = this.get('lazyCallback');
       let inputValue = this.get('inputValue');
       if (Ember.isPresent(lazyCallback) && Ember.isPresent(inputValue)) {
-        let promise = lazyCallback(inputValue);
-        this.set('valuePromise', promise);
+
+        if (inputValue.trim().length < this.get('configurationService').getMinLazyCharacters()) {
+          this.cancelLazyDebounce();
+          return;
+        }
+
+        this.setLazyDebounce(inputValue);
       }
     },
 

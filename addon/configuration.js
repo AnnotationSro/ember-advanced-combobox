@@ -8,7 +8,9 @@ let CONFIG_PROPERTIES = {
   emptyValueList: 'No items',
   mobileFilterPlaceholder: 'Enter filter here',
   mobileOkButton: 'Confirm',
-  mobileCancelButton: 'Cancel'
+  mobileCancelButton: 'Cancel',
+  lazyDebounceTime: 1000,
+  minLazyCharacters: 3
 };
 
 export default {
