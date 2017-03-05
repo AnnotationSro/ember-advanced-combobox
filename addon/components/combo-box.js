@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import layout from '../templates/components/combo-box';
-import isHtmlSafe from 'ember-string-ishtmlsafe-polyfill';
 import {
   accentRemovalHelper
 } from '../helpers/accent-removal-helper';
@@ -224,7 +223,7 @@ export default Ember.Component.extend({
       return valueList;
 
     } else {
-      if (isHtmlSafe(filterQuery)) {
+      if (Ember.String.isHTMLSafe(filterQuery)) {
         filterQuery = filterQuery.toString();
       }
       filterQuery = accentRemovalHelper(String(filterQuery).toLowerCase());
@@ -232,7 +231,7 @@ export default Ember.Component.extend({
       //filter the list
       let filteredValueList = valueList.filter((value) => {
         let valueLabel = this._getItemLabel(value);
-        if (isHtmlSafe(valueLabel)) {
+        if (Ember.String.isHTMLSafe(valueLabel)) {
           valueLabel = valueLabel.toString();
         }
 
