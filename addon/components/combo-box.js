@@ -100,13 +100,13 @@ export default Ember.Component.extend({
   itemLabel: null,
   itemLabelForSelectedPreview: null, //similar to 'itemLabel', but this one is used when creating selected preview label (if not speficied, defaults to 'itemLabel')
   multiselect: false,
-  onSelected: Ember.K,
+  onSelected() {},
   canFilter: false,
   preselectFirst: false,
   orderBy: null,
   noValueLabel: null, //label shown in labelOnly mode when there is no valueList available
-  onDropdownShow: Ember.K,
-  onDropdownHide: Ember.K,
+  onDropdownShow(){},
+  onDropdownHide(){},
   lazyCallback: null,
 
   //internals
