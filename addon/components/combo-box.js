@@ -106,7 +106,7 @@ export default Ember.Component.extend({
   orderBy: null,
   noValueLabel: null, //label shown in labelOnly mode when there is no valueList available
   onDropdownShow(){},
-  onDropdownHide(){},
+  onDropdownHide(){} ,
   lazyCallback: null,
 
   //internals
@@ -136,7 +136,13 @@ export default Ember.Component.extend({
     this.initSelectedValues();
 
     this.createSelectedLabel(this.get('internalSelectedList'));
-    this.set('inputValue', this.get('selectedValueLabel'));
+
+    let noValueLabel = this.get('noValueLabel');
+    if (Ember.isEmpty(this.get('valueList')) && Ember.isPresent(noValueLabel) && noValueLabel.length > 0) {
+      this.set('inputValue', noValueLabel);
+    } else {
+      this.set('inputValue', this.get('selectedValueLabel'));
+    }
 
     this._handleLabelOnlyNoValue();
 
@@ -196,7 +202,7 @@ export default Ember.Component.extend({
       this._handleLabelOnlyNoValue();
     } else {
       let noValueLabel = this.get('noValueLabel');
-      if (Ember.isNone(this.get('valueList')) && Ember.isPresent(noValueLabel) && noValueLabel.length > 0) {
+      if (Ember.isEmpty(this.get('valueList')) && Ember.isPresent(noValueLabel) && noValueLabel.length > 0) {
         this.set('inputValue', noValueLabel);
       } else {
         this.createSelectedLabel(selectedItems);

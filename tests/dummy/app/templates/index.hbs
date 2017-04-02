@@ -19,21 +19,7 @@ Single select
 
 </p>
 
-<div>
-Single select without filtering
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedSingleWithoutFilter
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedSingleWithoutWilter')
-  canFilter=false
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboSelectedSingleFormattedWithoutFilter}}
-</div>
+
 <p>
 
 </p>
@@ -52,6 +38,45 @@ Single select - only 1 item in value list
   labelOnly=labelOnly
 }}
 {{oneItemSelectedSingleFormatted1}}
+</div>
+<p>
+
+</p>
+
+
+<div>
+Single select without filtering
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedSingleWithoutFilter
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedSingleWithoutWilter')
+  canFilter=false
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{comboSelectedSingleFormattedWithoutFilter}}
+</div>
+<p>
+
+</p>
+<div>
+Async value
+{{combo-box
+  valuePromise=asyncValueList
+  selected=comboSelectedSingleAsync
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedSingleAsync')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+  noValueLabel="I am async combobox"
+}}
+{{comboSelectedSingleFormattedAsync}}
 </div>
 <p>
 
@@ -77,6 +102,7 @@ Single select without filtering - preselect
 
 </p>
 
+
 <div>
 Multi select
 {{combo-box
@@ -92,29 +118,6 @@ Multi select
 }}
 {{comboSelectedMultiFormatted}}
 </div>
-
-<p>
-
-</p>
-
-<div>
-Async value
-{{combo-box
-  valuePromise=asyncValueList
-  selected=comboSelectedSingleAsync
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedSingleAsync')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-  noValueLabel="I am async combobox"
-}}
-{{comboSelectedSingleFormattedAsync}}
-</div>
-
-
 <p>
 
 </p>
@@ -171,6 +174,26 @@ labelOnly: {{labelOnly}}
     canFilter=false
     disabled=disabled
     labelOnly=labelOnly
+  }}
+</div>
+<p>
+
+</p>
+
+<div>
+  Null valueList - with noValueLabel
+  {{combo-box
+    id="noValueLabelCombo"
+    valueList=null
+    selected=noValueLabelSelected
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    preselectFirst=true
+    canFilter=false
+    disabled=disabled
+    labelOnly=labelOnly
+    noValueLabel='no value'
   }}
 </div>
 <p>
