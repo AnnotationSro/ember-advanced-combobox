@@ -105,8 +105,8 @@ export default Ember.Component.extend({
   preselectFirst: false,
   orderBy: null,
   noValueLabel: null, //label shown in labelOnly mode when there is no valueList available
-  onDropdownShow(){},
-  onDropdownHide(){} ,
+  onDropdownShow() {},
+  onDropdownHide() {},
   lazyCallback: null,
   showDropdownButton: true,
 
@@ -517,6 +517,15 @@ export default Ember.Component.extend({
       //dropdown is already visible
       return;
     }
+
+    if (Ember.isPresent(this.get('lazyCallback'))) {
+      let minLazyCharacters = this.get('configurationService').getMinLazyCharacters();
+      //if combobox is lazy and there are not enough characters - do not show the dropdown
+      if (this.get('inputValue').length < minLazyCharacters) {
+        return;
+      }
+    }
+
     this.set('dropdownVisible', true);
 
     this.get('onDropdownShow')();
@@ -566,7 +575,7 @@ export default Ember.Component.extend({
     });
   },
 
-  _hideDropdown(acceptSelected) {
+  _hideDropdown(acceptSelected, resetInput = true) {
 
     Ember.$(this.element).find('.dropdown').css({
       'maxHeight': ''
@@ -588,16 +597,18 @@ export default Ember.Component.extend({
 
     let noValueLabel = this.get('noValueLabel');
 
-    if (Ember.isEmpty(this.get('internalSelectedList')) &&
-      !Ember.isEmpty(this.get('selected')) &&
-      !Ember.isEmpty(this.get('valueList')) &&
-      Ember.isPresent(noValueLabel) &&
-      noValueLabel.length > 0
-    ) {
-      this.set('inputValue', noValueLabel);
-    } else {
-      this.createSelectedLabel(this.get('internalSelectedList'));
-      this.set('inputValue', this.get('selectedValueLabel'));
+    if (resetInput) {
+      if (Ember.isEmpty(this.get('internalSelectedList')) &&
+        !Ember.isEmpty(this.get('selected')) &&
+        !Ember.isEmpty(this.get('valueList')) &&
+        Ember.isPresent(noValueLabel) &&
+        noValueLabel.length > 0
+      ) {
+        this.set('inputValue', noValueLabel);
+      } else {
+        this.createSelectedLabel(this.get('internalSelectedList'));
+        this.set('inputValue', this.get('selectedValueLabel'));
+      }
     }
     this._destroyDropdownCloseListeners();
 
@@ -652,8 +663,8 @@ export default Ember.Component.extend({
     this.set('selectedValueLabel', label);
   },
 
-  _createLabel(items, labelProperty){
-    if (typeof labelProperty === 'function'){
+  _createLabel(items, labelProperty) {
+    if (typeof labelProperty === 'function') {
       return labelProperty(items);
     }
     return this._getPropertyFromItem(items, labelProperty);
@@ -804,7 +815,6 @@ export default Ember.Component.extend({
     Ember.Logger.debug('scheduling lazy');
 
     let debounceTimer = setTimeout(() => {
-      Ember.Logger.debug('running lazy');
       this.cancelLazyDebounce();
       let promise = this.get('lazyCallback')(inputValue);
       this.set('valueList', null);
@@ -823,10 +833,13 @@ export default Ember.Component.extend({
 
         if (inputValue.trim().length < this.get('configurationService').getMinLazyCharacters()) {
           this.cancelLazyDebounce();
-          return;
+          if (this.get('dropdownVisible')) {
+            this._hideDropdown(false, false);
+          }
+        } else {
+          this._showDropdown();
+          this.setLazyDebounce(inputValue);
         }
-
-        this.setLazyDebounce(inputValue);
       }
     },
 
