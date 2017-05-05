@@ -1,7 +1,9 @@
 <div class="input-group" tabindex={{if tabbable '-1' '0'}}>
 
   {{input class="combo-input" value=inputValue tabindex="-1" key-up="inputValueChanged" autocorrect="off" autocapitalize="off" spellcheck="false"}}
-  <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
+  {{#if showDropdownButton}}
+    <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
+  {{/if}}
   </div>
   <ul class="dropdown dropdown-hidden">
     {{partial 'components/item-list'}}

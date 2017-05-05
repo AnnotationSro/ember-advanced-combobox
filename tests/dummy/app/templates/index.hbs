@@ -1,4 +1,6 @@
-<input>
+<p>
+<input placeholder="just a random input">
+</p>
 
 <div>
 Single select
@@ -19,6 +21,25 @@ Single select
 
 </p>
 
+<div>
+Without dropdown button
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedNoButton
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedNoButton')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+  showDropdownButton=false
+}}
+{{comboSelectedNoButtonFormatted}}
+</div>
+ <p>
+
+</p>
 
 <p>
 

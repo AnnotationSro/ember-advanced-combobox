@@ -108,6 +108,8 @@ export default Ember.Component.extend({
   onDropdownShow(){},
   onDropdownHide(){} ,
   lazyCallback: null,
+  showDropdownButton: true,
+
 
   //internals
   selectedValueLabel: null,

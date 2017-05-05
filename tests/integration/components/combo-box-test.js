@@ -97,6 +97,44 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
 
 });
 
+test('it shows and hides dropdown when clicked into input - without button', function(assert) {
+
+  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+
+  this.set('valueList', valueList);
+  this.set('selected', 'b');
+  // that.on('onSelected', function(value){
+  //   debugger;
+  // });
+
+  // Template block usage:
+  this.render(hbs`
+    {{combo-box
+      valueList=valueList
+      selected=selected
+      itemKey='key'
+      itemLabel='label'
+      multiselect=false
+      canFilter=false
+      showDropdownButton=false
+    }}
+  `);
+
+  //just to be sure - dropdown should not be visible, yet
+  assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
+  //there should be no dropdown button visible
+  assert.equal(this.$().find('.dropdown-icon').length, 0);
+
+  Ember.run(()=>{
+    this.$('.combo-input').click();
+  });
+  Ember.run(()=>{
+    //dropdown should be visible
+    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
+  });
+
+});
+
 
 test('it renders plain JSON array as valueList', function(assert) {
 

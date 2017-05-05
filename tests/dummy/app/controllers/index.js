@@ -65,6 +65,11 @@ export default Ember.Controller.extend({
       this.set('comboSelectedSingle', selectedValues.a);
     },
 
+    onSelectedNoButton(selectedValues) {
+      this.set('comboSelectedNoButtonFormatted', JSON.stringify(selectedValues));
+      this.set('comboSelectedNoButton', selectedValues.a);
+    },
+
     onSelectedSingleAsync(selectedValues) {
       this.set('comboSelectedSingleFormattedasync', JSON.stringify(selectedValues));
       this.set('comboSelectedSingleAsync', selectedValues.a);
