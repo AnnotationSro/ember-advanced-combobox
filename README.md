@@ -53,6 +53,7 @@ __For more usage examples see dummy application.__
 | preselectFirst       | boolean value; if `true` combobox will automatically select the first item in the dropdown.                                                           |
 | onDropdownShow       | Action callback called when dropdown is going to show                                                           |
 | onDropdownHide       | Action callback called when dropdown is going to hide                                                             |
+| showDropdownButton       | boolean value; if `false` the dropdown button will be hidden (default is `true`)                                                             |
 
 Also note that if there is only one item available in combobox, it will be automatically selected.
 
