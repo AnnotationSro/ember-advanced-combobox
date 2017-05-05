@@ -47,6 +47,13 @@ export default Ember.Controller.extend({
 
   actions: {
 
+    customPreviewLabelFn(selected){
+      if (Ember.isNone(selected)){
+        return '';
+      }
+      return `Selected: ${selected.b}`;
+    },
+
     onDropdownShow() {
       console.log('onDropdownShow');
       this.set('complexValuePromise', new Ember.RSVP.Promise((resolve) => {
@@ -63,6 +70,11 @@ export default Ember.Controller.extend({
     onSelectedSingle(selectedValues) {
       this.set('comboSelectedSingleFormatted', JSON.stringify(selectedValues));
       this.set('comboSelectedSingle', selectedValues.a);
+    },
+
+    onSelectedPreviewSingle(selectedValues) {
+      this.set('comboSelectedPreviewSingleFormatted', JSON.stringify(selectedValues));
+      this.set('comboSelectedPreviewSingle', selectedValues.a);
     },
 
     onSelectedNoButton(selectedValues) {

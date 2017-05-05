@@ -22,6 +22,26 @@ Single select
 </p>
 
 <div>
+Custom selected label
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedPreviewSingle
+  itemKey='a'
+  itemLabel='b'
+  itemLabelForSelectedPreview=(action 'customPreviewLabelFn')
+  multiselect=false
+  onSelected=(action 'onSelectedPreviewSingle')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{comboSelectedPreviewSingleFormatted}}
+</div>
+ <p>
+
+</p>
+
+<div>
 Without dropdown button
 {{combo-box
   valueList=comboValueList

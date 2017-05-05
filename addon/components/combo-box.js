@@ -640,16 +640,23 @@ export default Ember.Component.extend({
       if (items.map) {
         //multiple items are selected
         if (items.length === 1) {
-          label = this._getPropertyFromItem(getObjectFromArray(items, 0), this.get('internalItemLabelForSelectedPreview'));
+          label = this._createLabel(getObjectFromArray(items, 0), this.get('internalItemLabelForSelectedPreview'));
         } else {
           label = this.get("configurationService").getMultiselectValueLabel() + items.length;
         }
       } else {
         //single item is selected
-        label = this._getPropertyFromItem(items, this.get('internalItemLabelForSelectedPreview'));
+        label = this._createLabel(items, this.get('internalItemLabelForSelectedPreview'));
       }
     }
     this.set('selectedValueLabel', label);
+  },
+
+  _createLabel(items, labelProperty){
+    if (typeof labelProperty === 'function'){
+      return labelProperty(items);
+    }
+    return this._getPropertyFromItem(items, labelProperty);
   },
 
   _addOrRemoveFromSelected(item) {
