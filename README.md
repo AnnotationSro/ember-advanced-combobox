@@ -43,7 +43,7 @@ __For more usage examples see dummy application.__
 | valuePromise         | Promise - when evaluated, the result will be used as `valueList` (note: either `valueList`, `valuePromise` or `lazyCallback` must be provided)                        |
 | lazyCallback         |callback to retrieve new combobox list items - usefull for lazy-loaded comboboxes (note: either `valueList`, `valuePromise` or `lazyCallback` must be provided)
 | itemKey              | Name of the property of valueList items to be used is key to identify items                                                                           |
-| itemLabel            | Name of the property of valueList items to be used as label                                                                                           |
+| itemLabel            | Name of the property of valueList items to be used as; can be string or function label                                                                                           |
 | selected             | Key of currently selected item                                                                                                                        |
 | onSelected           | Action callback that will be called when user selects an item                                                                                         |
 | multiselect          | boolean value; it `true` user can select multiple items (default is `false`)                                                                          |
