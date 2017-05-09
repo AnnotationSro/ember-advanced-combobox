@@ -14,7 +14,7 @@ Ember combobox that can (beside others):
 
 ## Installation
 
-**Warning: works for Ember >= 2.0.0**
+**Warning: works for Ember >= 2.8.0**
 
 ```
 ember install ember-advanced-combobox

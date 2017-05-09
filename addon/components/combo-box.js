@@ -342,7 +342,7 @@ export default Ember.Component.extend({
 
   valueListObserver: Ember.observer('valueList.[]', function() {
     this.initSelectedValues();
-    if (Ember.isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible')) {
+    if (Ember.isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible') && Ember.isNone(this.get('lazyCallback'))) {
       this.set('inputValue', this.get('configurationService').getChooseLabel());
     }
 
@@ -536,7 +536,9 @@ export default Ember.Component.extend({
         this.set('inputValue', '');
       }
     } else {
-      this.set('inputValue', this.get('configurationService').getChooseLabel());
+      if (Ember.isNone(this.get('lazyCallback'))) {
+        this.set('inputValue', this.get('configurationService').getChooseLabel());
+      }
     }
 
     this._initDropdownCloseListeners();
@@ -560,7 +562,9 @@ export default Ember.Component.extend({
         this.set('inputValue', '');
       }
     } else {
-      this.set('inputValue', this.get('configurationService').getChooseLabel());
+        if (Ember.isNone('lazyCallback')) {
+          this.set('inputValue', this.get('configurationService').getChooseLabel());
+        }
     }
   },
 
