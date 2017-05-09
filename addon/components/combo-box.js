@@ -331,6 +331,7 @@ export default Ember.Component.extend({
   valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function() {
     if (Ember.isPresent(this.get('valuePromise'))) {
       this.set('valuePromiseResolving', true);
+      this._changeDropdownPosition();
 
       this.get('valuePromise').then((result) => {
         this.set('valuePromiseResolving', false);
@@ -613,6 +614,7 @@ export default Ember.Component.extend({
         this.set('inputValue', this.get('selectedValueLabel'));
       }
     }
+
     this._destroyDropdownCloseListeners();
 
   },
@@ -724,7 +726,7 @@ export default Ember.Component.extend({
 
         //click into input
         if (isElementClicked($combo.find('.combo-input'), event)) {
-          if (this.get('canFilter')) {
+          if (this.get('canFilter') || Ember.isPresent(this.get('lazyCallback'))) {
             //do nothing - let the user enter the filter
             return;
           } else {
@@ -815,7 +817,6 @@ export default Ember.Component.extend({
     this.cancelLazyDebounce();
 
     const debounceTime = this.get('configurationService').getLazyDebounceTime();
-    Ember.Logger.debug('scheduling lazy');
 
     let debounceTimer = setTimeout(() => {
       this.cancelLazyDebounce();
