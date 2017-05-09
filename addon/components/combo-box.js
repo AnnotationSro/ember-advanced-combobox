@@ -320,7 +320,7 @@ export default Ember.Component.extend({
       return;
     }
     let itemsArray = this._createArray(selected);
-    itemsArray = itemsArray.map((itemKey) => this.findItemByKey(itemKey));
+    itemsArray = itemsArray.map((itemKey) => this.findItemByKey(itemKey) || itemKey);
 
     this.set('internalSelectedList', this._createArray(itemsArray));
     this.createSelectedLabel(itemsArray);
