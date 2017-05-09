@@ -42,6 +42,25 @@ Custom selected label
 </p>
 
 <div>
+Custom label in dropdown list
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedCustomDropdownSingle
+  itemKey='a'
+  itemLabel=(action 'customDropdownLabelFn')
+  multiselect=false
+  onSelected=(action 'onSelectedCustomDropdownSingle')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{comboSelectedCustomDropdownSingleFormatted}}
+</div>
+ <p>
+
+</p>
+
+<div>
 Without dropdown button
 {{combo-box
   valueList=comboValueList

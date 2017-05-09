@@ -72,6 +72,15 @@ export default Ember.Controller.extend({
       this.set('comboSelectedSingle', selectedValues.a);
     },
 
+    customDropdownLabelFn(item){
+      return `label: ${item.b} - code: ${item.a}`;
+    },
+
+    onSelectedCustomDropdownSingle(selectedValues) {
+      this.set('comboSelectedCustomDropdownSingleFormatted', JSON.stringify(selectedValues));
+      this.set('comboSelectedCustomDropdownSingle', selectedValues.a);
+    },
+
     onSelectedPreviewSingle(selectedValues) {
       this.set('comboSelectedPreviewSingleFormatted', JSON.stringify(selectedValues));
       this.set('comboSelectedPreviewSingle', selectedValues.a);

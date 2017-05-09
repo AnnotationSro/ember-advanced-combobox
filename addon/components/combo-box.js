@@ -3,6 +3,9 @@ import layout from '../templates/components/combo-box';
 import {
   accentRemovalHelper
 } from '../helpers/accent-removal-helper';
+import {
+  comboItemLabel
+} from '../helpers/combo-item-label';
 
 
 function getObjectFromArray(array, index) {
@@ -130,10 +133,6 @@ export default Ember.Component.extend({
   }),
 
   initCombobox: Ember.on('init', function() {
-
-    if (Ember.isPresent(this.get('lazyCallback'))) {
-      this.set('canFilter', true);
-    }
 
     this.initSelectedValues();
 
@@ -401,7 +400,7 @@ export default Ember.Component.extend({
     if (Ember.isEmpty(this.get('valueList')) && Ember.isNone(this.get('lazyCallback'))) {
       notClickable = true;
     }
-    if (this.get('canFilter') === false) {
+    if (this.get('canFilter') === false && Ember.isNone(this.get('lazyCallback'))) {
       notClickable = true;
     }
 
@@ -497,7 +496,7 @@ export default Ember.Component.extend({
 
   _getItemLabel(item) {
     if (Ember.isPresent(this.get('itemLabel'))) {
-      return Ember.get(item, this.get('itemLabel'));
+      return comboItemLabel([item, this.get('itemLabel')]);
     } else {
       //if no itemLabel is specified, use the item object itself
       return item;
