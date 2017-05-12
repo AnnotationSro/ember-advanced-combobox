@@ -283,6 +283,9 @@ export default Ember.Component.extend({
   findItemByKey(key) {
     let items = this.get('valueList');
     if (Ember.isNone(items)) {
+    	if (Ember.isPresent(this.get('lazyCallback')) && this.get('selected') === key){
+    		return key;
+		}
       return null;
     }
     let itemsLength = this.getValueListLength();

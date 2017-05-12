@@ -37,6 +37,7 @@ export default Ember.Controller.extend({
   init() {
     this._super(...arguments);
     this.comboSelectedSingle = 'hello';
+    this.comboSelectedPreviewSingle = 'hello1';
     for (let i = 0; i < 50; i++) {
       this.get('comboValueListMany').push({
         a: '' + i,
