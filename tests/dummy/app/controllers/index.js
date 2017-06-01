@@ -69,6 +69,9 @@ export default Ember.Controller.extend({
     },
 
     onSelectedSingle(selectedValues) {
+      if (selectedValues === null){
+        return;
+      }
       this.set('comboSelectedSingleFormatted', JSON.stringify(selectedValues));
       this.set('comboSelectedSingle', selectedValues.a);
     },

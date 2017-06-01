@@ -295,3 +295,23 @@ Lazy select (queries server after user types at least 3 characters into filter)
 <button {{action 'actionRemoveValueList'}}>Clear value list</button>
 
 <input />
+
+<p>
+<input placeholder="just a random input">
+</p>
+
+<div class="fixed-positioned-dropdown">
+Single select in fixed container
+{{combo-box
+  valueList=comboValueList
+  selected=comboSelectedSingle
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onSelected=(action 'onSelectedSingle')
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{comboSelectedSingleFormatted}}
+</div>

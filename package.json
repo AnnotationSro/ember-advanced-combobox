@@ -49,7 +49,9 @@
   ],
   "dependencies": {
     "ember-cli-babel": "^5.1.6",
-    "ember-cli-htmlbars": "^1.0.3"
+    "ember-cli-htmlbars": "^1.0.3",
+    "ember-cli-node-assets": "^0.2.2",
+    "popper.js": "^1.9.9"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",

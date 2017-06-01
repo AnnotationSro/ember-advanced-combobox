@@ -7,48 +7,11 @@ import {
   comboItemLabel
 } from '../helpers/combo-item-label';
 
-
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
     return array.objectAt(index);
   }
   return array[index];
-}
-
-
-const SPACE = 5;
-
-function positionDropdown($dropdown, $input) {
-
-  let {
-    left,
-    top
-  } = $input[0].getBoundingClientRect();
-
-  if (top + $dropdown.outerHeight() + SPACE <= Ember.$(window).height()) {
-    //dropdown has enough space to be rendered below the input
-
-    showDropdownBelowInput($dropdown, left, top, $input.outerHeight());
-  } else {
-    //try and show dropdown above input
-    if ($dropdown.outerHeight() + SPACE <= Ember.$(window).height()) {
-      showDropdownAboveInput($dropdown, left, top, $dropdown.outerHeight());
-    } else {
-      //still cannot position a dropdown
-      showDropdownBelowInput($dropdown, left, top, $input.outerHeight());
-    }
-  }
-
-  function showDropdownBelowInput($dropdown, left, top, inputHeight) {
-    $dropdown.css('left', `${left}px`);
-    $dropdown.css('top', `${top + inputHeight + SPACE}px`);
-
-  }
-
-  function showDropdownAboveInput($dropdown, left, top, dropdownHeight) {
-    $dropdown.css('left', `${left}px`);
-    $dropdown.css('top', `${top - dropdownHeight - SPACE}px`);
-  }
 }
 
 function adjustDropdownMaxHeight($dropdown, $input) {
@@ -67,14 +30,12 @@ function adjustDropdownMaxHeight($dropdown, $input) {
       $dropdown.css({
         'maxHeight': calculateMaxDropdownHeight($dropdown, $input) + 'px'
       });
-      positionDropdown($dropdown, $input);
     }
   } else {
     if (dropdownHeight >= dropdownBottom) {
       $dropdown.css({
         'maxHeight': calculateMaxDropdownHeight($dropdown, $input) + 'px'
       });
-      positionDropdown($dropdown, $input);
     }
   }
 
@@ -83,10 +44,96 @@ function adjustDropdownMaxHeight($dropdown, $input) {
     let inputTop = $input[0].getBoundingClientRect().top;
 
     return Math.max(
-      window.innerHeight - inputBottom - SPACE, //dropdown below the input
-      inputTop - SPACE //dropdown above the input
-    );
+      window.innerHeight - inputBottom, //dropdown below the input
+      inputTop //dropdown above the input
+    ) - 10;
   }
+}
+
+function initElementResizeListener() {
+
+  if (typeof window.addElementResizeListenerCombobox !== 'undefined') {
+    //no need to define these functions again
+    return;
+  }
+
+  /* jshint ignore:start */
+
+  /**
+  code by DANIEL BUCHNER: http://www.backalleycoder.com/2013/03/18/cross-browser-event-based-element-resize-detection/
+  **/
+  (function() {
+    var attachEvent = document.attachEvent;
+    var isIE = navigator.userAgent.match(/Trident/);
+    var requestFrame = (function() {
+      var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame ||
+        function(fn) {
+          return window.setTimeout(fn, 20);
+        };
+      return function(fn) {
+        return raf(fn);
+      };
+    })();
+
+    var cancelFrame = (function() {
+      var cancel = window.cancelAnimationFrame || window.mozCancelAnimationFrame || window.webkitCancelAnimationFrame ||
+        window.clearTimeout;
+      return function(id) {
+        return cancel(id);
+      };
+    })();
+
+    function resizeListener(e) {
+      var win = e.target || e.srcElement;
+      if (win.__resizeRAF__) cancelFrame(win.__resizeRAF__);
+      win.__resizeRAF__ = requestFrame(function() {
+        var trigger = win.__resizeTrigger__;
+        trigger.__resizeListeners__.forEach(function(fn) {
+          fn.call(trigger, e);
+        });
+      });
+    }
+
+    function objectLoad(e) {
+      this.contentDocument.defaultView.__resizeTrigger__ = this.__resizeElement__;
+      this.contentDocument.defaultView.addEventListener('resize', resizeListener);
+    }
+
+    window.addElementResizeListenerCombobox = function(element, fn) {
+      if (!element.__resizeListeners__) {
+        element.__resizeListeners__ = [];
+        if (attachEvent) {
+          element.__resizeTrigger__ = element;
+          element.attachEvent('onresize', resizeListener);
+        } else {
+          if (getComputedStyle(element).position == 'static') element.style.position = 'relative';
+          var obj = element.__resizeTrigger__ = document.createElement('object');
+          obj.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
+          obj.__resizeElement__ = element;
+          obj.onload = objectLoad;
+          obj.type = 'text/html';
+          if (isIE) element.appendChild(obj);
+          obj.data = 'about:blank';
+          if (!isIE) element.appendChild(obj);
+        }
+      }
+      element.__resizeListeners__.push(fn);
+    };
+
+    window.removeElementResizeListenerCombobox = function(element, fn) {
+      element.__resizeListeners__.splice(element.__resizeListeners__.indexOf(fn), 1);
+      if (!element.__resizeListeners__.length) {
+        if (attachEvent) element.detachEvent('onresize', resizeListener);
+        else {
+          element.__resizeTrigger__.contentDocument.defaultView.removeEventListener('resize', resizeListener);
+          element.__resizeTrigger__ = !element.removeChild(element.__resizeTrigger__);
+        }
+      }
+    }
+  })();
+
+
+  /* jshint ignore:end */
 }
 
 export default Ember.Component.extend({
@@ -115,6 +162,7 @@ export default Ember.Component.extend({
 
 
   //internals
+  _popper: null,
   selectedValueLabel: null,
   dropdownVisible: false,
   internalSelectedList: new Ember.A([]),
@@ -130,6 +178,11 @@ export default Ember.Component.extend({
     let orderString1 = Ember.get(a, orderBy);
     let orderString2 = Ember.get(b, orderBy);
     return (orderString1 < orderString2 ? -1 : (orderString1 > orderString2 ? 1 : 0));
+  }),
+
+  _isTesting: Ember.computed(function(){
+    let config = Ember.getOwner(this).resolveRegistration('config:environment');
+    return config.environment === 'test';
   }),
 
   initCombobox: Ember.on('init', function() {
@@ -149,12 +202,17 @@ export default Ember.Component.extend({
 
   }),
 
+  init() {
+    this._super(...arguments);
+    initElementResizeListener();
+  },
+
   setDropdownWidth: Ember.on('didInsertElement', function() {
     let $element = Ember.$(this.element);
     $element.find('.dropdown').css('min-width', $element.css('width'));
   }),
 
-  setInputFocus: Ember.on('didInsertElement', function() {
+  initElement: Ember.on('didInsertElement', function() {
     let $element = Ember.$(this.element);
     let $inputElement = $element.find('.input-group');
     $inputElement.focus(() => {
@@ -163,11 +221,26 @@ export default Ember.Component.extend({
     $inputElement.blur(() => {
       this.set('isComboFocused', false);
     });
+
+    if (this.get('_isTesting') === false) {
+      let onResizeCallback = () => {
+        this._initPopper();
+      };
+      window.addElementResizeListenerCombobox(Ember.$(this.element).find('.dropdown')[0], onResizeCallback);
+    }
   }),
 
-  onDestroy: Ember.on('didDestroyElement', function() {
-    Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
+  onDestroy: Ember.on('willDestroyElement', function() {
+    // Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
     this._destroyDropdownCloseListeners();
+
+    let popper = this.get('_popper');
+    if (Ember.isPresent(popper)) {
+      popper.destroy();
+    }
+    if (this.get('_isTesting') === false) {
+      window.removeElementResizeListenerCombobox(Ember.$(this.element).find('.dropdown')[0]);
+    }
   }),
 
   //if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
@@ -283,9 +356,9 @@ export default Ember.Component.extend({
   findItemByKey(key) {
     let items = this.get('valueList');
     if (Ember.isNone(items)) {
-    	if (Ember.isPresent(this.get('lazyCallback')) && this.get('selected') === key){
-    		return key;
-		}
+      if (Ember.isPresent(this.get('lazyCallback')) && this.get('selected') === key) {
+        return key;
+      }
       return null;
     }
     let itemsLength = this.getValueListLength();
@@ -547,10 +620,38 @@ export default Ember.Component.extend({
 
     this._initDropdownCloseListeners();
 
-    this._changeDropdownPosition();
-    Ember.$(window).on(`scroll.combobox-scroll-${this.elementId}`, () => {
-      this._hideDropdown();
+    this._initPopper();
+
+    // fix for https://github.com/FezVrasta/popper.js/issues/253
+    let $window = Ember.$(window);
+    setTimeout(() => {
+      $window.scrollTop($window.scrollTop() - 1);
+      $window.scrollTop($window.scrollTop() + 1);
     });
+
+    let $element = Ember.$(this.element);
+    let $dropdown = $element.find('.dropdown');
+    let $input = $element.find('.combo-input');
+    adjustDropdownMaxHeight($dropdown, $input);
+  },
+
+  _initPopper() {
+    if (Ember.isPresent(this.get('_popper'))) {
+      let popperOld = this.get('_popper');
+      popperOld.destroy();
+    }
+    if (this.get('dropdownVisible') === false) {
+      return;
+    }
+
+    let $element = Ember.$(this.element);
+    let $dropdown = $element.find('.dropdown');
+    let $input = $element.find('.input-group');
+
+    let popper = new window.Popper($input[0], $dropdown[0], {
+      placement: 'bottom-start',
+    });
+    this.set('_popper', popper);
   },
 
   _showMobileDropdown() {
@@ -566,9 +667,9 @@ export default Ember.Component.extend({
         this.set('inputValue', '');
       }
     } else {
-        if (Ember.isNone('lazyCallback')) {
-          this.set('inputValue', this.get('configurationService').getChooseLabel());
-        }
+      if (Ember.isNone('lazyCallback')) {
+        this.set('inputValue', this.get('configurationService').getChooseLabel());
+      }
     }
   },
 
@@ -577,7 +678,6 @@ export default Ember.Component.extend({
       let $element = Ember.$(this.element);
       let $dropdown = $element.find('.dropdown');
       let $input = $element.find('.combo-input');
-      positionDropdown($dropdown, $input);
       adjustDropdownMaxHeight($dropdown, $input);
     });
   },
@@ -590,9 +690,18 @@ export default Ember.Component.extend({
 
     this.get('onDropdownHide')();
 
-    Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
+    // Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
     this.set('dropdownVisible', false);
     this.set('mobileDropdownVisible', false);
+
+    Ember.run.scheduleOnce('afterRender', this, () => {
+
+      let popper = this.get('_popper');
+      if (Ember.isPresent(popper)) {
+        popper.destroy();
+        this.set('_popper', null);
+      }
+    });
 
     if (acceptSelected) {
       //call selection callback
