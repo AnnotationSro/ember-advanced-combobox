@@ -302,6 +302,7 @@ Lazy select (queries server after user types at least 3 characters into filter)
 
 <div class="fixed-positioned-dropdown">
 Single select in fixed container
+{{#if showFixedCombo}}
 {{combo-box
   valueList=comboValueList
   selected=comboSelectedSingle
@@ -314,4 +315,6 @@ Single select in fixed container
   labelOnly=labelOnly
 }}
 {{comboSelectedSingleFormatted}}
+{{/if}}
+<button {{action 'showHideFixed'}}>show/hide fixed panel</button>
 </div>

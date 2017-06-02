@@ -34,6 +34,8 @@ export default Ember.Controller.extend({
   labelOnlyWithNoValue: true,
   comboSelectedLazy: null,
 
+  showFixedCombo: true,
+
   init() {
     this._super(...arguments);
     this.comboSelectedSingle = 'hello';
@@ -48,8 +50,12 @@ export default Ember.Controller.extend({
 
   actions: {
 
-    customPreviewLabelFn(selected){
-      if (Ember.isNone(selected)){
+    showHideFixed() {
+      this.toggleProperty('showFixedCombo');
+    },
+
+    customPreviewLabelFn(selected) {
+      if (Ember.isNone(selected)) {
         return '';
       }
       return `Selected: ${selected.b}`;
@@ -69,14 +75,14 @@ export default Ember.Controller.extend({
     },
 
     onSelectedSingle(selectedValues) {
-      if (selectedValues === null){
+      if (selectedValues === null) {
         return;
       }
       this.set('comboSelectedSingleFormatted', JSON.stringify(selectedValues));
       this.set('comboSelectedSingle', selectedValues.a);
     },
 
-    customDropdownLabelFn(item){
+    customDropdownLabelFn(item) {
       return `label: ${item.b} - code: ${item.a}`;
     },
 
@@ -129,7 +135,7 @@ export default Ember.Controller.extend({
         this.set('comboSelectedMultiFormatted', null);
       }
     },
-    onLazySingle(item){
+    onLazySingle(item) {
       this.set('oneItemSelectedLazyFormatted', JSON.stringify(item));
       this.set('oneItemSelectedLazy', item.a);
     },
@@ -163,14 +169,17 @@ export default Ember.Controller.extend({
       this.set('comboValueList', null);
     },
 
-    lazyCallback(query){
-      return new Ember.RSVP.Promise(resolve=>{
+    lazyCallback(query) {
+      return new Ember.RSVP.Promise(resolve => {
         let result = [];
-        for (let i=0;i<10;i++){
+        for (let i = 0; i < 10; i++) {
           let text = `${query}_${i+1}`;
-          result.push({a: text, b: text});
+          result.push({
+            a: text,
+            b: text
+          });
         }
-        setTimeout(()=>{
+        setTimeout(() => {
           resolve(result);
         }, 2000);
       });

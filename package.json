@@ -48,10 +48,11 @@
     "dropdown"
   ],
   "dependencies": {
+    "element-resize-detector": "^1.1.12",
     "ember-cli-babel": "^5.1.6",
     "ember-cli-htmlbars": "^1.0.3",
-    "popper.js": "^1.9.9",
-    "ember-cli-node-assets": "^0.2.2"
+    "ember-cli-node-assets": "^0.2.2",
+    "popper.js": "^1.9.9"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
