@@ -536,13 +536,6 @@ export default Ember.Component.extend({
 
     this._initPopper();
 
-    // fix for https://github.com/FezVrasta/popper.js/issues/253
-    let $window = Ember.$(window);
-    setTimeout(() => {
-      $window.scrollTop($window.scrollTop() - 1);
-      $window.scrollTop($window.scrollTop() + 1);
-    });
-
     let $element = Ember.$(this.element);
     let $dropdown = $element.find('.dropdown');
     let $input = $element.find('.combo-input');
@@ -564,6 +557,7 @@ export default Ember.Component.extend({
 
     let popper = new window.Popper($input[0], $dropdown[0], {
       placement: 'bottom-start',
+      modifiers: ['preventOverflow']
     });
     this.set('_popper', popper);
   },
