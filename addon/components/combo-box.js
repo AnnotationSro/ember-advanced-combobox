@@ -557,7 +557,11 @@ export default Ember.Component.extend({
 
     let popper = new window.Popper($input[0], $dropdown[0], {
       placement: 'bottom-start',
-      modifiers: ['preventOverflow']
+      modifiers: {
+        preventOverflow: {
+          boundariesElement: 'viewport'
+        }
+      }
     });
     this.set('_popper', popper);
   },
