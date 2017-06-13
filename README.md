@@ -46,6 +46,7 @@ __For more usage examples see dummy application.__
 | itemLabel            | Name of the property of valueList items to be used as; can be string or function label                                                                                           |
 | selected             | Key of currently selected item                                                                                                                        |
 | onSelected           | Action callback that will be called when user selects an item                                                                                         |
+|disabledWhenEmpty     | Combobox will be disabled, when there are no options in dropdown menu (recommened to set to `false` when used with `valuePromise`) (default: `true`)|
 | multiselect          | boolean value; it `true` user can select multiple items (default is `false`)                                                                          |
 | canFilter            | boolean value; if `true` user can filter values in the dropdown - filter is case- and accent- insensitive fulltext search                             |
 | disabled             | boolean value                                                                                                                                         |

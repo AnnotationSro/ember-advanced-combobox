@@ -3,6 +3,27 @@
 </p>
 
 <div>
+Async value
+{{combo-box
+  valuePromise=asyncValueList
+  selected=comboSelectedSingleAsync
+  itemKey='a'
+  itemLabel='b'
+  multiselect=false
+  onDropdownShow=(action 'actionCreateAsyncValueList')
+  onSelected=(action 'onSelectedSingleAsync')
+  disabledWhenEmpty=false
+  canFilter=true
+  disabled=disabled
+  labelOnly=labelOnly
+}}
+{{comboSelectedSingleFormattedAsync}}
+</div>
+<p>
+
+</p>
+
+<div>
 Single select
 {{combo-box
   valueList=comboValueList

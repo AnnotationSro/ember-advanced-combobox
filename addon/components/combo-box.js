@@ -73,6 +73,7 @@ export default Ember.Component.extend({
   onDropdownHide() {},
   lazyCallback: null,
   showDropdownButton: true,
+  disabledWhenEmpty: true,
 
 
   //internals
@@ -367,7 +368,7 @@ export default Ember.Component.extend({
       return false;
     }
 
-    if (Ember.isEmpty(this.get('valueList'))) {
+    if (Ember.isEmpty(this.get('valueList')) && this.get('disabledWhenEmpty') === true) {
       //if there is no valueList, but 'noValueLabel' is specified, then combobox is not in disabled state - it should show 'noValueLabel' instead
       if (Ember.isPresent(this.get('noValueLabel'))) {
         return false;
