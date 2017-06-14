@@ -320,7 +320,7 @@ export default Ember.Component.extend({
   }),
 
   valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function() {
-    if (Ember.isPresent(this.get('valuePromise'))) {
+    if (Ember.isPresent(this.get('valuePromise')) && Ember.isEmpty(this.get('valueList'))) {
       this.set('valuePromiseResolving', true);
       this._changeDropdownPosition();
 
