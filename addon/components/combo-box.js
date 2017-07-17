@@ -672,9 +672,7 @@ export default Ember.Component.extend({
     let label = null;
     if (Ember.isEmpty(items)) {
       //no items were selected
-      if (Ember.isEmpty(this.get('valueList'))) {
-        label = ''; //no valueList
-      } else {
+      if (Ember.isEmpty(this.get('valueList'))){
         label = this.get("configurationService").getEmptySelectionLabel();
       }
     } else {
