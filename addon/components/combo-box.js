@@ -200,6 +200,13 @@ export default Ember.Component.extend({
     }
   }),
 
+
+  inputValueObserver: Ember.observer('inputValue', function() {
+    if (Ember.isPresent(this.get('lazyCallback'))) {
+      this._hideDropdown(false, false);
+    }
+  }),
+
   filteredValueList: Ember.computed('inputValue', 'sortedValueList.[]', function() {
 
     let valueList = this.get('sortedValueList');
@@ -524,7 +531,7 @@ export default Ember.Component.extend({
     this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
     if (this.get('canFilter')) {
       if (Ember.isNone(this.get('lazyCallback'))) {
-        //when we are using layzCallback, do not clear inputValue, otherwise clear it
+        //when we are using lazyCallback, do not clear inputValue, otherwise clear it
         this.set('inputValue', '');
       }
     } else {
@@ -842,6 +849,7 @@ export default Ember.Component.extend({
     let debounceTimer = setTimeout(() => {
       this.cancelLazyDebounce();
       let promise = this.get('lazyCallback')(inputValue);
+      this._showDropdown();
       this.set('valueList', null);
       this.set('valuePromise', promise);
     }, debounceTime);
@@ -862,7 +870,6 @@ export default Ember.Component.extend({
             this._hideDropdown(false, false);
           }
         } else {
-          this._showDropdown();
           this.setLazyDebounce(inputValue);
         }
       }

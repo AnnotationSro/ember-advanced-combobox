@@ -35,6 +35,8 @@
   padding: 0;
   background: white;
   overflow-y: auto;
+  padding-bottom: 1px;
+  padding-top: 1px;
 }
 
 .ember-modal-dialog.combobox-mobile-dialog{

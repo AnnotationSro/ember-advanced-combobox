@@ -2,6 +2,16 @@
 <input placeholder="just a random input">
 </p>
 
+<p>
+{{combo-box
+								lazyCallback=(action 'lazyCallback')
+								itemLabel='a'
+								itemKey='b'
+								selected=selectedAbc
+								canFilter=true
+						}}
+
+</p>
 <div>
 Async value
 {{combo-box
