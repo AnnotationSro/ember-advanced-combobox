@@ -247,9 +247,9 @@ test('it sorts plain JSON array', function(assert) {
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
-    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
-    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
-    assert.equal(stripComments($($items[2]).html()).trim(), 'labelb');
+    assert.equal(stripComments(Ember.$($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments(Ember.$($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments(Ember.$($items[2]).html()).trim(), 'labelb');
   });
 
 });
@@ -299,9 +299,9 @@ test('it sorts Ember Object array', function(assert) {
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
-    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
-    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
-    assert.equal(stripComments($($items[2]).html()).trim(), 'labelc');
+    assert.equal(stripComments(Ember.$($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments(Ember.$($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments(Ember.$($items[2]).html()).trim(), 'labelc');
   });
 
 });
