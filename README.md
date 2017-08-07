@@ -55,8 +55,8 @@ __For more usage examples see dummy application.__
 | onDropdownShow       | Action callback called when dropdown is going to show                                                           |
 | onDropdownHide       | Action callback called when dropdown is going to hide                                                             |
 | showDropdownButton       | boolean value; if `false` the dropdown button will be hidden (default is `true`)                                                             |
-| itemLabelForSelectedPreview       | string value of function; customize how selected value looks like in the combobox (only for single select combobox); default is the same property as `itemLabel`      
-
+| itemLabelForSelectedPreview       | string value of function; customize how selected value looks like in the combobox (only for single select combobox); default is the same property as `itemLabel` |     
+| showLabelWhenDisabled       | boolean; `false` when combobox should be empty when disabled (default is `false`) |     
 
 Also note that if there is only one item available in combobox, it will be automatically selected.
 

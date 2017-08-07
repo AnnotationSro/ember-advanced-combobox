@@ -74,6 +74,7 @@ export default Ember.Component.extend({
   lazyCallback: null,
   showDropdownButton: true,
   disabledWhenEmpty: true,
+  showLabelWhenDisabled: true,
 
 
   //internals
@@ -162,6 +163,14 @@ export default Ember.Component.extend({
   internalItemLabelForSelectedPreview: Ember.computed('itemLabelForSelectedPreview', 'itemLabel', function() {
     return this.get('itemLabelForSelectedPreview') || this.get('itemLabel');
   }),
+
+  disabledComboboxObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'showLabelWhenDisabled', function(){
+    if (this.get('_disabledCombobox') === true && this.get('showLabelWhenDisabled') === false){
+      this.set('inputValue', '');
+    }else{
+      this.set('inputValue', this.get('selectedValueLabel'));
+    }
+  })),
 
   tabbable: Ember.computed('labelOnly', '_disabledCombobox', function() {
     return this.get('labelOnly') || this.get('_disabledCombobox');
