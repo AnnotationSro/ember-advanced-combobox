@@ -362,6 +362,8 @@ export default Ember.Component.extend({
 				chooseLabel = null;
 			}
 			this.set('inputValue', chooseLabel);
+		}else{
+			this.set('inputValue', '');
 		}
 
 	}),
