@@ -60,16 +60,13 @@ export default Ember.Component.extend({
 	itemLabel: null,
 	itemLabelForSelectedPreview: null, //similar to 'itemLabel', but this one is used when creating selected preview label (if not speficied, defaults to 'itemLabel')
 	multiselect: false,
-	onSelected() {
-	},
+	onSelected() {},
 	canFilter: false,
 	preselectFirst: false,
 	orderBy: null,
 	noValueLabel: null, //label shown in labelOnly mode when there is no valueList available
-	onDropdownShow() {
-	},
-	onDropdownHide() {
-	},
+	onDropdownShow() {},
+	onDropdownHide() {},
 	lazyCallback: null,
 	showDropdownButton: true,
 	disabledWhenEmpty: true,
@@ -88,7 +85,7 @@ export default Ember.Component.extend({
 	valuePromiseResolving: false,
 	configurationService: Ember.inject.service('adv-combobox-configuration-service'),
 
-	sortedValueList: Ember.computed.sort('valueList', function (a, b) {
+	sortedValueList: Ember.computed.sort('valueList', function(a, b) {
 		let orderBy = this.get('orderBy');
 		if (Ember.isNone(orderBy)) {
 			//no sorting - it would be nice to completely disable this computed property somehow...
@@ -99,12 +96,12 @@ export default Ember.Component.extend({
 		return (orderString1 < orderString2 ? -1 : (orderString1 > orderString2 ? 1 : 0));
 	}),
 
-	_isTesting: Ember.computed(function () {
+	_isTesting: Ember.computed(function() {
 		let config = Ember.getOwner(this).resolveRegistration('config:environment');
 		return config.environment === 'test';
 	}),
 
-	initCombobox: Ember.on('init', function () {
+	initCombobox: Ember.on('init', function() {
 
 		this.initSelectedValues();
 
@@ -121,12 +118,12 @@ export default Ember.Component.extend({
 
 	}),
 
-	setDropdownWidth: Ember.on('didInsertElement', function () {
+	setDropdownWidth: Ember.on('didInsertElement', function() {
 		let $element = Ember.$(this.element);
 		$element.find('.dropdown').css('min-width', $element.css('width'));
 	}),
 
-	initElement: Ember.on('didInsertElement', function () {
+	initElement: Ember.on('didInsertElement', function() {
 		let $element = Ember.$(this.element);
 		let $inputElement = $element.find('.input-group');
 		$inputElement.focus(() => {
@@ -149,7 +146,7 @@ export default Ember.Component.extend({
 		}
 	}),
 
-	onDestroy: Ember.on('willDestroyElement', function () {
+	onDestroy: Ember.on('willDestroyElement', function() {
 		// Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
 		this._destroyDropdownCloseListeners();
 
@@ -163,12 +160,12 @@ export default Ember.Component.extend({
 	}),
 
 	//if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
-	internalItemLabelForSelectedPreview: Ember.computed('itemLabelForSelectedPreview', 'itemLabel', function () {
+	internalItemLabelForSelectedPreview: Ember.computed('itemLabelForSelectedPreview', 'itemLabel', function() {
 		return this.get('itemLabelForSelectedPreview') || this.get('itemLabel');
 	}),
 
-	disabledComboboxObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'showLabelWhenDisabled', function () {
-		if (this.get('lazyCallbackInProgress') === true) {
+	disabledComboboxObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'showLabelWhenDisabled', function() {
+		if (this.get('lazyCallbackInProgress') === true){
 			return;
 		}
 		if (this.get('_disabledCombobox') === true && this.get('showLabelWhenDisabled') === false) {
@@ -178,7 +175,7 @@ export default Ember.Component.extend({
 		}
 	})),
 
-	tabbable: Ember.computed('labelOnly', '_disabledCombobox', function () {
+	tabbable: Ember.computed('labelOnly', '_disabledCombobox', function() {
 		return this.get('labelOnly') || this.get('_disabledCombobox');
 	}),
 
@@ -200,7 +197,7 @@ export default Ember.Component.extend({
 		this._automaticallySelect();
 	},
 
-	labelOnlyObserver: Ember.observer('labelOnly', function () {
+	labelOnlyObserver: Ember.observer('labelOnly', function() {
 		let selectedItems = this.get('internalSelectedList');
 		if (this.get('labelOnly')) {
 			this._handleLabelOnlyNoValue();
@@ -216,19 +213,15 @@ export default Ember.Component.extend({
 	}),
 
 
-	inputValueObserver: Ember.observer('inputValue', function () {
+	inputValueObserver: Ember.observer('inputValue', function() {
 		if (Ember.isPresent(this.get('lazyCallback')) && this.get('simpleCombobox') === false) {
 			this._hideDropdown(false, false);
 		}
 	}),
 
-	filteredValueList: Ember.computed('inputValue', 'sortedValueList.[]', 'valueList.[]', 'orderBy', function () {
+	filteredValueList: Ember.computed('inputValue', 'sortedValueList.[]', function() {
 
 		let valueList = this.get('sortedValueList');
-		if (Ember.isNone(this.get('orderBy'))) {
-			valueList = this.get('valueList');
-		}
-
 
 		if (!this.get('canFilter')) {
 			return valueList;
@@ -325,7 +318,7 @@ export default Ember.Component.extend({
 		return itemsLength;
 	},
 
-	selectedObserver: Ember.observer('selected', function () {
+	selectedObserver: Ember.observer('selected', function() {
 		let selected = this.get('selected');
 		if (Ember.isEmpty(selected)) {
 			this.set('internalSelectedList', new Ember.A([]));
@@ -345,7 +338,7 @@ export default Ember.Component.extend({
 		}
 	}),
 
-	valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function () {
+	valuePromiseObserver: Ember.on('init', Ember.observer('valuePromise', function() {
 		if (Ember.isPresent(this.get('valuePromise')) && Ember.isEmpty(this.get('valueList'))) {
 			this.set('valuePromiseResolving', true);
 			this._changeDropdownPosition();
@@ -358,8 +351,8 @@ export default Ember.Component.extend({
 	})),
 
 
-	valueListObserver: Ember.observer('valueList.[]', function () {
-		if (this.get('simpleCombobox') === true) {
+	valueListObserver: Ember.observer('valueList.[]', function() {
+		if (this.get('simpleCombobox') === true){
 			return;
 		}
 		this.initSelectedValues();
@@ -369,8 +362,10 @@ export default Ember.Component.extend({
 				chooseLabel = null;
 			}
 			this.set('inputValue', chooseLabel);
-		} else {
-			this.set('inputValue', '');
+		}else{
+			if (Ember.isNone(this.get('lazyCallback'))){
+				this.set('inputValue', '');
+			}
 		}
 
 	}),
@@ -394,7 +389,7 @@ export default Ember.Component.extend({
 		}
 	},
 
-	_disabledCombobox: Ember.computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', 'lazyCallback', function () {
+	_disabledCombobox: Ember.computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', 'lazyCallback', function() {
 		if (this.get('disabled')) {
 			return true;
 		}
@@ -416,7 +411,7 @@ export default Ember.Component.extend({
 	}),
 
 	//we cannot use {{input readonly=readonly}} because of bug https://github.com/emberjs/ember.js/issues/11828
-	inputNotClickableObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', 'lazyCallback', function () {
+	inputNotClickableObserver: Ember.on('init', Ember.observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', 'lazyCallback', function() {
 		let notClickable = false;
 		if (this.get('_disabledCombobox')) {
 			notClickable = true;
@@ -431,13 +426,13 @@ export default Ember.Component.extend({
 			notClickable = true;
 		}
 
-		Ember.run.scheduleOnce('afterRender', this, function () {
+		Ember.run.scheduleOnce('afterRender', this, function() {
 			Ember.$(this.element).find('.combo-input').prop('readonly', notClickable);
 		});
 
 	})),
 
-	initInputClickHandler: Ember.on('didInsertElement', function () {
+	initInputClickHandler: Ember.on('didInsertElement', function() {
 
 		Ember.$(this.element).find(' *').on('touchstart', (event) => {
 			event.stopPropagation();
@@ -457,36 +452,36 @@ export default Ember.Component.extend({
 			if (this.get('simpleCombobox') === false) {
 				this._showDropdown();
 			}
-			Ember.run.scheduleOnce('afterRender', this, function () {
+			Ember.run.scheduleOnce('afterRender', this, function() {
 				Ember.$(this.element).find('.combo-input-with-dropdown').focus();
 			});
 
 		});
 	}),
 
-	filterObserver: Ember.observer('inputValue', function () {
+	filterObserver: Ember.observer('inputValue', function() {
 		if (this.get('dropdownVisible') && this.get('canFilter')) {
 			this._changeDropdownPosition();
 		}
 	}),
 
-	asyncLoaderStartLabel: Ember.computed(function () {
+	asyncLoaderStartLabel: Ember.computed(function() {
 		return this.get('configurationService').getAsyncLoaderStartLabel();
 	}),
 
-	emptyValueListLabel: Ember.computed(function () {
+	emptyValueListLabel: Ember.computed(function() {
 		return this.get('configurationService').getEmptyValueListLabel();
 	}),
 
-	mobileFilterPlaceholder: Ember.computed(function () {
+	mobileFilterPlaceholder: Ember.computed(function() {
 		return this.get('configurationService').getMobileFilterPlaceholder();
 	}),
 
-	mobileOkButton: Ember.computed(function () {
+	mobileOkButton: Ember.computed(function() {
 		return this.get('configurationService').getMobileOkButton();
 	}),
 
-	mobileCancelButton: Ember.computed(function () {
+	mobileCancelButton: Ember.computed(function() {
 		return this.get('configurationService').getMobileCancelButton();
 	}),
 
@@ -639,7 +634,7 @@ export default Ember.Component.extend({
 	},
 
 	_changeDropdownPosition() {
-		Ember.run.scheduleOnce('afterRender', this, function () {
+		Ember.run.scheduleOnce('afterRender', this, function() {
 			let $element = Ember.$(this.element);
 			let $dropdown = $element.find('.dropdown');
 			let $input = $element.find('.combo-input');
@@ -722,7 +717,7 @@ export default Ember.Component.extend({
 		let label = null;
 		if (Ember.isEmpty(items)) {
 			//no items were selected
-			if (this.get('showEmptySelectionLabel') === true) {
+			if (this.get('showEmptySelectionLabel') === true){
 				label = this.get("configurationService").getEmptySelectionLabel();
 			}
 		} else {
@@ -860,7 +855,7 @@ export default Ember.Component.extend({
 		if (this.getValueListLength() === 1) {
 			//only 1 item in value list
 			//
-			Ember.run.next(this, function () {
+			Ember.run.next(this, function() {
 				this._selectItem(getObjectFromArray(valueList, 0));
 			});
 			return;
@@ -868,7 +863,7 @@ export default Ember.Component.extend({
 
 		if (this.get('preselectFirst') === true) {
 			//preselect item
-			Ember.run.next(this, function () {
+			Ember.run.next(this, function() {
 				this._selectItem(getObjectFromArray(valueList, 0));
 			});
 			return;
@@ -897,9 +892,9 @@ export default Ember.Component.extend({
 			let promise = this.get('lazyCallback')(inputValue);
 			this.set('valueList', null);
 			this.set('valuePromise', promise);
-			promise.then(() => {
+			promise.then(()=>{
 
-				Ember.run.scheduleOnce('afterRender', this, function () {
+				Ember.run.scheduleOnce('afterRender', this, function() {
 					this._showDropdown();
 					if (this.get('simpleCombobox') === true) {
 						this.set('inputValue', null);
