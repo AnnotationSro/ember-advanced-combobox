@@ -896,7 +896,7 @@ export default Ember.Component.extend({
 
 				Ember.run.scheduleOnce('afterRender', this, function() {
 					this._showDropdown();
-					if (this.get('simpleCombobox') === true) {
+					if (this.get('simpleCombobox') === true && Ember.isNone(this.get('lazyCallback'))) {
 						this.set('inputValue', null);
 					}
 					this.set('lazyCallbackInProgress', false);
