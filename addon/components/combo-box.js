@@ -10,7 +10,7 @@ function getObjectFromArray(array, index) {
 	return array[index];
 }
 
-function adjustDropdownMaxHeight($dropdown, $input) {
+function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
 	$dropdown.css({
 		'maxHeight': ''
 	});
@@ -24,25 +24,29 @@ function adjustDropdownMaxHeight($dropdown, $input) {
 		//dropdown is below the input
 		if (dropdownTop + dropdownHeight >= window.innerHeight) {
 			$dropdown.css({
-				'maxHeight': calculateMaxDropdownHeight($dropdown, $input) + 'px'
+				'maxHeight': calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) + 'px'
 			});
 		}
 	} else {
 		if (dropdownHeight >= dropdownBottom) {
 			$dropdown.css({
-				'maxHeight': calculateMaxDropdownHeight($dropdown, $input) + 'px'
+				'maxHeight': calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) + 'px'
 			});
 		}
 	}
 
-	function calculateMaxDropdownHeight($dropdown, $input) {
+	function calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) {
 		let inputBottom = $input[0].getBoundingClientRect().bottom;
 		let inputTop = $input[0].getBoundingClientRect().top;
 
-		return Math.max(
+		let height = Math.max(
 			window.innerHeight - inputBottom, //dropdown below the input
 			inputTop //dropdown above the input
 		) - 10;
+		if (Ember.isNone(maxDropdownHeight)){
+			maxDropdownHeight = Number.MAX_SAFE_INTEGER;
+		}
+		return Math.min(height, maxDropdownHeight);
 	}
 }
 
@@ -74,6 +78,7 @@ export default Ember.Component.extend({
 	showChooseLabel: true,
 	showEmptySelectionLabel: true,
 	simpleCombobox: false,
+	maxDropdownHeight: null,
 
 
 	//internals
@@ -582,7 +587,7 @@ export default Ember.Component.extend({
 		let $element = Ember.$(this.element);
 		let $dropdown = $element.find('.dropdown');
 		let $input = $element.find('.combo-input');
-		adjustDropdownMaxHeight($dropdown, $input);
+		adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
 	},
 
 	_initPopper() {
@@ -638,7 +643,7 @@ export default Ember.Component.extend({
 			let $element = Ember.$(this.element);
 			let $dropdown = $element.find('.dropdown');
 			let $input = $element.find('.combo-input');
-			adjustDropdownMaxHeight($dropdown, $input);
+			adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
 		});
 	},
 
