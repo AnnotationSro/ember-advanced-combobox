@@ -59,6 +59,8 @@ __For more usage examples see dummy application.__
 | showLabelWhenDisabled       | boolean; `false` when combobox should be empty when disabled (default is `false`) |   
 | showChooseLabel       | boolean; `false` 'chooseLabel' should be shown - see global configuration as well (default is `true`) |   
 | showEmptySelectionLabel       | boolean; `false` 'emptySelectionLabel' should be shown - see global configuration as well (default is `true`) |   
+| maxDropdownHeight       | number; max height of dropdown (in pixels) - optional, if not set, dropdown will be stretched to the max height to be still visible in the page |   
+
 
 
 Also note that if there is only one item available in combobox, it will be automatically selected.
