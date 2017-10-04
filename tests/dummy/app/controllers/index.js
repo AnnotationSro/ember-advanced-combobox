@@ -38,6 +38,8 @@ export default Ember.Controller.extend({
 
   showFixedCombo: true,
 
+  comboboxConfig: Ember.inject.service('adv-combobox-configuration-service'),
+
   init() {
     this._super(...arguments);
     this.comboSelectedSingle = 'hello';
@@ -48,9 +50,19 @@ export default Ember.Controller.extend({
         b: '' + i
       });
     }
+
+
+
+      this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'bb');
+      this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');
+
   },
 
   actions: {
+
+    actionClearSingleCombo(){
+      this.set('comboSelectedSingle', null);
+    },
 
     showHideFixed() {
       this.toggleProperty('showFixedCombo');

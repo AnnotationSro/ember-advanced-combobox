@@ -60,6 +60,8 @@ __For more usage examples see dummy application.__
 | showChooseLabel       | boolean; `false` 'chooseLabel' should be shown - see global configuration as well (default is `true`) |   
 | showEmptySelectionLabel       | boolean; `false` 'emptySelectionLabel' should be shown - see global configuration as well (default is `true`) |   
 | maxDropdownHeight       | number; max height of dropdown (in pixels) - optional, if not set, dropdown will be stretched to the max height to be still visible in the page |   
+| emptySelectionLabel | overrides `emptySelectionLabel` (see global configuration section)|
+| chooseLabel | overrides `chooseLabel` (see global configuration section)|
 
 
 

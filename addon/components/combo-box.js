@@ -76,7 +76,9 @@ export default Ember.Component.extend({
 	disabledWhenEmpty: true,
 	showLabelWhenDisabled: true,
 	showChooseLabel: true,
+	chooseLabel: null,
 	showEmptySelectionLabel: true,
+  emptySelectionLabel: null,
 	simpleCombobox: false,
 	maxDropdownHeight: null,
 
@@ -159,7 +161,7 @@ export default Ember.Component.extend({
 		if (Ember.isPresent(popper)) {
 			popper.destroy();
 		}
-		if (this.get('_isTesting') === false) {
+		if (this.get('_isTesting') === false && Ember.isPresent(this.get('_erd'))) {
 			this.get('_erd').uninstall(Ember.$(this.element).find('.dropdown')[0]);
 		}
 	}),
@@ -362,7 +364,7 @@ export default Ember.Component.extend({
 		}
 		this.initSelectedValues();
 		if (Ember.isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible') && Ember.isNone(this.get('lazyCallback'))) {
-			let chooseLabel = this.get('configurationService').getChooseLabel();
+			let chooseLabel = Ember.isPresent(this.get('chooseLabel'))? this.get('chooseLabel'): this.get('configurationService').getChooseLabel();
 			if (this.get('showChooseLabel') === false) {
 				chooseLabel = null;
 			}
@@ -723,7 +725,7 @@ export default Ember.Component.extend({
 		if (Ember.isEmpty(items)) {
 			//no items were selected
 			if (this.get('showEmptySelectionLabel') === true){
-				label = this.get("configurationService").getEmptySelectionLabel();
+				label = Ember.isPresent(this.get('emptySelectionLabel'))? this.get('emptySelectionLabel'): this.get("configurationService").getEmptySelectionLabel();
 			}
 		} else {
 			if (items.map) {
