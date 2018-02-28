@@ -13,6 +13,10 @@ export default Ember.Service.extend({
     return configuration;
   },
 
+  getIconStyles(){
+    return configuration.getConfig().icons;
+  },
+
   getMinLazyCharacters(){
     return configuration.getConfig().minLazyCharacters;
   },

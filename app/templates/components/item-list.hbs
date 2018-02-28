@@ -2,9 +2,9 @@
   <li class="dropdown-item" {{action 'actionItemSelect' value bubbles=false}} title={{combo-item-label value itemLabel}}>
     {{#if multiselect}}
       {{#if (is-item-selected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
-        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <i class='{{font-icon "checkbox-checked"}}' aria-hidden="true"></i>
       {{else}}
-        <i class="fa fa-square-o" aria-hidden="true"></i>
+        <i class='{{font-icon "checkbox-unchecked"}}' aria-hidden="true"></i>
       {{/if}}
     {{/if}}
     {{combo-item-label value itemLabel}}
@@ -12,7 +12,7 @@
 {{else}}
     {{!-- filteredValueList is empty = either because of filter or valuePromise is not yet resolved --}}
     {{#if valuePromiseResolving}}
-      <i class="fa fa-circle-o-notch fa-spin fa-fw"></i>
+      <i class='{{font-icon "loading"}}'></i>
       {{asyncLoaderStartLabel}}
     {{else}}
       <li class="dropdown-item">{{emptyValueListLabel}}</li>

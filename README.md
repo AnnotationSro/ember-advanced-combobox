@@ -90,6 +90,8 @@ Most often you would like to style the mobile version of combobox. To do this yo
 | mobileCancelButton| Text for "Cancel" button in mobile dropdown                                                                | "Cancel"          |
 | lazyDebounceTime | debounce time (in msec) when typing - used for lazy loading of comobobox items | 1000 |
 | minLazyCharacters | minimum number of characters to trigger lazy load fetch | 3 |
+| icons | JSON of font icons used | see example above |
+
 
 There are 2 ways to configure the combobox: using `config/environment.js` or by injecting service `ember-advanced-combobox/adv-combobox-configuration-service`:
 
@@ -109,7 +111,13 @@ Add this to your `config/environment.js` file:
     mobileOkButton: 'Confirm',
     mobileCancelButton: 'Cancel',
     lazyDebounceTime: 1000,
-    minLazyCharacters: 3
+    minLazyCharacters: 3,
+    icons: {
+      dropdown: 'fa fa-chevron-down',
+      'checkbox-checked': 'fa fa-check-square-o',
+      'checkbox-unchecked': 'fa fa-square-o',
+      loading: 'fa fa-circle-o-notch fa-spin fa-fw'
+    }
   }
   //---------------------------
 

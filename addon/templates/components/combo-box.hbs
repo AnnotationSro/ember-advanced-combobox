@@ -2,7 +2,7 @@
 
   {{input class="combo-input" value=inputValue tabindex="-1" key-up="inputValueChanged" autocorrect="off" autocapitalize="off" spellcheck="false"}}
   {{#if showDropdownButton}}
-    <i class="fa fa-chevron-down dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
+    <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
   {{/if}}
   </div>
   <ul class="dropdown dropdown-hidden">

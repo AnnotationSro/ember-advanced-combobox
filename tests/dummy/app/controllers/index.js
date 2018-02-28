@@ -55,6 +55,12 @@ export default Ember.Controller.extend({
 
       this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'bb');
       this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');
+      this.get('comboboxConfig').setConfiguration("icons", {
+        dropdown: 'fa fa-chevron-down',
+        'checkbox-checked': 'far fa-check-square',
+        'checkbox-unchecked': 'far fa-square',
+        loading: 'fas fa-circle-notch fa-spin'
+      });
 
   },
 
