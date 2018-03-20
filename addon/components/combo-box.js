@@ -1,11 +1,7 @@
 import Ember from 'ember';
 import layout from '../templates/components/combo-box';
-import {
-  accentRemovalHelper
-} from '../helpers/accent-removal-helper';
-import {
-  comboItemLabel
-} from '../helpers/combo-item-label';
+import {accentRemovalHelper} from '../helpers/accent-removal-helper';
+import {comboItemLabel} from '../helpers/combo-item-label';
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -374,6 +370,13 @@ export default Ember.Component.extend({
       return;
     }
     this.initSelectedValues();
+    if (Ember.isNone(this.get('valueList'))){
+		let noValueLabel = this.get('noValueLabel');
+		if (Ember.isPresent(noValueLabel)){
+			this.set('inputValue', noValueLabel);
+		}
+    return;
+	}
     if (Ember.isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible') && Ember.isNone(this.get('lazyCallback'))) {
       let chooseLabel = Ember.isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
       if (this.get('showChooseLabel') === false) {
