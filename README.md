@@ -51,6 +51,7 @@ __For more usage examples see dummy application.__
 | canFilter            | boolean value; if `true` user can filter values in the dropdown - filter is case- and accent- insensitive fulltext search                             |
 | disabled             | boolean value                                                                                                                                         |
 | orderBy              | Name of the property of valueList items to be used to sort the items in dropdown. If `orderBy` is not provided, items in dropdown will not be sorted. |
+| minLazyCharacters | overrides `minLazyCharacters` (see global configuration section)|
 | preselectFirst       | boolean value; if `true` combobox will automatically select the first item in the dropdown.                                                           |
 | onDropdownShow       | Action callback called when dropdown is going to show                                                           |
 | onDropdownHide       | Action callback called when dropdown is going to hide                                                             |

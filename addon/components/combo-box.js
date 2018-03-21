@@ -103,6 +103,13 @@ export default Ember.Component.extend({
     return (orderString1 < orderString2 ? -1 : (orderString1 > orderString2 ? 1 : 0));
   }),
 
+  getMinLazyCharacters(){
+    if (this.get('minLazyCharacters') === 0){
+      return 0;
+    }
+    return this.get('minLazyCharacters') || this.get('configurationService').getMinLazyCharacters();
+  },
+
   _isTesting: Ember.computed(function() {
     let config = Ember.getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
@@ -563,7 +570,7 @@ export default Ember.Component.extend({
     }
 
     if (Ember.isPresent(this.get('lazyCallback'))) {
-      let minLazyCharacters = this.get('configurationService').getMinLazyCharacters();
+      let minLazyCharacters = this.getMinLazyCharacters();
       //if combobox is lazy and there are not enough characters - do not show the dropdown
       if (Ember.isPresent(this.get('inputValue')) && this.get('inputValue').length < minLazyCharacters) {
         return;
@@ -941,7 +948,7 @@ export default Ember.Component.extend({
       let inputValue = this.get('inputValue');
       if (Ember.isPresent(lazyCallback) && Ember.isPresent(inputValue)) {
 
-        if (inputValue.trim().length < this.get('configurationService').getMinLazyCharacters()) {
+        if (inputValue.trim().length < this.getMinLazyCharacters()) {
           this.cancelLazyDebounce();
           if (this.get('dropdownVisible')) {
             this._hideDropdown(false, false);
