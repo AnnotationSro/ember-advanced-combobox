@@ -66,6 +66,9 @@ export default Ember.Controller.extend({
 
   actions: {
 
+actionSimpleSelectedCombo(selected){
+  this.set('selectedSimpleCombo', selected.value);
+},
     actionClearSingleCombo(){
       this.set('comboSelectedSingle', null);
     },

@@ -1,7 +1,11 @@
 import Ember from 'ember';
 import layout from '../templates/components/combo-box';
-import {accentRemovalHelper} from '../helpers/accent-removal-helper';
-import {comboItemLabel} from '../helpers/combo-item-label';
+import {
+  accentRemovalHelper
+} from '../helpers/accent-removal-helper';
+import {
+  comboItemLabel
+} from '../helpers/combo-item-label';
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -103,8 +107,8 @@ export default Ember.Component.extend({
     return (orderString1 < orderString2 ? -1 : (orderString1 > orderString2 ? 1 : 0));
   }),
 
-  getMinLazyCharacters(){
-    if (this.get('minLazyCharacters') === 0){
+  getMinLazyCharacters() {
+    if (this.get('minLazyCharacters') === 0) {
       return 0;
     }
     return this.get('minLazyCharacters') || this.get('configurationService').getMinLazyCharacters();
@@ -236,7 +240,7 @@ export default Ember.Component.extend({
 
   inputValueObserver: Ember.observer('inputValue', function() {
     if (Ember.isPresent(this.get('lazyCallback')) && this.get('simpleCombobox') === false) {
-      this._hideDropdown(false, false);
+      // this._hideDropdown(false, false);
     }
   }),
 
@@ -377,13 +381,13 @@ export default Ember.Component.extend({
       return;
     }
     this.initSelectedValues();
-    if (Ember.isNone(this.get('valueList'))){
-		let noValueLabel = this.get('noValueLabel');
-		if (Ember.isPresent(noValueLabel)){
-			this.set('inputValue', noValueLabel);
-		}
-    return;
-	}
+    if (Ember.isNone(this.get('valueList'))) {
+      let noValueLabel = this.get('noValueLabel');
+      if (Ember.isPresent(noValueLabel)) {
+        this.set('inputValue', noValueLabel);
+      }
+      return;
+    }
     if (Ember.isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible') && Ember.isNone(this.get('lazyCallback'))) {
       let chooseLabel = Ember.isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
       if (this.get('showChooseLabel') === false) {
@@ -477,7 +481,7 @@ export default Ember.Component.extend({
         return;
       }
 
-      if (this.get('simpleCombobox') === false) {
+      if (this.get('simpleCombobox') === false && Ember.isNone(this.get('lazyCallback'))) {
         this._showDropdown();
       }
       Ember.run.scheduleOnce('afterRender', this, function() {
@@ -672,9 +676,11 @@ export default Ember.Component.extend({
 
   _hideDropdown(acceptSelected, resetInput = true) {
 
-    if ( (this.get('isDestroyed') || this.get('isDestroying')) ) {
+    if ((this.get('isDestroyed') || this.get('isDestroying'))) {
       return;
     }
+
+    this.cancelLazyDebounce();
 
     Ember.$(this.element).find('.dropdown').css({
       'maxHeight': ''
@@ -749,8 +755,12 @@ export default Ember.Component.extend({
     let label = null;
     if (Ember.isEmpty(items)) {
       //no items were selected
-      if (this.get('showEmptySelectionLabel') === true) {
-        label = Ember.isPresent(this.get('emptySelectionLabel')) ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
+      if (Ember.isPresent(this.get('selected')) && Ember.isPresent(this.get('noValueLabel'))) {
+        label = this.get('noValueLabel');
+      } else {
+        if (this.get('showEmptySelectionLabel') === true) {
+          label = Ember.isPresent(this.get('emptySelectionLabel')) ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
+        }
       }
     } else {
       if (items.map) {

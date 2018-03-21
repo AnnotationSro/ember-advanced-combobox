@@ -3,6 +3,42 @@
 </p>
 
 <div>
+Lazy select (queries server after user types at least 3 characters into filter)
+{{combo-box
+  selected=comboSelectedLazy
+  itemKey='a'
+  itemLabel='b'
+  onSelected=(action 'onLazySingle')
+  disabled=disabled
+  lazyCallback=(action 'lazyCallback')
+  minLazyCharacters=2
+}}
+{{oneItemSelectedLazyFormatted}}
+</div>
+
+<div>
+  Simple combobox
+  {{combo-box
+					canFilter=false
+					lazyCallback=(action 'lazyCallback')
+          itemKey='a'
+          itemLabel='b'
+					selected=selectedSimpleCombo
+					onSelected=(action 'actionSimpleSelectedCombo')
+					showDropdownButton=false
+					showLabelWhenDisabled=false
+					showChooseLabel=false
+					showEmptySelectionLabel=false
+					simpleCombobox=true
+					preselectFirst=false
+					maxDropdownHeight=175
+			}}
+</div>
+ <p>
+
+</p>
+
+<div>
  Async value
 {{combo-box
   valuePromise=asyncValueList
@@ -294,22 +330,6 @@ Many items - automatic scrollbar
 }}
 </div>
 
- <p>
-
-</p>
-<div>
-Lazy select (queries server after user types at least 3 characters into filter)
-{{combo-box
-  selected=comboSelectedLazy
-  itemKey='a'
-  itemLabel='b'
-  onSelected=(action 'onLazySingle')
-  disabled=disabled
-  lazyCallback=(action 'lazyCallback')
-  minLazyCharacters=2
-}}
-{{oneItemSelectedLazyFormatted}}
-</div>
  <p>
 
 </p>
