@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import $ from 'jquery';
 
 let CONFIG_PROPERTIES = {
   emptySelectionLabel: "",
@@ -21,7 +21,7 @@ let CONFIG_PROPERTIES = {
 
 export default {
   load(config) {
-    CONFIG_PROPERTIES = Ember.$.extend(true, {}, CONFIG_PROPERTIES, config);
+    CONFIG_PROPERTIES = $.extend(true, {}, CONFIG_PROPERTIES, config);
   },
 
   getConfig(){

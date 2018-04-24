@@ -4,6 +4,7 @@
 
 <div>
 Lazy select (queries server after user types at least 3 characters into filter)
+<br>
 {{combo-box
   selected=comboSelectedLazy
   itemKey='a'
@@ -11,6 +12,18 @@ Lazy select (queries server after user types at least 3 characters into filter)
   onSelected=(action 'onLazySingle')
   disabled=disabled
   lazyCallback=(action 'lazyCallback')
+  abortLazyCallback=(action 'abortLazyCallback')
+  minLazyCharacters=2
+}}
+<br>
+{{combo-box
+  selected=comboSelectedLazy
+  itemKey='a'
+  itemLabel='b'
+  onSelected=(action 'onLazySingle')
+  disabled=disabled
+  lazyCallback=(action 'lazyCallback')
+  abortLazyCallback=(action 'abortLazyCallback')
   minLazyCharacters=2
 }}
 {{oneItemSelectedLazyFormatted}}

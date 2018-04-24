@@ -55,6 +55,8 @@
    padding-right: 10px;
    max-height: 300px;
    max-height: 30vh;
+   -webkit-transform: translateZ(0);
+    -webkit-filter: blur(0);
  }
  .combobox-mobile-dialog button{
    margin: 10px;
@@ -90,6 +92,10 @@
 
 .advanced-combo-box.combobox-label-only .combo-input{
   cursor: default;
+}
+
+.advanced-combo-box.lazy-loading-in-progress .input-group .dropdown-icon{
+  font-size: 14px;
 }
 
 .ember-modal-dialog {

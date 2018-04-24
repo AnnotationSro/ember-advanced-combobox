@@ -1,8 +1,21 @@
 /* eslint no-console: 0 */
+/* eslint-disable*/
 
-import Ember from 'ember';
+import $ from 'jquery';
+import {
+  Promise as EmberPromise
+} from 'rsvp';
 
-export default Ember.Controller.extend({
+import {
+  isNone,
+  isPresent
+} from '@ember/utils';
+import {
+  inject as service
+} from '@ember/service';
+import Controller from '@ember/controller';
+
+export default Controller.extend({
 
   comboValueList: [{
     a: 'hello1',
@@ -38,7 +51,7 @@ export default Ember.Controller.extend({
 
   showFixedCombo: true,
 
-  comboboxConfig: Ember.inject.service('adv-combobox-configuration-service'),
+  comboboxConfig: service('adv-combobox-configuration-service'),
 
   init() {
     this._super(...arguments);
@@ -53,23 +66,23 @@ export default Ember.Controller.extend({
 
 
 
-      this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'bb');
-      this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');
-      this.get('comboboxConfig').setConfiguration("icons", {
-        dropdown: 'fa fa-chevron-down',
-        'checkbox-checked': 'far fa-check-square',
-        'checkbox-unchecked': 'far fa-square',
-        loading: 'fas fa-circle-notch fa-spin'
-      });
+    this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'bb');
+    this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');
+    this.get('comboboxConfig').setConfiguration("icons", {
+      dropdown: 'fa fa-chevron-down',
+      'checkbox-checked': 'far fa-check-square',
+      'checkbox-unchecked': 'far fa-square',
+      loading: 'fas fa-circle-notch fa-spin'
+    });
 
   },
 
   actions: {
 
-actionSimpleSelectedCombo(selected){
-  this.set('selectedSimpleCombo', selected.value);
-},
-    actionClearSingleCombo(){
+    actionSimpleSelectedCombo(selected) {
+      this.set('selectedSimpleCombo', selected.value);
+    },
+    actionClearSingleCombo() {
       this.set('comboSelectedSingle', null);
     },
 
@@ -78,7 +91,7 @@ actionSimpleSelectedCombo(selected){
     },
 
     customPreviewLabelFn(selected) {
-      if (Ember.isNone(selected)) {
+      if (isNone(selected)) {
         return '';
       }
       return `Selected: ${selected.b}`;
@@ -86,7 +99,7 @@ actionSimpleSelectedCombo(selected){
 
     onDropdownShow() {
       console.log('onDropdownShow');
-      this.set('complexValuePromise', new Ember.RSVP.Promise((resolve) => {
+      this.set('complexValuePromise', new EmberPromise((resolve) => {
         setTimeout(() => {
           resolve(this.get('comboValueList'));
         }, 3000);
@@ -152,7 +165,7 @@ actionSimpleSelectedCombo(selected){
     onSelectedMulti(selectedValues) {
       this.set('comboSelectedMulti', selectedValues.map((o) => o.a));
 
-      if (Ember.isPresent(selectedValues)) {
+      if (isPresent(selectedValues)) {
         this.set('comboSelectedMultiFormatted', selectedValues.map((o) => JSON.stringify(o)).join(','));
       } else {
         this.set('comboSelectedMultiFormatted', null);
@@ -181,7 +194,7 @@ actionSimpleSelectedCombo(selected){
         b: 'a'
       }];
 
-      this.set('asyncValueList', new Ember.RSVP.Promise(function(resolve) {
+      this.set('asyncValueList', new EmberPromise(function(resolve) {
         setTimeout(function() {
           resolve(valueList);
         }, 3000);
@@ -192,20 +205,37 @@ actionSimpleSelectedCombo(selected){
       this.set('comboValueList', null);
     },
 
-    lazyCallback(query) {
-      return new Ember.RSVP.Promise(resolve => {
-        let result = [];
-        for (let i = 0; i < 10; i++) {
-          let text = `${query}_${i+1}`;
-          result.push({
-            a: text,
-            b: text
-          });
+    abortLazyCallback() {
+      if (isPresent(this.get('lazyCallbackAjax'))) {
+        let xhr = this.get('lazyCallbackAjax');
+        if(xhr && xhr.readyState != 4){
+            xhr.abort();
         }
-        setTimeout(() => {
-          resolve(result);
-        }, 2000);
+        this.set('lazyCallbackAjax', null);
+      }
+    },
+
+    lazyCallback(query) {
+      let a = new EmberPromise((resolve, reject) => {
+        let ajax = $.ajax({
+          type: "GET",
+          url: "https://reqres.in/api/users?delay=2",
+          success: function(data) {
+            let result = [];
+            for (let i = 0; i < 3; i++) {
+              let text = `${query}_${i+1}_${data.data[i].first_name}`;
+              result.push({
+                a: data.data[i].first_name,
+                b: text
+              });
+            }
+            resolve(result);
+          }
+        });
+        this.set('lazyCallbackAjax', ajax);
       });
+
+      return a;
     }
   }
 });

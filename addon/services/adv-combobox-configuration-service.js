@@ -1,8 +1,8 @@
-import Ember from 'ember';
+import Service from '@ember/service';
 import configuration from 'ember-advanced-combobox/configuration';
 
 
-export default Ember.Service.extend({
+export default Service.extend({
 
 
   setConfiguration(key, value){

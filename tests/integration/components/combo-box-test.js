@@ -1,16 +1,22 @@
+import { Promise as EmberPromise } from 'rsvp';
+import $ from 'jquery';
+import EmberObject from '@ember/object';
+import { run } from '@ember/runloop';
+import { A } from '@ember/array';
+import { isNone } from '@ember/utils';
+import Service from '@ember/service';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import Ember from 'ember';
 import wait from 'ember-test-helpers/wait';
 
-const i18nMock = Ember.Service.extend({
+const i18nMock = Service.extend({
   t(key){
     return `dummy-translated-message for ${key}`;
   }
 });
 
 function stripComments(str){
-  if (Ember.isNone(str)){
+  if (isNone(str)){
     return str;
   }
   return str.replace(/<!--(.*?)-->/gm, "");
@@ -27,7 +33,7 @@ moduleForComponent('combo-box', 'Integration | Component | combo box', {
 
 test('it shows and hides dropdown when clicked into input', function(assert) {
 
-  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -50,10 +56,10 @@ test('it shows and hides dropdown when clicked into input', function(assert) {
   //just to be sure - dropdown should not be visible, yet
   assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
 
-  Ember.run(()=>{
+  run(()=>{
     this.$('.combo-input').click();
   });
-  Ember.run(()=>{
+  run(()=>{
     //dropdown should be visible
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
   });
@@ -64,7 +70,7 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -87,10 +93,10 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
   //just to be sure - dropdown should not be visible, yet
   assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
 
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
-  Ember.run(()=>{
+  run(()=>{
     //dropdown should be visible
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
   });
@@ -99,7 +105,7 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
 
 test('it shows and hides dropdown when clicked into input - without button', function(assert) {
 
-  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -125,10 +131,10 @@ test('it shows and hides dropdown when clicked into input - without button', fun
   //there should be no dropdown button visible
   assert.equal(this.$().find('.dropdown-icon').length, 0);
 
-  Ember.run(()=>{
+  run(()=>{
     this.$('.combo-input').click();
   });
-  Ember.run(()=>{
+  run(()=>{
     //dropdown should be visible
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
   });
@@ -138,7 +144,7 @@ test('it shows and hides dropdown when clicked into input - without button', fun
 
 test('it renders plain JSON array as valueList', function(assert) {
 
-  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -161,7 +167,7 @@ test('it renders plain JSON array as valueList', function(assert) {
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, valueList.length);
@@ -172,20 +178,20 @@ test('it renders plain JSON array as valueList', function(assert) {
 
 test('it renders Ember Object array as valueList', function(assert) {
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"label1"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"label2"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"label3"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -208,7 +214,7 @@ test('it renders Ember Object array as valueList', function(assert) {
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, valueList.length);
@@ -218,7 +224,7 @@ test('it renders Ember Object array as valueList', function(assert) {
 
 test('it sorts plain JSON array', function(assert) {
 
-  let valueList = new Ember.A([{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}]);
+  let valueList = new A([{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -243,13 +249,13 @@ test('it sorts plain JSON array', function(assert) {
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
-    assert.equal(stripComments(Ember.$($items[0]).html()).trim(), 'labela');
-    assert.equal(stripComments(Ember.$($items[1]).html()).trim(), 'labelaa');
-    assert.equal(stripComments(Ember.$($items[2]).html()).trim(), 'labelb');
+    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments($($items[2]).html()).trim(), 'labelb');
   });
 
 });
@@ -257,20 +263,20 @@ test('it sorts plain JSON array', function(assert) {
 
 test('it sorts Ember Object array', function(assert) {
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"labela"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"labelc"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"labelaa"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -295,13 +301,13 @@ test('it sorts Ember Object array', function(assert) {
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
-    assert.equal(stripComments(Ember.$($items[0]).html()).trim(), 'labela');
-    assert.equal(stripComments(Ember.$($items[1]).html()).trim(), 'labelaa');
-    assert.equal(stripComments(Ember.$($items[2]).html()).trim(), 'labelc');
+    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments($($items[2]).html()).trim(), 'labelc');
   });
 
 });
@@ -310,22 +316,22 @@ test('it sorts Ember Object array', function(assert) {
 test('it resolves valueList Promise ', function(assert) {
   let done = assert.async();
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"labela"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"labelc"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"labelaa"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
-  let valueListPromise = new Ember.RSVP.Promise(function(resolve){
+  let valueListPromise = new EmberPromise(function(resolve){
     setTimeout(function(){
       resolve(valueList);
     }, 10);
@@ -355,7 +361,7 @@ test('it resolves valueList Promise ', function(assert) {
 
  wait().then(() => {
   valueListPromise.then(function(){
-    Ember.run(()=>{
+    run(()=>{
         $this.find('.dropdown-icon').click();
 
         assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
@@ -377,12 +383,12 @@ test('it handles empty valueList - cliking on dropdown button', function(assert)
     }}
   `);
 
-  Ember.run(()=>{
+  run(()=>{
     assert.equal(this.$().find('.combobox-disabled').length, 1);
   });
 
   //open dropdown - should not work
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
   });
@@ -399,12 +405,12 @@ test('it handles empty valueList - cliking on combobox input', function(assert) 
     }}
   `);
 
-  Ember.run(()=>{
+  run(()=>{
     assert.equal(this.$().find('.combobox-disabled').length, 1);
   });
 
   //open dropdown - should not work
-  Ember.run(()=>{
+  run(()=>{
     this.$('.combo-input').click();
     assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
   });
@@ -414,20 +420,20 @@ test('it handles empty valueList - cliking on combobox input', function(assert) 
 
 test('it calls selected callback', function(assert) {
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"label1"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"label2"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"label3"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -457,11 +463,11 @@ test('it calls selected callback', function(assert) {
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[0]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[0]).click();
   });
 
 });
@@ -469,20 +475,20 @@ test('it calls selected callback', function(assert) {
 
 test('it calls multiselect selected callback - adds new selected items', function(assert) {
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"label1"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"label2"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"label3"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -519,18 +525,18 @@ test('it calls multiselect selected callback - adds new selected items', functio
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[0]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[0]).click();
     // Ember.$($this.find('.dropdown-item')[1]).click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[1]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[1]).click();
   });
   // close dropdown = confirm selection
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
 });
@@ -540,20 +546,20 @@ test('it calls multiselect selected callback - adds new selected items', functio
  */
 test('it calls multiselect selected callback - removes selected items', function(assert) {
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"label1"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"label2"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"label3"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -585,18 +591,18 @@ test('it calls multiselect selected callback - removes selected items', function
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[0]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[0]).click();
     // Ember.$($this.find('.dropdown-item')[1]).click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[1]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[1]).click();
   });
   // close dropdown = confirm selection
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
 });
@@ -604,20 +610,20 @@ test('it calls multiselect selected callback - removes selected items', function
 test('it does not call selected callback because user selected value that was already selected', function(assert) {
   assert.expect(0);
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"label1"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"label2"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"label3"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -643,15 +649,15 @@ test('it does not call selected callback because user selected value that was al
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[0]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[0]).click();
   });
 
   wait().then(() => {
-     Ember.run(()=>{
+     run(()=>{
          done();
     });
   });
@@ -662,20 +668,20 @@ test('it does not call selected callback because user selected value that was al
 test('it calls onDropdownShow/Hide callbacks', function(assert) {
   assert.expect(2);
 
-  let obj1 = Ember.Object.extend({}).create({
+  let obj1 = EmberObject.extend({}).create({
     key: 'a',
     label:"label1"
   });
-  let obj2 = Ember.Object.extend({}).create({
+  let obj2 = EmberObject.extend({}).create({
     key: 'b',
     label:"label2"
   });
-  let obj3 = Ember.Object.extend({}).create({
+  let obj3 = EmberObject.extend({}).create({
     key: 'c',
     label:"label3"
   });
 
-  let valueList = new Ember.A([obj1, obj2, obj3]);
+  let valueList = new A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -706,15 +712,15 @@ test('it calls onDropdownShow/Hide callbacks', function(assert) {
   let $this = this.$();
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     this.$('.dropdown-icon').click();
   });
-  Ember.run(()=>{
-    Ember.$($this.find('.dropdown-item')[0]).click();
+  run(()=>{
+    $($this.find('.dropdown-item')[0]).click();
   });
 
   wait().then(() => {
-     Ember.run(()=>{
+     run(()=>{
          done();
     });
   });
@@ -724,7 +730,7 @@ test('it calls onDropdownShow/Hide callbacks', function(assert) {
 
 test('it filters valueList', function(assert) {
 
-  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', null);
@@ -752,7 +758,7 @@ test('it filters valueList', function(assert) {
 
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, 2);
   });
@@ -761,7 +767,7 @@ test('it filters valueList', function(assert) {
 
 test('it filters valueList with previously selected value', function(assert) {
 
-  let valueList = new Ember.A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -789,7 +795,7 @@ test('it filters valueList with previously selected value', function(assert) {
 
 
   //open dropdown
-  Ember.run(()=>{
+  run(()=>{
     assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, 2);
   });

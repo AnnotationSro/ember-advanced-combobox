@@ -1,14 +1,15 @@
-import Ember from 'ember';
+import { helper as buildHelper } from '@ember/component/helper';
+import { isEmpty, isNone } from '@ember/utils';
 
 export function isItemSelected(params/*, hash*/) {
   let list = params[0];
   let item = params[1];
 
-  if (Ember.isEmpty(list) || Ember.isNone(item)){
+  if (isEmpty(list) || isNone(item)){
     return false;
   }
 
   return list.indexOf(item) > -1;
 }
 
-export default Ember.Helper.helper(isItemSelected);
+export default buildHelper(isItemSelected);

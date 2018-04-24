@@ -1,12 +1,15 @@
-import Ember from 'ember';
+import { isPresent } from '@ember/utils';
+import { assert } from '@ember/debug';
+import { inject as service } from '@ember/service';
+import Helper from '@ember/component/helper';
 
-export default Ember.Helper.extend({
-  configurationService: Ember.inject.service('adv-combobox-configuration-service'),
+export default Helper.extend({
+  configurationService: service('adv-combobox-configuration-service'),
 
   compute(params) {
     let [iconClassName] = params;
     let icon = this.get('configurationService').getIconStyles()[iconClassName];
-    Ember.assert(`unknown icon name: ${iconClassName}`, Ember.isPresent(icon));
+    assert(`unknown icon name: ${iconClassName}`, isPresent(icon));
 
     return icon;
   }
