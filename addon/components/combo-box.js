@@ -1,5 +1,5 @@
 import { scheduleOnce, next } from '@ember/runloop';
-import { isHTMLSafe } from '@ember/template';
+import { isHTMLSafe } from '@ember/string';
 import $ from 'jquery';
 import { on } from '@ember/object/evented';
 import { getOwner } from '@ember/application';
