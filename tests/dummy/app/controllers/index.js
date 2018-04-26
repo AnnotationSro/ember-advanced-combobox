@@ -29,7 +29,10 @@ export default Controller.extend({
   }, {
     a: 'hello21',
     b: "bb"
-  }],
+  },{
+   a: 'xhello21',
+   b: "prvy"
+ }],
   comboValueListMany: [],
   comboSelectedSingle: null,
   comboPreSelectedSingle: null,

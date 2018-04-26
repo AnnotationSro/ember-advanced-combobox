@@ -52,6 +52,27 @@ Lazy select (queries server after user types at least 3 characters into filter)
 </p>
 
 <div>
+  Sorted combobox
+  {{combo-box
+					canFilter=false
+          orderBy='a'
+          valueList=comboValueList
+          selected=comboSelectedSingle
+          itemKey='a'
+          itemLabel='b'
+          multiselect=false
+          onSelected=(action 'onSelectedSingle')
+          disabled=disabled
+          labelOnly=labelOnly
+          emptySelectionLabel='empty value'
+			}}
+</div>
+ <p>
+
+</p>
+
+
+<div>
  Async value
 {{combo-box
   valuePromise=asyncValueList

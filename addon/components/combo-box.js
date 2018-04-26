@@ -295,7 +295,12 @@ export default Component.extend({
 
   filteredValueList: computed('inputValue', 'sortedValueList.[]', function() {
 
-    let valueList = this.get('sortedValueList');
+    let valueList = null;
+    if (isPresent(this.get('orderBy'))) {
+      valueList = this.get('sortedValueList');
+    } else {
+      valueList = this.get('valueList');
+    }
 
     if (!this.get('canFilter')) {
       return valueList;
