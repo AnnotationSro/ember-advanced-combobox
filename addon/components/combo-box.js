@@ -1,14 +1,37 @@
-import { scheduleOnce, next } from '@ember/runloop';
-import { isHTMLSafe } from '@ember/string';
+import {
+  scheduleOnce,
+  next
+} from '@ember/runloop';
+import {
+  isHTMLSafe
+} from '@ember/string';
 import $ from 'jquery';
-import { on } from '@ember/object/evented';
-import { getOwner } from '@ember/application';
-import { get, computed, observer } from '@ember/object';
-import { sort } from '@ember/object/computed';
-import { inject as service } from '@ember/service';
-import { A } from '@ember/array';
+import {
+  on
+} from '@ember/object/evented';
+import {
+  getOwner
+} from '@ember/application';
+import {
+  get,
+  computed,
+  observer
+} from '@ember/object';
+import {
+  sort
+} from '@ember/object/computed';
+import {
+  inject as service
+} from '@ember/service';
+import {
+  A
+} from '@ember/array';
 import Component from '@ember/component';
-import { isNone, isEmpty, isPresent } from '@ember/utils';
+import {
+  isNone,
+  isEmpty,
+  isPresent
+} from '@ember/utils';
 import layout from '../templates/components/combo-box';
 import {
   accentRemovalHelper
@@ -67,10 +90,11 @@ function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
 export default Component.extend({
   classNames: ['advanced-combo-box'],
   classNameBindings: ['labelOnly:combobox-label-only',
-  '_disabledCombobox:combobox-disabled',
-  'dropdownVisible:dropdown-visible:dropdown-hidden',
-  'isComboFocused:combo-focused',
-'lazyCallbackInProgress:lazy-loading-in-progress'],
+    '_disabledCombobox:combobox-disabled',
+    'dropdownVisible:dropdown-visible:dropdown-hidden',
+    'isComboFocused:combo-focused',
+    'lazyCallbackInProgress:lazy-loading-in-progress'
+  ],
   layout,
 
   disabled: false,
@@ -90,7 +114,7 @@ export default Component.extend({
   onDropdownShow() {},
   onDropdownHide() {},
   lazyCallback: null,
-  abortLazyCallback(){},
+  abortLazyCallback() {},
   showDropdownButton: true,
   disabledWhenEmpty: true,
   showLabelWhenDisabled: true,
@@ -134,7 +158,7 @@ export default Component.extend({
     return config.environment === 'test';
   }),
 
-  canShowDropdownButton: computed('showDropdownButton', 'lazyCallbackInProgress', function(){
+  canShowDropdownButton: computed('showDropdownButton', 'lazyCallbackInProgress', function() {
     return this.get('showDropdownButton') && !this.get('lazyCallbackInProgress')
   }),
 
@@ -193,29 +217,29 @@ export default Component.extend({
     $element.find('.dropdown').css('min-width', $element.css('width'));
 
     //initInputClickHandler
-     $(this.element).find(' *').on('touchstart', (event) => {
-       event.stopPropagation();
-       if (this.get('_disabledCombobox')) {
-         return;
-       }
-       this._showMobileDropdown();
-     });
+    $(this.element).find(' *').on('touchstart', (event) => {
+      event.stopPropagation();
+      if (this.get('_disabledCombobox')) {
+        return;
+      }
+      this._showMobileDropdown();
+    });
 
-     $(this.element).find('.combo-input').on('click', () => {
-       //comobobox input was clicked on
-       if (this.get('_disabledCombobox') || this.get('labelOnly')) {
-         //no clicking on input allowed
-         return;
-       }
+    $(this.element).find('.combo-input').on('click', () => {
+      //comobobox input was clicked on
+      if (this.get('_disabledCombobox') || this.get('labelOnly')) {
+        //no clicking on input allowed
+        return;
+      }
 
-       if (this.get('simpleCombobox') === false && isNone(this.get('lazyCallback'))) {
-         this._showDropdown();
-       }
-       scheduleOnce('afterRender', this, function() {
-         $(this.element).find('.combo-input-with-dropdown').focus();
-       });
+      if (this.get('simpleCombobox') === false && isNone(this.get('lazyCallback'))) {
+        this._showDropdown();
+      }
+      scheduleOnce('afterRender', this, function() {
+        $(this.element).find('.combo-input-with-dropdown').focus();
+      });
 
-     });
+    });
   },
 
   willDestroyElement() {
@@ -242,10 +266,12 @@ export default Component.extend({
     if (this.get('lazyCallbackInProgress') === true) {
       return;
     }
-    if (this.get('_disabledCombobox') === true && this.get('showLabelWhenDisabled') === false) {
-      this.set('inputValue', '');
-    } else {
-      this.set('inputValue', this.get('selectedValueLabel'));
+    if (this.get('_disabledCombobox') === true) {
+      if (this.get('showLabelWhenDisabled') === false) {
+        this.set('inputValue', '');
+      } else {
+        this.set('inputValue', this.get('selectedValueLabel'));
+      }
     }
   })),
 
@@ -294,7 +320,6 @@ export default Component.extend({
   }),
 
   filteredValueList: computed('inputValue', 'sortedValueList.[]', function() {
-
     let valueList = null;
     if (isPresent(this.get('orderBy'))) {
       valueList = this.get('sortedValueList');
@@ -424,8 +449,12 @@ export default Component.extend({
       this._changeDropdownPosition();
 
       this.get('valuePromise').then((result) => {
+
         this.set('valuePromiseResolving', false);
         this.set('valueList', result);
+
+        this.notifyPropertyChange('sortedValueList');
+
       });
     }
   })),
