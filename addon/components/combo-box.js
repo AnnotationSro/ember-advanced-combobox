@@ -319,7 +319,7 @@ export default Component.extend({
     }
   }),
 
-  filteredValueList: computed('inputValue', 'sortedValueList.[]', function() {
+  filteredValueList: computed('inputValue', 'sortedValueList.[]', 'valueList.[]', function() {
     let valueList = null;
     if (isPresent(this.get('orderBy'))) {
       valueList = this.get('sortedValueList');
