@@ -232,6 +232,10 @@ export default Component.extend({
         return;
       }
 
+      if (isEmpty(this.get('internalSelectedList'))){
+        this.set('inputValue', null);
+      }
+
       if (this.get('simpleCombobox') === false && isNone(this.get('lazyCallback'))) {
         this._showDropdown();
       }
@@ -983,10 +987,13 @@ export default Component.extend({
     }
   },
 
-  setLazyDebounce(inputValue) {
+  setLazyDebounce(inputValue, runImmidiate = false) {
     this.cancelLazyDebounce();
 
-    const debounceTime = this.get('configurationService').getLazyDebounceTime();
+    let debounceTime = this.get('configurationService').getLazyDebounceTime();
+    if (runImmidiate === true){
+      debounceTime = 0;
+    }
 
     let debounceTimer = setTimeout(() => {
       this.set('lazyCallbackInProgress', true);
@@ -1035,6 +1042,10 @@ export default Component.extend({
       if (this.get('dropdownVisible')) {
         this._hideDropdown(true);
       } else {
+        if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))){
+          this.setLazyDebounce(this.get('inputValue'), true);
+          return;
+        }
         $(document).trigger('ember-advanced-combobox-hide-dropdown');
         this._showDropdown();
       }

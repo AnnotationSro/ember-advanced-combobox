@@ -69,7 +69,7 @@ export default Controller.extend({
 
 
 
-    this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'bb');
+    this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'choose value');
     this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');
     this.get('comboboxConfig').setConfiguration("icons", {
       dropdown: 'fa fa-chevron-down',
