@@ -998,6 +998,12 @@ export default Component.extend({
   setLazyDebounce(inputValue, runImmidiate = false) {
     this.cancelLazyDebounce();
 
+    let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
+
+    if (this.get('showChooseLabel') === true && inputValue === chooseLabel){
+		inputValue = '';
+	}
+
     let debounceTime = this.get('configurationService').getLazyDebounceTime();
     if (runImmidiate === true){
       debounceTime = 0;
