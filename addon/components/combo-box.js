@@ -702,6 +702,7 @@ export default Component.extend({
 
     let popper = new window.Popper($input[0], $dropdown[0], {
       placement: 'bottom-start',
+      positionFixed: true,
       modifiers: {
         preventOverflow: {
           boundariesElement: 'viewport'
