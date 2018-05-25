@@ -468,6 +468,10 @@ export default Component.extend({
     if (this.get('simpleCombobox') === true) {
       return;
     }
+    if (isEmpty(this.get('valueList')) && isPresent(this.get('noValueLabel'))){
+      this.set('inputValue', this.get('noValueLabel'));
+      return;
+	}
     this.initSelectedValues();
     if (isNone(this.get('valueList'))) {
       let noValueLabel = this.get('noValueLabel');
@@ -476,7 +480,7 @@ export default Component.extend({
       }
       return;
     }
-    if (isEmpty(this.get('internalSelectedList')) && !this.get('dropdownVisible') && isNone(this.get('lazyCallback'))) {
+    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected')))&& !this.get('dropdownVisible') && isNone(this.get('lazyCallback'))) {
       let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
       if (this.get('showChooseLabel') === false) {
         chooseLabel = null;
@@ -484,7 +488,11 @@ export default Component.extend({
       this.set('inputValue', chooseLabel);
     } else {
       if (isNone(this.get('lazyCallback'))) {
-        this.set('inputValue', '');
+        let selectedKeys = this._itemKeysListToItemObjects(this.get('selected'));
+        if (isEmpty(selectedKeys)) {
+          //selected value is not within the new valueList
+          this.set('inputValue', '');
+        }
       }
     }
 
@@ -622,7 +630,7 @@ export default Component.extend({
   },
 
   _getPropertyFromItem(item, property) {
-    if (isPresent(property) && isPresent(item)) {
+    if (isPresent(property) && isPresent(item) && typeof item !== 'string') {
       return get(item, property);
     } else {
       return item;
