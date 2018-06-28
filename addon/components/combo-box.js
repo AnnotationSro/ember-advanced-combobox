@@ -509,9 +509,7 @@ export default Component.extend({
     if (this.get('multiselect')) {
       this.get('onSelected')(newList);
     } else {
-      if (isEmpty(newList)) {
-        this.get('onSelected')(null);
-      } else {
+      if (!isEmpty(newList)) {
         this.get('onSelected')(getObjectFromArray(newList, 0));
       }
     }

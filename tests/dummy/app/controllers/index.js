@@ -18,6 +18,9 @@ import Controller from '@ember/controller';
 export default Controller.extend({
 
   comboValueList: [{
+    a: null,
+    b: 'ja som prazdny'
+  },{
     a: 'hello1',
     b: "a"
   }, {
