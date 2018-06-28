@@ -1056,7 +1056,7 @@ export default Component.extend({
         this._hideDropdown(true);
       } else {
         if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))){
-          this.setLazyDebounce(this.get('inputValue'), true);
+          this.setLazyDebounce('', true);
           return;
         }
         $(document).trigger('ember-advanced-combobox-hide-dropdown');
