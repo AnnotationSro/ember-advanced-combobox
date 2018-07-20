@@ -232,7 +232,7 @@ export default Component.extend({
         return;
       }
 
-      if (isEmpty(this.get('internalSelectedList'))){
+      if (isEmpty(this.get('internalSelectedList'))) {
         this.set('inputValue', null);
       }
 
@@ -468,10 +468,10 @@ export default Component.extend({
     if (this.get('simpleCombobox') === true) {
       return;
     }
-    if (isEmpty(this.get('valueList')) && isPresent(this.get('noValueLabel'))){
+    if (isEmpty(this.get('valueList')) && isPresent(this.get('noValueLabel'))) {
       this.set('inputValue', this.get('noValueLabel'));
       return;
-	}
+    }
     this.initSelectedValues();
     if (isNone(this.get('valueList'))) {
       let noValueLabel = this.get('noValueLabel');
@@ -480,7 +480,7 @@ export default Component.extend({
       }
       return;
     }
-    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected')))&& !this.get('dropdownVisible') && isNone(this.get('lazyCallback'))) {
+    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected'))) && !this.get('dropdownVisible') && isNone(this.get('lazyCallback'))) {
       let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
       if (this.get('showChooseLabel') === false) {
         chooseLabel = null;
@@ -724,8 +724,7 @@ export default Component.extend({
       }
     } else {
       if (isNone('lazyCallback')) {
-
-        let chooseLabel = this.get('configurationService').getChooseLabel();
+        let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
         if (this.get('showChooseLabel') === false) {
           chooseLabel = null;
         }
@@ -828,7 +827,7 @@ export default Component.extend({
         label = this.get('noValueLabel');
       } else {
         if (this.get('showEmptySelectionLabel') === true) {
-          label = isPresent(this.get('emptySelectionLabel')) ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
+          label = (isPresent(this.get('emptySelectionLabel')) || this.get('emptySelectionLabel')==='') ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
         }
       }
     } else {
@@ -999,12 +998,12 @@ export default Component.extend({
 
     let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
 
-    if (this.get('showChooseLabel') === true && inputValue === chooseLabel){
-		inputValue = '';
-	}
+    if (this.get('showChooseLabel') === true && inputValue === chooseLabel) {
+      inputValue = '';
+    }
 
     let debounceTime = this.get('configurationService').getLazyDebounceTime();
-    if (runImmidiate === true){
+    if (runImmidiate === true) {
       debounceTime = 0;
     }
 
@@ -1055,7 +1054,7 @@ export default Component.extend({
       if (this.get('dropdownVisible')) {
         this._hideDropdown(true);
       } else {
-        if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))){
+        if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))) {
           this.setLazyDebounce('', true);
           return;
         }

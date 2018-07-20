@@ -57,6 +57,8 @@ export default Controller.extend({
 
   showFixedCombo: true,
 
+  myChooseLabel:'ja som myChooseLabel',
+
   comboboxConfig: service('adv-combobox-configuration-service'),
 
   init() {

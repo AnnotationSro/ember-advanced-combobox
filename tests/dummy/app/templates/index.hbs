@@ -52,6 +52,28 @@ Lazy select (queries server after user types at least 3 characters into filter)
 </p>
 
 <div>
+  Combobox with dynamic chooseLabel
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedSingle
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onSelectedSingle')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+    emptySelectionLabel=myChooseLabel
+  }}
+
+      {{input value=myChooseLabel}}
+      {{myChooseLabel}}
+</div>
+ <p>
+
+</p>
+
+<div>
   Sorted combobox
   {{combo-box
 					canFilter=false
