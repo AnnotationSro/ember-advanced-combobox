@@ -21,7 +21,7 @@
 
 .advanced-combo-box input{
   border: none;
-  width: calc( 100% - 25px);
+  width: calc( 100% - 20px);
   outline: none;
   text-overflow: ellipsis;
 }

@@ -1,13 +1,16 @@
 <div class="input-group" tabindex={{if tabbable '-1' '0'}}>
-
-  {{input class="combo-input" value=inputValue tabindex="-1" key-up="inputValueChanged" autocorrect="off" autocapitalize="off" spellcheck="false"}}
-  {{#if canShowDropdownButton}}
-    <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
-  {{/if}}
-  {{#if lazyCallbackInProgress}}
-    <i class="{{font-icon "loading"}} dropdown-icon" aria-hidden="true"></i>
-  {{/if}}
+  
+  <div class="input-wrapper">
+    {{input class="combo-input" value=inputValue tabindex="-1" key-up="inputValueChanged" autocorrect="off" autocapitalize="off" spellcheck="false"}}
+    {{#if canShowDropdownButton}}
+      <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}}></i>
+    {{/if}}
+    {{#if lazyCallbackInProgress}}
+      <i class="{{font-icon "loading"}} dropdown-icon" aria-hidden="true"></i>
+    {{/if}}
   </div>
+
+</div>
   <ul class="dropdown dropdown-hidden">
     {{partial 'components/item-list'}}
   </ul>
