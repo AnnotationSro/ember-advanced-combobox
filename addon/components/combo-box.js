@@ -555,6 +555,7 @@ export default Component.extend({
 
     scheduleOnce('afterRender', this, function() {
       $(this.element).find('.combo-input').prop('readonly', notClickable);
+      $(this.element).find('.input-wrapper').attr('readonly', notClickable);
     });
 
   })),
