@@ -566,6 +566,14 @@ export default Component.extend({
     }
   }),
 
+  comboFocusedObserver: observer('isComboFocused', 'lazyCallback', function() {
+    if (this.get('isComboFocused') === true && isNone(this.get('lazyCallback'))) {
+      this._showDropdown();//no lazy present  
+    } else {
+      this.setLazyDebounce('', true);//lazy is present
+    }
+  }),
+
   asyncLoaderStartLabel: computed(function() {
     return this.get('configurationService').getAsyncLoaderStartLabel();
   }),
