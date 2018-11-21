@@ -15,14 +15,19 @@ module.exports = {
     browser: true
   },
   rules: {
+    "ember/avoid-leaking-state-in-ember-objects": "off",
+    "ember/no-observers": "off"
   },
   overrides: [
     // node files
     {
       files: [
+        '.eslintrc.js',
+        '.template-lintrc.js',
         'ember-cli-build.js',
         'index.js',
         'testem.js',
+        'blueprints/*/index.js',
         'config/**/*.js',
         'tests/dummy/config/**/*.js'
       ],

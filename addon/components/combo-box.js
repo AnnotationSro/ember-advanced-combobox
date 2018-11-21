@@ -511,6 +511,8 @@ export default Component.extend({
     } else {
       if (!isEmpty(newList)) {
         this.get('onSelected')(getObjectFromArray(newList, 0));
+      } else {
+        this.get('onSelected')(null);
       }
     }
   },
@@ -827,7 +829,7 @@ export default Component.extend({
         label = this.get('noValueLabel');
       } else {
         if (this.get('showEmptySelectionLabel') === true) {
-          label = (isPresent(this.get('emptySelectionLabel')) || this.get('emptySelectionLabel')==='') ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
+          label = (isPresent(this.get('emptySelectionLabel')) || this.get('emptySelectionLabel') === '') ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
         }
       }
     } else {
@@ -1043,6 +1045,14 @@ export default Component.extend({
           }
         } else {
           this.setLazyDebounce(inputValue);
+        }
+      }
+
+      if (isPresent(this.get('lazyCallback'))) {
+        if (isEmpty(this.get('inputValue')) || this.get('inputValue').length === 0) {
+          //clear selection
+          this.set('internalSelectedList', A([]));
+          this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), this.get('oldInternalSelectionKeys'));
         }
       }
     },

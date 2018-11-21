@@ -90,6 +90,9 @@ export default Controller.extend({
     actionSimpleSelectedCombo(selected) {
       this.set('selectedSimpleCombo', selected.value);
     },
+    actionClearLazyCombo(){
+      this.set('comboSelectedLazy', null);
+    },
     actionClearSingleCombo() {
       this.set('comboSelectedSingle', null);
     },
@@ -181,7 +184,11 @@ export default Controller.extend({
     },
     onLazySingle(item) {
       this.set('oneItemSelectedLazyFormatted', JSON.stringify(item));
-      this.set('oneItemSelectedLazy', item.a);
+      let value = null;
+      if (item !== null){
+        value = item.a;
+      }
+      this.set('oneItemSelectedLazy', value);
     },
     actionToggleLabelOnly() {
       this.toggleProperty('labelOnly');

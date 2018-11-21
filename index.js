@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-advanced-combobox',
+  name: require('./package').name,
 
   options: {
    nodeAssets: {

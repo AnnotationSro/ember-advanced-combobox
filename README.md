@@ -21,9 +21,6 @@ ember install ember-advanced-combobox
 ```
 
 
-## Example Usage
-
-
 ```
 {{combo-box  
   valueList=valueList

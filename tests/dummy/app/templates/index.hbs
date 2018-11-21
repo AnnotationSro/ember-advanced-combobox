@@ -26,7 +26,13 @@ Lazy select (queries server after user types at least 3 characters into filter)
   abortLazyCallback=(action 'abortLazyCallback')
   minLazyCharacters=2
 }}
-{{oneItemSelectedLazyFormatted}}
+<button {{action 'actionClearLazyCombo'}}>clear lazy</button>
+
+<div>
+Raw value: {{comboSelectedLazy}}<br/>
+Formatted: {{oneItemSelectedLazyFormatted}}
+</div>
+
 </div>
 
 <div>
@@ -395,7 +401,7 @@ Many items - automatic scrollbar
 <button {{action 'actionCreateAsyncValueList'}}>Create async value</button>
 <button {{action 'actionRemoveValueList'}}>Clear value list</button>
 
-<input />
+<input>
 
 <p>
 <input placeholder="just a random input">
