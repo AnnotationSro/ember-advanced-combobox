@@ -55,5 +55,9 @@ export default Service.extend({
 
   getMobileCancelButton(){
     return configuration.getConfig().mobileCancelButton;
+  },
+
+  getNumberOfShownItems() {
+    return configuration.getConfig().numberOfShownItems;
   }
 });

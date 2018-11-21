@@ -237,7 +237,7 @@ export default Controller.extend({
           url: "https://reqres.in/api/users?delay=2",
           success: function(data) {
             let result = [];
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < data.data.length; i++) {
               let text = `${query}_${i+1}_${data.data[i].first_name}`;
               result.push({
                 a: data.data[i].first_name,

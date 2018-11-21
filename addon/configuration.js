@@ -10,7 +10,8 @@ let CONFIG_PROPERTIES = {
   mobileOkButton: 'Confirm',
   mobileCancelButton: 'Cancel',
   lazyDebounceTime: 1000,
-  minLazyCharacters: 3,
+  minLazyCharacters: 1,
+  numberOfShownItems: 30,
   icons: {
     dropdown: 'fa fa-chevron-down',
     'checkbox-checked': 'fa fa-check-square-o',

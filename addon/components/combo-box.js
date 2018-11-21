@@ -557,6 +557,7 @@ export default Component.extend({
 
     scheduleOnce('afterRender', this, function() {
       $(this.element).find('.combo-input').prop('readonly', notClickable);
+      $(this.element).find('.input-wrapper').attr('readonly', notClickable);
     });
 
   })),
@@ -564,6 +565,14 @@ export default Component.extend({
   filterObserver: observer('inputValue', function() {
     if (this.get('dropdownVisible') && this.get('canFilter')) {
       this._changeDropdownPosition();
+    }
+  }),
+
+  comboFocusedObserver: observer('isComboFocused', 'lazyCallback', function() {
+    if (this.get('isComboFocused') === true && isNone(this.get('lazyCallback'))) {
+      this._showDropdown();//no lazy present  
+    } else {
+      this.setLazyDebounce('', true);//lazy is present
     }
   }),
 
