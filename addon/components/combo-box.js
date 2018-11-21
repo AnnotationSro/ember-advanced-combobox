@@ -468,14 +468,14 @@ export default Component.extend({
     if (this.get('simpleCombobox') === true) {
       return;
     }
-    if (isEmpty(this.get('valueList')) && isPresent(this.get('noValueLabel'))) {
+    if ( isNone(this.get('lazyCallback')) && isEmpty(this.get('valueList')) && isPresent(this.get('noValueLabel'))) {
       this.set('inputValue', this.get('noValueLabel'));
       return;
     }
     this.initSelectedValues();
     if (isNone(this.get('valueList'))) {
       let noValueLabel = this.get('noValueLabel');
-      if (isPresent(noValueLabel)) {
+      if (isPresent(noValueLabel) && isNone(this.get('lazyCallback'))) {
         this.set('inputValue', noValueLabel);
       }
       return;
