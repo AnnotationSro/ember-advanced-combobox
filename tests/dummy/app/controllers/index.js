@@ -223,25 +223,24 @@ export default Controller.extend({
     abortLazyCallback() {
       if (isPresent(this.get('lazyCallbackAjax'))) {
         let xhr = this.get('lazyCallbackAjax');
-        if(xhr && xhr.readyState != 4){
+        if(xhr && xhr.readyState !== 4){
             xhr.abort();
         }
         this.set('lazyCallbackAjax', null);
       }
     },
 
-    lazyCallback(query) {
+    lazyCallback(query, page, pageSize) {
       let a = new EmberPromise((resolve, reject) => {
         let ajax = $.ajax({
           type: "GET",
-          url: "https://reqres.in/api/users?delay=2",
+          url: `/api/users?delay=2&page=${page}&pageSize=${pageSize}`,
           success: function(data) {
             let result = [];
             for (let i = 0; i < data.data.length; i++) {
-              let text = `${query}_${i+1}_${data.data[i].first_name}`;
               result.push({
                 a: data.data[i].first_name,
-                b: text
+                b: data.data[i].first_name
               });
             }
             resolve(result);
