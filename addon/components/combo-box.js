@@ -678,7 +678,7 @@ export default Component.extend({
   },
 
   _showDropdown() {
-    if (this.get('dropdownVisible')) {
+    if (this.get('dropdownVisible') || this.get('_disabledCombobox') === true) {
       //dropdown is already visible
       return;
     }
@@ -1141,9 +1141,7 @@ export default Component.extend({
       if (this.get('_disabledCombobox')) {
         return;
       }
-      if (this.get('dropdownVisible')) {
-        this._hideDropdown(true);
-      } else {
+      if (this.get('dropdownVisible') === false) {
         if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))) {
           this.setLazyDebounce('', true);
           return;

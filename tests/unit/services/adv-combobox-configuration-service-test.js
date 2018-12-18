@@ -1,20 +1,19 @@
-import { moduleFor, test } from 'ember-qunit';
+import { module, test } from 'qunit';
+import { setupTest } from 'ember-qunit';
 
-moduleFor('service:adv-combobox-configuration-service', 'Unit | Service | configuration service', {
-  // Specify the other units that are required for this test.
-  // needs: ['service:foo']
-    integration: true
-});
+module('Unit | Service | configuration service', function(hooks) {
+  setupTest(hooks);
 
 
-test('it exists', function(assert) {
-  let service = this.subject();
-  assert.ok(service);
-});
+  test('it exists', function(assert) {
+    let service = this.owner.lookup('service:adv-combobox-configuration-service');
+    assert.ok(service);
+  });
 
-test('it can change global configuration', function(assert) {
-  let service = this.subject();
-  service.setConfiguration("emptySelectionLabel", "hello world");
+  test('it can change global configuration', function(assert) {
+    let service = this.owner.lookup('service:adv-combobox-configuration-service');
+    service.setConfiguration("emptySelectionLabel", "hello world");
 
-  assert.equal(service.getEmptySelectionLabel(), "hello world");
+    assert.equal(service.getEmptySelectionLabel(), "hello world");
+  });
 });

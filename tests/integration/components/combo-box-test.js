@@ -1,13 +1,14 @@
-import { Promise as EmberPromise } from 'rsvp';
+import {Promise as EmberPromise} from 'rsvp';
 import $ from 'jquery';
 import EmberObject from '@ember/object';
-import { run } from '@ember/runloop';
-import { A } from '@ember/array';
-import { isNone } from '@ember/utils';
+import {later, run} from '@ember/runloop';
+import {A} from '@ember/array';
+import {isNone} from '@ember/utils';
 import Service from '@ember/service';
-import { moduleForComponent, test } from 'ember-qunit';
+import {module, test} from 'qunit';
+import {setupRenderingTest} from 'ember-qunit';
+import {click, render, settled, triggerEvent} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
-import wait from 'ember-test-helpers/wait';
 
 const i18nMock = Service.extend({
   t(key){
@@ -22,784 +23,796 @@ function stripComments(str){
   return str.replace(/<!--(.*?)-->/gm, "");
 }
 
-moduleForComponent('combo-box', 'Integration | Component | combo box', {
-  integration: true,
+function isElementVisible(selector) {
+  let el = document.querySelector(selector);
+  let style = window.getComputedStyle(el);
+  return (style.display !== 'none')
+}
 
-  beforeEach: function () {
-    this.register('service:i18n', i18nMock);
-    this.inject.service('i18n');
-  }
-});
+function focus(selector) {
+  triggerEvent(selector, 'focus');
+}
 
-test('it shows and hides dropdown when clicked into input', function(assert) {
+module('Integration | Component | combo box', function (hooks) {
+  setupRenderingTest(hooks);
 
-  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  hooks.beforeEach(function () {
+    this.actions = {};
+    this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-    }}
-  `);
-
-  //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 1, "dropdown found - it should NOT present in DOM before user clicks on combobox");
-
-  run(()=>{
-    this.$('.combo-input').click();
-  });
-  run(()=>{
-    //dropdown should be visible
-    assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 0, "dropdown NOT found - it should present in DOM before user clicks on combobox");
+    this.owner.register('service:i18n', i18nMock);
+    this.i18n = this.owner.lookup('service:i18n');
   });
 
-});
 
-test('it shows and hides dropdown when clicked on button', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
+  //----------
+  // we cannot test opening and closing of the dropdown, since it all depends on "focus" event, that is not handled properly by ember testing framework
+  //----------
 
-  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
+  test('it shows and hides dropdown when clicked into input', async function (assert) {
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-    }}
-  `);
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
 
-  //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 1, "dropdown found - it should NOT present in DOM before user clicks on combobox");
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
 
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-  run(()=>{
-    debugger;
-    //dropdown should be visible
-    assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 0,  "dropdown NOT found - it should present in DOM before user clicks on combobox");
-  });
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+      }}
+    `);
 
-});
+    //just to be sure - dropdown should not be visible, yet
+    assert.notOk(isElementVisible('.advanced-combo-box .dropdown-hidden'), "dropdown found - it should NOT present in DOM before user clicks on combobox");
 
-test('it shows and hides dropdown when clicked into input - without button', function(assert) {
+    focus('.combo-input');
 
-  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+    later(this, () => {
+      //dropdown should be visible
+      assert.ok(isElementVisible('.advanced-combo-box .dropdown-hidden'), "dropdown NOT found - it should present in DOM before user clicks on combobox");
+    }, 100);
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-      showDropdownButton=false
-    }}
-  `);
-
-  //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
-  //there should be no dropdown button visible
-  assert.equal(this.$().find('.dropdown-icon').length, 0);
-
-  run(()=>{
-    this.$('.combo-input').click();
-  });
-  run(()=>{
-    //dropdown should be visible
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
   });
 
-});
+  test('it shows and hides dropdown when clicked on button', async function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+      }}
+    `);
+
+    //just to be sure - dropdown should not be visible, yet
+    assert.notOk(isElementVisible('.advanced-combo-box .dropdown-hidden'), "dropdown should NOT be present in DOM before user clicks on combobox");
 
 
-test('it renders plain JSON array as valueList', function(assert) {
+    // await click('.dropdown-icon');
 
-  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+    focus('.dropdown-icon');
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-    }}
-  `);
+    later(this, () => {
+      //dropdown should be visible
+      assert.ok(isElementVisible('.advanced-combo-box .dropdown-hidden'), "dropdown should be present in DOM before user clicks on combobox");
+    }, 100);
 
-  let $this = this.$();
 
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
+  });
+
+  test('it shows and hides dropdown when clicked into input - without button', async function (assert) {
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        showDropdownButton=false
+      }}
+    `);
+
+    //just to be sure - dropdown should not be visible, yet
+    assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
+    //there should be no dropdown button visible
+    // assert.notOk(isElementVisible('.dropdown-icon'));
+
+
+    focus('.combo-input');
+
+    later(this, function () {
+      //dropdown should be visible
+      assert.ok(isElementVisible('.dropdown.dropdown-hidden'));
+    }, 100);
+
+
+  });
+
+
+  test('it renders plain JSON array as valueList', async function (assert) {
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+      }}
+    `);
+
+    let $this = this.$();
+
+    //open dropdown
+    await click('.dropdown-icon');
+
+
     assert.equal($this.find('.dropdown-item').length, valueList.length);
+
   });
 
-});
 
+  test('it renders Ember Object array as valueList', async function (assert) {
 
-test('it renders Ember Object array as valueList', function(assert) {
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "label1"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "label2"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "label3"
+    });
 
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"label1"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"label2"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"label3"
-  });
+    let valueList = A([obj1, obj2, obj3]);
 
-  let valueList = A([obj1, obj2, obj3]);
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+      }}
+    `);
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-    }}
-  `);
+    let $this = this.$();
 
-  let $this = this.$();
+    //open dropdown
+    await click('.dropdown-icon');
 
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     assert.equal($this.find('.dropdown-item').length, valueList.length);
+
   });
 
-});
+  test('it sorts plain JSON array', async function (assert) {
 
-test('it sorts plain JSON array', function(assert) {
+    let valueList = A([{key: "f", label: "labela"}, {key: "b", label: "labelb"}, {key: "aa", label: "labelaa"}]);
 
-  let valueList = A([{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}]);
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    this.set('orderBy', 'label');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  this.set('orderBy', 'label');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        orderBy=orderBy
+      }}
+    `);
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-      orderBy=orderBy
-    }}
-  `);
+    let $this = this.$();
 
-  let $this = this.$();
+    //open dropdown
+    await click('.dropdown-icon');
 
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
     assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
     assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
     assert.equal(stripComments($($items[2]).html()).trim(), 'labelb');
+
+
   });
 
-});
 
+  test('it sorts Ember Object array', async function (assert) {
 
-test('it sorts Ember Object array', function(assert) {
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "labela"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "labelc"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "labelaa"
+    });
 
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"labela"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"labelc"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"labelaa"
-  });
+    let valueList = A([obj1, obj2, obj3]);
 
-  let valueList = A([obj1, obj2, obj3]);
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    this.set('orderBy', 'label');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
 
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  this.set('orderBy', 'label');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        orderBy=orderBy
+      }}
+    `);
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-      orderBy=orderBy
-    }}
-  `);
+    let $this = this.$();
 
-  let $this = this.$();
+    //open dropdown
+    await click('.dropdown-icon');
 
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
     let $items = $this.find('.dropdown-item');
     assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
     assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
     assert.equal(stripComments($($items[2]).html()).trim(), 'labelc');
+
+
   });
 
-});
 
+  test('it resolves valueList Promise ', async function (assert) {
+    let done = assert.async();
 
-test('it resolves valueList Promise ', function(assert) {
-  let done = assert.async();
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "labela"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "labelc"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "labelaa"
+    });
 
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"labela"
+    let valueList = A([obj1, obj2, obj3]);
+
+    let valueListPromise = new EmberPromise(function (resolve) {
+      setTimeout(function () {
+        resolve(valueList);
+      }, 10);
+    });
+
+    this.set('valuePromise', valueListPromise);
+    this.set('selected', 'b');
+    this.set('orderBy', 'label');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valuePromise=valuePromise
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        orderBy=orderBy
+      }}
+    `);
+
+    let $this = this.$();
+
+    settled().then(() => {
+      valueListPromise.then(function () {
+        run(() => {
+          $this.find('.dropdown-icon').click();
+
+          assert.equal($this.find('.dropdown-item').length, valueList.length);
+          done();
+        });
+      });
+    });
   });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"labelc"
+
+
+  test('it handles empty valueList - cliking on dropdown button', async function (assert) {
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        itemKey='key'
+        itemLabel='label'
+      }}
+    `);
+
+    run(() => {
+      assert.equal(this.$().find('.combobox-disabled').length, 1);
+    });
+
+    //open dropdown - should not work
+    focus('.dropdown-icon');
+
+    later(this, ()=>{
+      assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
+    }, 100);
+
+
   });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"labelaa"
+
+  test('it handles empty valueList - cliking on combobox input', async function (assert) {
+
+    // Template block usage:
+    await render(hbs`
+        {{combo-box
+          itemKey='key'
+          itemLabel='label'
+        }}
+      `);
+
+    run(() => {
+      assert.equal(this.$().find('.combobox-disabled').length, 1);
+    });
+
+    //open dropdown - should not work
+
+    focus('.combo-input');
+    later(this, () => {
+      assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
+    }, 100);
+
   });
 
-  let valueList = A([obj1, obj2, obj3]);
 
-  let valueListPromise = new EmberPromise(function(resolve){
-    setTimeout(function(){
-      resolve(valueList);
-    }, 10);
+  test('it calls selected callback', async function (assert) {
+
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "label1"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "label2"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "label3"
+    });
+
+    let valueList = A([obj1, obj2, obj3]);
+
+    var done = assert.async();
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    this.actions.onSelected = function (value) {
+      assert.ok(value);
+      assert.equal(value.get('key'), obj1.get('key'));
+      assert.equal(value.get('label'), obj1.get('label'));
+      assert.equal(value, obj1);
+      done();
+    };
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        onSelected=(action 'onSelected')
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+      }}
+    `);
+
+    let $this = this.$();
+
+    //open dropdown
+    focus('.dropdown-icon');
+    later(this, () => {
+      $($this.find('.dropdown-item')[0]).click();
+    }, 100);
+
+
   });
 
-  this.set('valuePromise', valueListPromise);
-  this.set('selected', 'b');
-  this.set('orderBy', 'label');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valuePromise=valuePromise
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-      orderBy=orderBy
-    }}
-  `);
+  test('it calls multiselect selected callback - adds new selected items', async function (assert) {
 
-  let $this = this.$();
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "label1"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "label2"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "label3"
+    });
 
- wait().then(() => {
-  valueListPromise.then(function(){
-    run(()=>{
-        $this.find('.dropdown-icon').click();
+    let valueList = A([obj1, obj2, obj3]);
 
-        assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
-        assert.equal($this.find('.dropdown-item').length, valueList.length);
+    var done = assert.async();
+
+    this.set('valueList', valueList);
+    this.set('selected', 'c');
+    this.actions.onSelected = function (value) {
+      assert.ok(value);
+
+      assert.equal(value.length, 3);
+      assert.equal(value[0].get('key'), obj3.get('key'));
+      assert.equal(value[0].get('label'), obj3.get('label'));
+
+      assert.equal(value[1].get('key'), obj1.get('key'));
+      assert.equal(value[1].get('label'), obj1.get('label'));
+
+      assert.equal(value[2].get('key'), obj2.get('key'));
+      assert.equal(value[2].get('label'), obj2.get('label'));
+      done();
+    };
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        onSelected=(action 'onSelected')
+        itemKey='key'
+        itemLabel='label'
+        multiselect=true
+        canFilter=false
+      }}
+      <button id="confirm">ok</button>
+    `);
+
+    let $this = this.$();
+
+    //open dropdown
+    focus('.dropdown-icon');
+
+    later(this, ()=>{
+      $($this.find('.dropdown-item')[0]).click();
+      // Ember.$($this.find('.dropdown-item')[1]).click();
+
+      $($this.find('.dropdown-item')[1]).click();
+
+      // close dropdown = confirm selection
+      click('#confirm');
+    }, 100);
+
+  });
+
+  /**
+   * user clicks on already selected item -> it sould not be selected at the end
+   */
+  test('it calls multiselect selected callback - removes selected items', async function (assert) {
+
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "label1"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "label2"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "label3"
+    });
+
+    let valueList = A([obj1, obj2, obj3]);
+
+    var done = assert.async();
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    this.actions.onSelected = function (value) {
+      assert.ok(value);
+      assert.equal(value.length, 1);
+      assert.equal(value[0].get('key'), obj1.get('key'));
+      assert.equal(value[0].get('label'), obj1.get('label'));
+      assert.equal(value[0], obj1);
+
+      done();
+    };
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        onSelected=(action 'onSelected')
+        itemKey='key'
+        itemLabel='label'
+        multiselect=true
+        canFilter=false
+      }}
+       <button id="confirm">ok</button>
+    `);
+
+    let $this = this.$();
+
+    //open dropdown
+    focus('.dropdown-icon');
+
+    later(this, ()=> {
+      $($this.find('.dropdown-item')[0]).click();
+      // Ember.$($this.find('.dropdown-item')[1]).click();
+
+
+      $($this.find('.dropdown-item')[1]).click();
+
+      // close dropdown = confirm selection
+      click('#confirm');
+    });
+  });
+
+  test('it does not call selected callback because user selected value that was already selected', async function (assert) {
+    assert.expect(0);
+
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "label1"
+    });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "label2"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "label3"
+    });
+
+    let valueList = A([obj1, obj2, obj3]);
+
+    var done = assert.async();
+
+    this.set('valueList', valueList);
+    this.set('selected', 'a');
+    this.actions.onSelected = function () {
+      assert.ok(null, "onSelected callback was called - this is wrong");//should not be called
+    };
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        onSelected=(action 'onSelected')
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+      }}
+    `);
+
+    let $this = this.$();
+
+    //open dropdown
+    await click('.dropdown-icon');
+
+    $($this.find('.dropdown-item')[0]).click();
+
+    settled().then(() => {
+      run(() => {
         done();
-     });
-   });
- });
-});
-
-
-test('it handles empty valueList - cliking on dropdown button', function(assert) {
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      itemKey='key'
-      itemLabel='label'
-    }}
-  `);
-
-  run(()=>{
-    assert.equal(this.$().find('.combobox-disabled').length, 1);
-  });
-
-  //open dropdown - should not work
-  run(()=>{
-    this.$('.dropdown-icon').click();
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
-  });
-
-});
-
-test('it handles empty valueList - cliking on combobox input', function(assert) {
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      itemKey='key'
-      itemLabel='label'
-    }}
-  `);
-
-  run(()=>{
-    assert.equal(this.$().find('.combobox-disabled').length, 1);
-  });
-
-  //open dropdown - should not work
-  run(()=>{
-    this.$('.combo-input').click();
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
-  });
-
-});
-
-
-test('it calls selected callback', function(assert) {
-
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"label1"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"label2"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"label3"
-  });
-
-  let valueList = A([obj1, obj2, obj3]);
-
-  var done = assert.async();
-
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  this.on('onSelected', function(value){
-    assert.ok(value);
-    assert.equal(value.get('key'), obj1.get('key'));
-    assert.equal(value.get('label'), obj1.get('label'));
-    assert.equal(value, obj1);
-    done();
-  });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      onSelected=(action 'onSelected')
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-    }}
-  `);
-
-  let $this = this.$();
-
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[0]).click();
-  });
-
-});
-
-
-test('it calls multiselect selected callback - adds new selected items', function(assert) {
-
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"label1"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"label2"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"label3"
-  });
-
-  let valueList = A([obj1, obj2, obj3]);
-
-  var done = assert.async();
-
-  this.set('valueList', valueList);
-  this.set('selected', 'c');
-  this.on('onSelected', function(value){
-    assert.ok(value);
-
-    assert.equal(value.length, 3);
-    assert.equal(value[0].get('key'), obj3.get('key'));
-    assert.equal(value[0].get('label'), obj3.get('label'));
-
-    assert.equal(value[1].get('key'), obj1.get('key'));
-    assert.equal(value[1].get('label'), obj1.get('label'));
-
-    assert.equal(value[2].get('key'), obj2.get('key'));
-    assert.equal(value[2].get('label'), obj2.get('label'));
-    done();
-  });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      onSelected=(action 'onSelected')
-      itemKey='key'
-      itemLabel='label'
-      multiselect=true
-      canFilter=false
-    }}
-  `);
-
-  let $this = this.$();
-
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[0]).click();
-    // Ember.$($this.find('.dropdown-item')[1]).click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[1]).click();
-  });
-  // close dropdown = confirm selection
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-});
-
-/**
- * user clicks on already selected item -> it sould not be selected at the end
- */
-test('it calls multiselect selected callback - removes selected items', function(assert) {
-
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"label1"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"label2"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"label3"
-  });
-
-  let valueList = A([obj1, obj2, obj3]);
-
-  var done = assert.async();
-
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  this.on('onSelected', function(value){
-    assert.ok(value);
-    assert.equal(value.length, 1);
-    assert.equal(value[0].get('key'), obj1.get('key'));
-    assert.equal(value[0].get('label'), obj1.get('label'));
-    assert.equal(value[0], obj1);
-
-    done();
-  });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      onSelected=(action 'onSelected')
-      itemKey='key'
-      itemLabel='label'
-      multiselect=true
-      canFilter=false
-    }}
-  `);
-
-  let $this = this.$();
-
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[0]).click();
-    // Ember.$($this.find('.dropdown-item')[1]).click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[1]).click();
-  });
-  // close dropdown = confirm selection
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-});
-
-test('it does not call selected callback because user selected value that was already selected', function(assert) {
-  assert.expect(0);
-
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"label1"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"label2"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"label3"
-  });
-
-  let valueList = A([obj1, obj2, obj3]);
-
-  var done = assert.async();
-
-  this.set('valueList', valueList);
-  this.set('selected', 'a');
-  this.on('onSelected', function(){
-    assert.ok(null, "onSelected callback was called - this is wrong");//should not be called
-  });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      onSelected=(action 'onSelected')
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-    }}
-  `);
-
-  let $this = this.$();
-
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[0]).click();
-  });
-
-  wait().then(() => {
-     run(()=>{
-         done();
+      });
     });
+
   });
 
-});
 
+  test('it calls onDropdownShow/Hide callbacks', async function (assert) {
+    assert.expect(2);
 
-test('it calls onDropdownShow/Hide callbacks', function(assert) {
-  assert.expect(2);
-
-  let obj1 = EmberObject.extend({}).create({
-    key: 'a',
-    label:"label1"
-  });
-  let obj2 = EmberObject.extend({}).create({
-    key: 'b',
-    label:"label2"
-  });
-  let obj3 = EmberObject.extend({}).create({
-    key: 'c',
-    label:"label3"
-  });
-
-  let valueList = A([obj1, obj2, obj3]);
-
-  var done = assert.async();
-
-  this.set('valueList', valueList);
-  this.set('selected', 'a');
-  this.on('onDropdownShow', function(){
-    assert.ok(true);
-  });
-
-  this.on('onDropdownHide', function(){
-    assert.ok(true);
-  });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=false
-      onDropdownHide=(action 'onDropdownHide')
-      onDropdownShow=(action 'onDropdownShow')
-    }}
-  `);
-
-  let $this = this.$();
-
-  //open dropdown
-  run(()=>{
-    this.$('.dropdown-icon').click();
-  });
-  run(()=>{
-    $($this.find('.dropdown-item')[0]).click();
-  });
-
-  wait().then(() => {
-     run(()=>{
-         done();
+    let obj1 = EmberObject.extend({}).create({
+      key: 'a',
+      label: "label1"
     });
-  });
+    let obj2 = EmberObject.extend({}).create({
+      key: 'b',
+      label: "label2"
+    });
+    let obj3 = EmberObject.extend({}).create({
+      key: 'c',
+      label: "label3"
+    });
 
-});
+    let valueList = A([obj1, obj2, obj3]);
 
+    var done = assert.async();
 
-test('it filters valueList', function(assert) {
+    this.set('valueList', valueList);
+    this.set('selected', 'a');
+    this.actions.onDropdownShow = function () {
+      assert.ok(true);
+    };
 
-  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+    this.actions.onDropdownHide = function () {
+      assert.ok(true);
+    };
 
-  this.set('valueList', valueList);
-  this.set('selected', null);
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        onDropdownHide=(action 'onDropdownHide')
+        onDropdownShow=(action 'onDropdownShow')
+      }}
+    `);
 
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=true
-    }}
-  `);
+    let $this = this.$();
 
-  let $this = this.$();
+    //open dropdown
+    focus('.dropdown-icon');
 
-  $this.find('.dropdown-icon').click();
-  $this.find('input').val('label1');
-  $this.find('input').trigger('keyup');
-
-
-  //open dropdown
-  run(()=>{
-    assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
-    assert.equal($this.find('.dropdown-item').length, 2);
-  });
-
-});
-
-test('it filters valueList with previously selected value', function(assert) {
-
-  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
-
-  this.set('valueList', valueList);
-  this.set('selected', 'b');
-  // that.on('onSelected', function(value){
-  //   debugger;
-  // });
-
-  // Template block usage:
-  this.render(hbs`
-    {{combo-box
-      valueList=valueList
-      selected=selected
-      itemKey='key'
-      itemLabel='label'
-      multiselect=false
-      canFilter=true
-    }}
-  `);
-
-  let $this = this.$();
-
-  $this.find('.dropdown-icon').click();
-  $this.find('input').val('label1');
-  $this.find('input').trigger('keyup');
+    later(this, ()=>{
+      $($this.find('.dropdown-item')[0]).click();
 
 
-  //open dropdown
-  run(()=>{
-    assert.equal($this.find('.advanced-combo-box.dropdown-hidden').length, 0);
-    assert.equal($this.find('.dropdown-item').length, 2);
+      settled().then(() => {
+        run(() => {
+          done();
+        });
+      });
+    }, 100);
+
   });
 
 
+  test('it filters valueList', async function (assert) {
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label12"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', null);
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=true
+      }}
+    `);
+
+    let $this = this.$();
+
+
+    await click('.dropdown-icon');
+    $this.find('input').val('label1');
+    $this.find('input').trigger('keyup');
+
+
+    //open dropdown
+    run(() => {
+      assert.equal($this.find('.dropdown-item').length, 2);
+    });
+
+  });
+
+  test('it filters valueList with previously selected value', async function (assert) {
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label12"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=true
+      }}
+    `);
+
+    let $this = this.$();
+
+    await click('.dropdown-icon');
+    $this.find('input').val('label1');
+    $this.find('input').trigger('keyup');
+
+
+    //open dropdown
+    run(() => {
+      assert.equal($this.find('.dropdown-item').length, 2);
+    });
+
+
+  });
 });
