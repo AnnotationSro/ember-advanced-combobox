@@ -33,7 +33,7 @@ moduleForComponent('combo-box', 'Integration | Component | combo box', {
 
 test('it shows and hides dropdown when clicked into input', function(assert) {
 
-  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -54,14 +54,14 @@ test('it shows and hides dropdown when clicked into input', function(assert) {
   `);
 
   //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
+  assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 1, "dropdown found - it should NOT present in DOM before user clicks on combobox");
 
   run(()=>{
     this.$('.combo-input').click();
   });
   run(()=>{
     //dropdown should be visible
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 0, "dropdown NOT found - it should present in DOM before user clicks on combobox");
   });
 
 });
@@ -70,7 +70,7 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
   // Set any properties with this.set('myProperty', 'value');
   // Handle any actions with this.on('myAction', function(val) { ... });
 
-  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -91,21 +91,22 @@ test('it shows and hides dropdown when clicked on button', function(assert) {
   `);
 
   //just to be sure - dropdown should not be visible, yet
-  assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 1);
+  assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 1, "dropdown found - it should NOT present in DOM before user clicks on combobox");
 
   run(()=>{
     this.$('.dropdown-icon').click();
   });
   run(()=>{
+    debugger;
     //dropdown should be visible
-    assert.equal(this.$().find('.advanced-combo-box.dropdown-hidden').length, 0);
+    assert.equal(this.$().find('.advanced-combo-box .dropdown-hidden').length, 0,  "dropdown NOT found - it should present in DOM before user clicks on combobox");
   });
 
 });
 
 test('it shows and hides dropdown when clicked into input - without button', function(assert) {
 
-  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -144,7 +145,7 @@ test('it shows and hides dropdown when clicked into input - without button', fun
 
 test('it renders plain JSON array as valueList', function(assert) {
 
-  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
+  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label2"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -191,7 +192,7 @@ test('it renders Ember Object array as valueList', function(assert) {
     label:"label3"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -224,7 +225,7 @@ test('it renders Ember Object array as valueList', function(assert) {
 
 test('it sorts plain JSON array', function(assert) {
 
-  let valueList = new A([{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}]);
+  let valueList = A([{key: "f", label:"labela"}, {key: "b", label:"labelb"}, {key: "aa", label:"labelaa"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -276,7 +277,7 @@ test('it sorts Ember Object array', function(assert) {
     label:"labelaa"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');
@@ -329,7 +330,7 @@ test('it resolves valueList Promise ', function(assert) {
     label:"labelaa"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   let valueListPromise = new EmberPromise(function(resolve){
     setTimeout(function(){
@@ -433,7 +434,7 @@ test('it calls selected callback', function(assert) {
     label:"label3"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -488,7 +489,7 @@ test('it calls multiselect selected callback - adds new selected items', functio
     label:"label3"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -559,7 +560,7 @@ test('it calls multiselect selected callback - removes selected items', function
     label:"label3"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -623,7 +624,7 @@ test('it does not call selected callback because user selected value that was al
     label:"label3"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -681,7 +682,7 @@ test('it calls onDropdownShow/Hide callbacks', function(assert) {
     label:"label3"
   });
 
-  let valueList = new A([obj1, obj2, obj3]);
+  let valueList = A([obj1, obj2, obj3]);
 
   var done = assert.async();
 
@@ -730,7 +731,7 @@ test('it calls onDropdownShow/Hide callbacks', function(assert) {
 
 test('it filters valueList', function(assert) {
 
-  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', null);
@@ -767,7 +768,7 @@ test('it filters valueList', function(assert) {
 
 test('it filters valueList with previously selected value', function(assert) {
 
-  let valueList = new A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
+  let valueList = A([{key: "a", label:"label1"}, {key: "b", label:"label12"}, {key: "aa", label:"label3"}]);
 
   this.set('valueList', valueList);
   this.set('selected', 'b');

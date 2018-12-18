@@ -118,7 +118,7 @@ export default Component.extend({
   lazyCallbackInProgress: false,
   selectedValueLabel: null,
   dropdownVisible: false,
-  internalSelectedList: new A([]), // eslint-disable-line  ember/avoid-leaking-state-in-ember-objects
+  internalSelectedList: A([]), // eslint-disable-line  ember/avoid-leaking-state-in-ember-objects
   valuePromiseResolving: false,
   isComboFocused: false,
   _hasNextPage: true,
@@ -234,7 +234,6 @@ export default Component.extend({
         //hide all other dropdowns except this one (if user clicks on the same dropdown even if already visible - keep that one opened)
         $(document).trigger('ember-advanced-combobox-hide-dropdown', this.elementId);
 
-        // this._showDropdown();
         event.stopPropagation();
       }
     });
@@ -414,7 +413,7 @@ export default Component.extend({
         items = [item];
       }
     }
-    return new A(items);
+    return A(items);
   },
 
   findItemByKey(key) {
@@ -451,7 +450,7 @@ export default Component.extend({
   selectedObserver: observer('selected', function() {
     let selected = this.get('selected');
     if (isEmpty(selected)) {
-      this.set('internalSelectedList', new A([]));
+      this.set('internalSelectedList', A([]));
       this.createSelectedLabel(null);
       if (!this.get('canFilter') || !this.get('dropdownVisible')) {
         this.set('inputValue', this.get('selectedValueLabel'));
@@ -633,7 +632,7 @@ export default Component.extend({
    */
   _createArray(object) {
     if (isNone(object)) {
-      return new A([]);
+      return A([]);
     }
     if (object.map) {
       //it is an array
@@ -642,10 +641,10 @@ export default Component.extend({
         return object;
       } else {
         //it is a plain JS array
-        return new A(object);
+        return A(object);
       }
     } else {
-      return new A([object]);
+      return A([object]);
     }
   },
 
@@ -926,7 +925,7 @@ export default Component.extend({
       //if multiselect combobox, first check if object is not already in selected list
       let selectedList = this.get('internalSelectedList');
       if (isNone(selectedList)) {
-        this.set('internalSelectedList', new A([]));
+        this.set('internalSelectedList', A([]));
       } else {
         this._addOrRemoveFromList(this.get('internalSelectedList'), item);
       }
