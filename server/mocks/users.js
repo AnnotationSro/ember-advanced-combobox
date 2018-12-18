@@ -5,21 +5,28 @@ module.exports = function (app) {
   const express = require('express');
   let usersRouter = express.Router();
 
+
+  var data = [];
+  for (var i = 0; i < 25; i++) {
+    data.push({first_name: 'Person\'s name ' + (i + 1)});
+  }
+
   usersRouter.get('/', function (req, res) {
     var delay = req.query.delay || 0; //in seconds
     var page = req.query.page;
     var pageSize = req.query.pageSize;
+    var query = req.query.query || '';
 
 
-    var data = [];
-
-    for (var i = (page - 1) * pageSize; i < page * pageSize; i++) {
-      data.push({first_name: 'Person\'s name ' + (i + 1)});
-    }
+    var dataToSend = data.filter((d) => d.first_name.includes(query));
+    var dataToSendAllLength = data.length;
+    dataToSend = dataToSend.splice((page - 1) * pageSize, pageSize);
+    let hasNextPage = (page * pageSize < dataToSendAllLength);
 
     setTimeout(function () {
       res.send({
-        'data': data
+        'data': dataToSend,
+        hasNextPage: hasNextPage
       });
     }, delay * 1000);
 

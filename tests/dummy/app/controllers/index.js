@@ -234,7 +234,7 @@ export default Controller.extend({
       let a = new EmberPromise((resolve, reject) => {
         let ajax = $.ajax({
           type: "GET",
-          url: `/api/users?delay=2&page=${page}&pageSize=${pageSize}`,
+          url: `/api/users?delay=2&page=${page}&pageSize=${pageSize}&query=${query}`,
           success: function(data) {
             let result = [];
             for (let i = 0; i < data.data.length; i++) {
@@ -243,7 +243,7 @@ export default Controller.extend({
                 b: data.data[i].first_name
               });
             }
-            resolve(result);
+            resolve({'data':result, hasNextPage:data.hasNextPage});
           }
         });
         this.set('lazyCallbackAjax', ajax);

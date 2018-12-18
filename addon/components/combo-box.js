@@ -120,6 +120,8 @@ export default Component.extend({
   dropdownVisible: false,
   internalSelectedList: new A([]), // eslint-disable-line  ember/avoid-leaking-state-in-ember-objects
   valuePromiseResolving: false,
+  isComboFocused: false,
+  _hasNextPage: true,
   configurationService: service('adv-combobox-configuration-service'),
 
   sortedValueList: sort('valueList', function(a, b) {
@@ -153,7 +155,7 @@ export default Component.extend({
 
     this._super(...arguments);
 
-    this.initSelectedValues();
+    this.initSelectedValues(true);
 
     this.createSelectedLabel(this.get('internalSelectedList'));
 
@@ -167,26 +169,35 @@ export default Component.extend({
     this._handleLabelOnlyNoValue();
 
 
-    $(document).bind('ember-advanced-combobox-hide-dropdown', () => {
-      if (this.get('dropdownVisible') === true) {
-        this._hideDropdown();
+    $(document).bind('ember-advanced-combobox-hide-dropdown', (event, doNotHideComboboxId) => {
+      if (this.get('dropdownVisible') === true && (isPresent(doNotHideComboboxId) && this.elementId !== doNotHideComboboxId)) {
+        this._hideDropdown(false);
       }
     });
 
   },
 
+  initFocusHandler() {
+    let $element = $(this.element);
+    $element.focusin(() => {
+      if (this.get('isComboFocused') === true) {
+        return;
+      }
+      this.set('isComboFocused', true);
+    });
+
+  },
+  destroyFocusHandler() {
+    let $element = $(this.element);
+    $element.off('focusin');
+    $element.off('focusout');
+  },
+
   didInsertElement() {
     this._super(...arguments);
 
-    //initElement
     let $element = $(this.element);
-    let $inputElement = $element.find('.input-group');
-    $inputElement.focus(() => {
-      this.set('isComboFocused', true);
-    });
-    $inputElement.blur(() => {
-      this.set('isComboFocused', false);
-    });
+    this.initFocusHandler();
 
     if (this.get('_isTesting') === false) {
       let onResizeCallback = () => {
@@ -212,34 +223,33 @@ export default Component.extend({
       this._showMobileDropdown();
     });
 
-    $(this.element).find('.combo-input').on('click', () => {
+    $(this.element).find('.combo-input').on('click', (event) => {
       //comobobox input was clicked on
       if (this.get('_disabledCombobox') || this.get('labelOnly')) {
         //no clicking on input allowed
         return;
       }
 
-      if (isEmpty(this.get('internalSelectedList'))) {
-        this.set('inputValue', null);
-      }
-
       if (this.get('simpleCombobox') === false) {
-        this._showDropdown();
-      }
-      scheduleOnce('afterRender', this, function() {
-        $(this.element).find('.combo-input-with-dropdown').focus();
-      });
+        //hide all other dropdowns except this one (if user clicks on the same dropdown even if already visible - keep that one opened)
+        $(document).trigger('ember-advanced-combobox-hide-dropdown', this.elementId);
 
+        // this._showDropdown();
+        event.stopPropagation();
+      }
     });
+
     if (this.get('pagination') === true) {
       this.initPagination();
     }
+    return false;
   },
 
   willDestroyElement() {
     this._super(...arguments);
-    // Ember.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
+
     this._destroyDropdownCloseListeners();
+    this.destroyFocusHandler();
 
     let popper = this.get('_popper');
     if (isPresent(popper)) {
@@ -294,7 +304,7 @@ export default Component.extend({
     return this.get('labelOnly') || this.get('_disabledCombobox');
   }),
 
-  initSelectedValues() {
+  initSelectedValues(canAutoselect) {
     //find selected items and assgn them into internalSelectedList
     let selected = this.get('selected');
 
@@ -308,8 +318,9 @@ export default Component.extend({
     } else {
       this.set('internalSelectedList', A([]));
     }
-
-    this._automaticallySelect();
+    if (canAutoselect === true) {
+      this._automaticallySelect();
+    }
   },
 
   labelOnlyObserver: observer('labelOnly', function() {
@@ -466,12 +477,16 @@ export default Component.extend({
       this.get('valuePromise').then((result) => {
 
         this.set('valuePromiseResolving', false);
-        if (isEmpty(this.get('valueList'))) {
-          this.set('valueList', result);
-        } else {
-          this.set('valueList', this.get('valueList').concat(result));
-        }
 
+        let newValueList = (typeof result.data !== 'undefined')? result.data : result;
+        let hasNextPage = result.hasNextPage;
+        this.set('_hasNextPage', hasNextPage);
+
+        if (isEmpty(this.get('valueList'))) {
+          this.set('valueList', newValueList);
+        } else {
+          this.set('valueList', this.get('valueList').concat(newValueList));
+        }
 
         this.notifyPropertyChange('sortedValueList');
 
@@ -488,7 +503,7 @@ export default Component.extend({
       this.set('inputValue', this.get('noValueLabel'));
       return;
     }
-    this.initSelectedValues();
+    this.initSelectedValues(false);
     if (isNone(this.get('valueList'))) {
       let noValueLabel = this.get('noValueLabel');
       if (isPresent(noValueLabel) && isNone(this.get('lazyCallback'))) {
@@ -584,13 +599,14 @@ export default Component.extend({
     }
   }),
   //
-  // comboFocusedObserver: observer('isComboFocused', 'lazyCallback', function() {
-  //   if (this.get('isComboFocused') === true && isNone(this.get('lazyCallback'))) {
-  //     this._showDropdown();//no lazy present
-  //   } else {
-  //     this.setLazyDebounce('', true);//lazy is present
-  //   }
-  // }),
+  comboFocusedObserver: observer('isComboFocused', function () {
+    if (this.get('isComboFocused') === true) {
+      //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
+      //and then 2nd time when it receives focus afterwards, but that does not matter
+      this._showDropdown();
+    }
+
+  }),
 
   asyncLoaderStartLabel: computed(function() {
     return this.get('configurationService').getAsyncLoaderStartLabel();
@@ -668,6 +684,12 @@ export default Component.extend({
       return;
     }
 
+    this.set('_oldInputValue', this.get('inputValue'));
+    if (this.get('canFilter') === true || isPresent(this.get('lazyCallback'))) {
+      this.set('inputValue', '');
+    }
+
+
     // if (isPresent(this.get('lazyCallback'))) {
     //   let minLazyCharacters = this.getMinLazyCharacters();
       //if combobox is lazy and there are not enough characters - do not show the dropdown
@@ -686,21 +708,21 @@ export default Component.extend({
     }
 
     this.set('oldInternalSelectionKeys', this._createArray(oldKeys));
-    if (this.get('canFilter')) {
-      if (isNone(this.get('lazyCallback'))) {
-        //when we are using lazyCallback, do not clear inputValue, otherwise clear it
-        this.set('inputValue', '');
-      }
-    } else {
-      if (isNone(this.get('lazyCallback'))) {
+    /*    if (this.get('canFilter')) {
+          if (isNone(this.get('lazyCallback'))) {
+            //when we are using lazyCallback, do not clear inputValue, otherwise clear it
+            this.set('inputValue', '');
+          }
+        } else {
+          if (isNone(this.get('lazyCallback'))) {
 
-        let chooseLabel = this.get('configurationService').getChooseLabel();
-        if (this.get('showChooseLabel') === false) {
-          chooseLabel = null;
-        }
-        this.set('inputValue', chooseLabel);
-      }
-    }
+            let chooseLabel = this.get('configurationService').getChooseLabel();
+            if (this.get('showChooseLabel') === false) {
+              chooseLabel = null;
+            }
+            this.set('inputValue', chooseLabel);
+          }
+        }*/
 
     if (isPresent(this.get('lazyCallback')) && isEmpty(this.get('valueList'))) {
       this.setLazyDebounce('', true);
@@ -749,10 +771,10 @@ export default Component.extend({
     this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
 
     if (this.get('canFilter')) {
-      if (isNone('lazyCallback')) {
+      // if (isNone('lazyCallback')) {
         //when we are using layzCallback, do not clear inputValue, otherwise clear it
-        this.set('inputValue', '');
-      }
+        // this.set('inputValue', '');
+      // }
     } else {
       if (isNone('lazyCallback')) {
         let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
@@ -779,9 +801,16 @@ export default Component.extend({
       return;
     }
 
+    let $element = $(this.element);
+    $element.off('focusout');
+
+    if (this.get('dropdownVisible') === false) {
+      return;
+    }
+    this.set('isComboFocused', false);
     this.cancelLazyDebounce();
 
-    $(this.element).find('.dropdown').css({
+    $element.find('.dropdown').css({
       'maxHeight': ''
     });
 
@@ -803,24 +832,28 @@ export default Component.extend({
     if (acceptSelected) {
       //call selection callback
       this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), this.get('oldInternalSelectionKeys'));
+      this.createSelectedLabel(this.get('internalSelectedList'));
+      this.set('inputValue', this.get('selectedValueLabel'));
     } else {
       //selection is not accepted -> revert internal selection
       this.set('internalSelectedList', this._itemKeysListToItemObjects(this.get('oldInternalSelectionKeys')));
     }
 
-    let noValueLabel = this.get('noValueLabel');
+    // let noValueLabel = this.get('noValueLabel');
 
     if (resetInput) {
-      if (isEmpty(this.get('internalSelectedList')) &&
-        isPresent(noValueLabel) &&
-        noValueLabel.length > 0
-      ) {
-        this.set('inputValue', noValueLabel);
-      } else {
-        this.createSelectedLabel(this.get('internalSelectedList'));
-        this.set('inputValue', this.get('selectedValueLabel'));
-      }
+      /*  if (isEmpty(this.get('internalSelectedList')) &&
+          isPresent(noValueLabel) &&
+          noValueLabel.length > 0
+        ) {
+          this.set('inputValue', noValueLabel);
+        } else {
+          this.createSelectedLabel(this.get('internalSelectedList'));
+          this.set('inputValue', this.get('selectedValueLabel'));
+        }*/
+      this.set('inputValue', this.get('_oldInputValue'));
     }
+    this.set('_oldInputValue', null);
 
     this._destroyDropdownCloseListeners();
 
@@ -903,7 +936,7 @@ export default Component.extend({
   _selectItem(item) {
     this._addOrRemoveFromSelected(item);
     if (!this.get('multiselect')) {
-      this._hideDropdown(true);
+      this._hideDropdown(true, false);
     }
   },
 
@@ -1040,7 +1073,12 @@ export default Component.extend({
 
     let debounceTimer = setTimeout(() => {
       this.set('lazyCallbackInProgress', true);
-      let promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
+      let promise;
+      if (this.get('pagination') === true) {
+        promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
+      } else {
+        promise = this.get('lazyCallback')(inputValue);
+      }
       if (clearOldValueList === true) {
         this.set('valueList', null);
       }
@@ -1053,7 +1091,7 @@ export default Component.extend({
         scheduleOnce('afterRender', this, () => {
           this._showDropdown();
           if (this.get('simpleCombobox') === true && isNone(this.get('lazyCallback'))) {
-            this.set('inputValue', null);
+            this.set('inputValue', '');
           }
           this.set('lazyCallbackInProgress', false);
         });
@@ -1066,7 +1104,9 @@ export default Component.extend({
   },
 
   fetchNextPage(onFetchDone) {
-    this.setLazyDebounce(this.get('inputValue'), true, false, onFetchDone);
+    if (this.get('_hasNextPage') === true) {
+      this.setLazyDebounce(this.get('inputValue'), true, false, onFetchDone);
+    }
   },
 
   actions: {
@@ -1078,11 +1118,14 @@ export default Component.extend({
 
         if (inputValue.trim().length < this.getMinLazyCharacters()) {
           this.cancelLazyDebounce();
-          if (this.get('dropdownVisible')) {
+          /*if (this.get('dropdownVisible')) {
             this._hideDropdown(false, false);
-          }
+          }*/
         } else {
-          this.setLazyDebounce(inputValue);
+          this.set('_hasNextPage', true);
+          this.set('_page', 1);
+
+          this.setLazyDebounce(inputValue, false, true);
         }
       }
 
@@ -1107,7 +1150,7 @@ export default Component.extend({
           return;
         }
         $(document).trigger('ember-advanced-combobox-hide-dropdown');
-        this._showDropdown();
+        // this._showDropdown();
       }
     },
 
