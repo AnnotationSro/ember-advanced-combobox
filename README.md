@@ -60,6 +60,9 @@ __For more usage examples see dummy application.__
 | maxDropdownHeight       | number; max height of dropdown (in pixels) - optional, if not set, dropdown will be stretched to the max height to be still visible in the page |   
 | emptySelectionLabel | overrides `emptySelectionLabel` (see global configuration section)|
 | chooseLabel | overrides `chooseLabel` (see global configuration section)|
+| pagination| boolean (default: false); `true` if you want items in dropdown to be fetched with pagination|
+| pageSize| number (default: 10)|
+| showDropdownOnClick| boolean (default: true); `true` if dropdown should be opened on click| 
 
 
 
