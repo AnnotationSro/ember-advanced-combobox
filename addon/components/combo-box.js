@@ -110,6 +110,7 @@ export default Component.extend({
   maxDropdownHeight: null,
   pagination: false,
   pageSize: 10,
+  showDropdownOnClick: true, //automatically show dropdown when clicked anywhere in a combobox
 
 
   //internals
@@ -599,10 +600,21 @@ export default Component.extend({
   }),
   //
   comboFocusedObserver: observer('isComboFocused', function () {
-    if (this.get('isComboFocused') === true) {
-      //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
-      //and then 2nd time when it receives focus afterwards, but that does not matter
-      this._showDropdown();
+    if (this.get('showDropdownOnClick') === true) {
+      if (this.get('isComboFocused') === true) {
+        //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
+        //and then 2nd time when it receives focus afterwards, but that does not matter
+        this._showDropdown();
+      }
+
+    } else {
+      if (this.get('canFilter') === true || isPresent(this.get('lazyCallback'))) {
+        if (isNone(this.get('_oldInputValue'))) {
+          this.set('_oldInputValue', this.get('inputValue'));
+        }
+        this.set('inputValue', '');
+        this._initDropdownCloseListeners();
+      }
     }
 
   }),
@@ -682,8 +694,9 @@ export default Component.extend({
       //dropdown is already visible
       return;
     }
-
-    this.set('_oldInputValue', this.get('inputValue'));
+    if (isNone(this.get('_oldInputValue'))) {
+      this.set('_oldInputValue', this.get('inputValue'));
+    }
     if (this.get('canFilter') === true || isPresent(this.get('lazyCallback'))) {
       this.set('inputValue', '');
     }
@@ -803,7 +816,7 @@ export default Component.extend({
     let $element = $(this.element);
     $element.off('focusout');
 
-    if (this.get('dropdownVisible') === false) {
+    if (this.get('isComboFocused') === false) {
       return;
     }
     this.set('isComboFocused', false);
@@ -977,7 +990,7 @@ export default Component.extend({
 
         //click somewhere outside the combobox
         if (!isElementClicked($combo, event)) {
-          if (this.get('dropdownVisible')) {
+          if (this.get('isComboFocused')) {
 
             //multiselect checkboxes should not trigger dropdown collapse
 
@@ -997,7 +1010,7 @@ export default Component.extend({
         return true;
       };
 
-      if (this.get('dropdownVisible')) {
+      if (this.get('isComboFocused')) {
         $('body').on(`click.hideDropdown_${this.elementId}`, hideDropdown);
       }
     });

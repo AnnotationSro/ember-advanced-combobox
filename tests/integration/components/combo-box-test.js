@@ -125,6 +125,48 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
+  test('it DOES NOT show and hides dropdown when clicked on button with `showDropdownOnClick=false`', async function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        showDropdownOnClick=false
+      }}
+    `);
+
+    //just to be sure - dropdown should not be visible, yet
+    assert.notOk(isElementVisible('.advanced-combo-box .dropdown-hidden'), "dropdown should NOT be present in DOM before user clicks on combobox");
+
+
+    // await click('.dropdown-icon');
+
+    focus('.dropdown-icon');
+
+
+    later(this, () => {
+      //dropdown should be visible
+      assert.notOk(isElementVisible('.advanced-combo-box .dropdown-hidden'), "dropdown should be present in DOM before user clicks on combobox");
+    }, 100);
+
+
+  });
+
   test('it shows and hides dropdown when clicked into input - without button', async function (assert) {
 
     let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
@@ -159,6 +201,46 @@ module('Integration | Component | combo box', function (hooks) {
     later(this, function () {
       //dropdown should be visible
       assert.ok(isElementVisible('.dropdown.dropdown-hidden'));
+    }, 100);
+
+
+  });
+
+  test('it DOES NOT shows and hides dropdown when clicked into input - without button - with `showDropdownOnClick=false`', async function (assert) {
+
+    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+
+    this.set('valueList', valueList);
+    this.set('selected', 'b');
+    // that.on('onSelected', function(value){
+    //   debugger;
+    // });
+
+    // Template block usage:
+    await render(hbs`
+      {{combo-box
+        valueList=valueList
+        selected=selected
+        itemKey='key'
+        itemLabel='label'
+        multiselect=false
+        canFilter=false
+        showDropdownButton=false
+        showDropdownOnClick=false
+      }}
+    `);
+
+    //just to be sure - dropdown should not be visible, yet
+    assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
+    //there should be no dropdown button visible
+    // assert.notOk(isElementVisible('.dropdown-icon'));
+
+
+    focus('.combo-input');
+
+    later(this, function () {
+      //dropdown should be visible
+      assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
     }, 100);
 
 
