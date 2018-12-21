@@ -23,6 +23,11 @@
    outline: none;
    height: 20px;
  }
+
+.advanced-combo-box .input-wrapper[readonly="readonly"] input{
+  cursor: default;
+}
+
  .advanced-combo-box .input-wrapper input {
    padding-top: 1px;
  }
