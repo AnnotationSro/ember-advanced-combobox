@@ -600,6 +600,10 @@ export default Component.extend({
   }),
   //
   comboFocusedObserver: observer('isComboFocused', function () {
+    if (this.get('_disabledCombobox') === true || this.get('labelOnly') === true){
+      return;
+    }
+
     if (this.get('showDropdownOnClick') === true) {
       if (this.get('isComboFocused') === true) {
         //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
