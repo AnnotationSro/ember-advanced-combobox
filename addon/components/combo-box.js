@@ -77,7 +77,8 @@ export default Component.extend({
     '_disabledCombobox:combobox-disabled',
     'dropdownVisible:dropdown-visible:dropdown-hidden',
     'isComboFocused:combo-focused',
-    'lazyCallbackInProgress:lazy-loading-in-progress'
+    'lazyCallbackInProgress:lazy-loading-in-progress',
+    'hasEmptySelectionClass:empty-selection'
   ],
   layout,
 
@@ -111,6 +112,7 @@ export default Component.extend({
   pagination: false,
   pageSize: 10,
   showDropdownOnClick: true, //automatically show dropdown when clicked anywhere in a combobox
+  placeholder: null,
 
 
   //internals
@@ -150,6 +152,13 @@ export default Component.extend({
 
   canShowDropdownButton: computed('showDropdownButton', 'lazyCallbackInProgress', function() {
     return this.get('showDropdownButton') && !this.get('lazyCallbackInProgress')
+  }),
+
+  hasEmptySelectionClass: computed('isEmptySelectionLabelVisible', 'dropdownVisible', function(){
+    if (this.get('dropdownVisible') === true){
+      return false;
+    }
+    return this.get('isEmptySelectionLabelVisible');
   }),
 
   init() {
@@ -901,6 +910,7 @@ export default Component.extend({
 
   createSelectedLabel(items) {
     let label = null;
+    let isEmptySelectionLabelVisible = false;
     if (isEmpty(items)) {
       //no items were selected
       if (isPresent(this.get('selected')) && isPresent(this.get('noValueLabel'))) {
@@ -908,6 +918,7 @@ export default Component.extend({
       } else {
         if (this.get('showEmptySelectionLabel') === true) {
           label = (isPresent(this.get('emptySelectionLabel')) || this.get('emptySelectionLabel') === '') ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
+          isEmptySelectionLabelVisible = true;
         }
       }
     } else {
@@ -923,6 +934,7 @@ export default Component.extend({
         label = this._createLabel(items, this.get('internalItemLabelForSelectedPreview'));
       }
     }
+    this.set('isEmptySelectionLabelVisible', isEmptySelectionLabelVisible)
     this.set('selectedValueLabel', label);
   },
 

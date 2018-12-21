@@ -61,6 +61,22 @@ Formatted: {{oneItemSelectedLazyFormatted}}
 </p>
 
 <div>
+  Simple combobox with placeholder
+  {{combo-box
+    canFilter=true
+    itemKey='a'
+    itemLabel='b'
+    selected=null
+    valueList=comboValueList
+    emptySelectionLabel='I am a placeholder'
+  }}
+</div>
+<p>
+
+</p>
+
+
+<div>
   Combobox with dynamic chooseLabel
   {{combo-box
     valueList=comboValueList
