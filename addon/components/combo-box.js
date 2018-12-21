@@ -1145,13 +1145,13 @@ export default Component.extend({
         }
       }
 
-      if (isPresent(this.get('lazyCallback'))) {
+  /*    if (isPresent(this.get('lazyCallback'))) {
         if (isEmpty(this.get('inputValue')) || this.get('inputValue').length === 0) {
           //clear selection
           this.set('internalSelectedList', A([]));
           this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), this.get('oldInternalSelectionKeys'));
         }
-      }
+      }*/
     },
 
     actionDropdownButton() {
