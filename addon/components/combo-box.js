@@ -533,7 +533,7 @@ export default Component.extend({
     } else {
       if (isNone(this.get('lazyCallback'))) {
         let selectedKeys = this._itemKeysListToItemObjects(this.get('selected'));
-        if (isEmpty(selectedKeys)) {
+        if (isEmpty(selectedKeys) && isPresent(this.get('selected'))) {
           //selected value is not within the new valueList
           this.set('inputValue', '');
         }
