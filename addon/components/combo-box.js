@@ -706,6 +706,12 @@ export default Component.extend({
     }
   },
 
+  _resetLazyCombobox(){
+    this.set('valueList', null);
+    this.set('_page', 1);
+    this.set('_hasNextPage', 1);
+  },
+
   _showDropdown() {
     if (this.get('dropdownVisible') || this.get('_disabledCombobox') === true) {
       //dropdown is already visible
@@ -716,6 +722,9 @@ export default Component.extend({
     }
     if (this.get('canFilter') === true || isPresent(this.get('lazyCallback'))) {
       this.set('inputValue', '');
+    }
+    if (isPresent(this.get('lazyCallback'))){
+      this._resetLazyCombobox();
     }
 
 
@@ -1102,9 +1111,12 @@ export default Component.extend({
     if (runImmidiate === true) {
       debounceTime = 0;
     }
+     if (debounceTime > 0) {
+       this.set('lazyCallbackInProgress', true);
+       this.set('valuePromiseResolving', true);
+     }
 
     let debounceTimer = setTimeout(() => {
-      this.set('lazyCallbackInProgress', true);
       let promise;
       if (this.get('pagination') === true) {
         promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
@@ -1146,17 +1158,15 @@ export default Component.extend({
     inputValueChanged() {
       let lazyCallback = this.get('lazyCallback');
       let inputValue = this.get('inputValue');
-      if (isPresent(lazyCallback) && isPresent(inputValue)) {
+      if (isPresent(lazyCallback)) {
 
-        if (inputValue.trim().length < this.getMinLazyCharacters()) {
+        if (inputValue.trim().length < this.getMinLazyCharacters() && inputValue.length > 0) {
           this.cancelLazyDebounce();
           /*if (this.get('dropdownVisible')) {
             this._hideDropdown(false, false);
           }*/
         } else {
-          this.set('_hasNextPage', true);
-          this.set('_page', 1);
-
+          this._resetLazyCombobox();
           this.setLazyDebounce(inputValue, false, true);
         }
       }
