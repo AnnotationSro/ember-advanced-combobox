@@ -920,7 +920,7 @@ export default Component.extend({
       if (isPresent(this.get('selected')) && isPresent(this.get('noValueLabel'))) {
         label = this.get('noValueLabel');
       } else {
-        if (this.get('showEmptySelectionLabel') === true) {
+        if (this.get('showEmptySelectionLabel') === true || this.get('simpleCombobox') === true) {
           label = (isPresent(this.get('emptySelectionLabel')) || this.get('emptySelectionLabel') === '') ? this.get('emptySelectionLabel') : this.get("configurationService").getEmptySelectionLabel();
           isEmptySelectionLabelVisible = true;
         }
