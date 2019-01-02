@@ -26,11 +26,13 @@
 
 .advanced-combo-box .input-wrapper[readonly="readonly"] input{
   cursor: default;
+  pointer-events: none; /*this will prevent cursor showing in readonly mode in Firefox (and perhaps IE, too)*/
 }
 
  .advanced-combo-box .input-wrapper input {
    padding-top: 1px;
  }
+
 
 .advanced-combo-box input{
   border: none;
