@@ -494,7 +494,11 @@ export default Component.extend({
         if (isEmpty(this.get('valueList'))) {
           this.set('valueList', newValueList);
         } else {
-          this.set('valueList', this.get('valueList').concat(newValueList));
+          if (this.get('pagination') === true) {
+            this.set('valueList', this.get('valueList').concat(newValueList));
+          } else {
+            this.set('valueList', newValueList);
+          }
         }
 
         this.notifyPropertyChange('sortedValueList');
