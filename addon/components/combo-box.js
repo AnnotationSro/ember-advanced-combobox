@@ -193,7 +193,24 @@ export default Component.extend({
       if (this.get('isComboFocused') === true) {
         return;
       }
+      if (this.get('isComboFocused') === false) {
+        scheduleOnce('afterRender', this, function () {
+          $element.find('.dropdown').focus();
+        });
+      }
+
       this.set('isComboFocused', true);
+
+      $element.focusout(() => {
+
+        // let the browser set focus on the newly clicked elem before check
+        setTimeout(() => {
+          if (!$element.find(':focus').length) {
+            this._hideDropdown(false);
+          }
+        }, 0);
+
+      })
     });
 
   },
@@ -309,8 +326,14 @@ export default Component.extend({
     }
   })),
 
-  tabbable: computed('labelOnly', '_disabledCombobox', function() {
-    return this.get('labelOnly') || this.get('_disabledCombobox');
+  tabbable: computed('labelOnly', '_disabledCombobox', 'isComboFocused', function() {
+    if (this.get('labelOnly') || this.get('_disabledCombobox')){
+      return false;
+    }
+    if (this.get('isComboFocused') === true){
+      return false;
+    }
+    return true;
   }),
 
   initSelectedValues(canAutoselect) {

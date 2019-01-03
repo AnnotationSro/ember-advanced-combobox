@@ -1,9 +1,9 @@
-<div class="input-group" tabindex={{if tabbable '-1' '0'}}>
+<div class="input-group" tabindex={{if tabbable '0' '-1'}}>
 
   <div class="input-wrapper">
     {{input class="combo-input" value=inputValue tabindex="-1" key-up=(action "inputValueChanged") autocorrect="off" autocapitalize="off" spellcheck="false" placeholder=pleceholder}}
     {{#if canShowDropdownButton}}
-      <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button"></i>
+      <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
     {{/if}}
     {{#if lazyCallbackInProgress}}
       <i class="{{font-icon "loading"}} dropdown-icon" aria-hidden="true"></i>
@@ -11,7 +11,7 @@
   </div>
 
 </div>
-  <ul class="dropdown dropdown-hidden">
+  <ul class="dropdown dropdown-hidden" tabindex="0">
     {{partial 'components/item-list'}}
   </ul>
   {{#if mobileDropdownVisible}}
