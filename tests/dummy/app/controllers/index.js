@@ -250,6 +250,28 @@ export default Controller.extend({
       });
 
       return a;
+    },
+
+    lazyCallbackSimpleCombo(query){
+      let a = new EmberPromise((resolve, reject) => {
+        let ajax = $.ajax({
+          type: "GET",
+          url: `/api/users?delay=2&page=1&pageSize=50&query=${query}`,
+          success: function(data) {
+            let result = [];
+            for (let i = 0; i < data.data.length; i++) {
+              result.push({
+                a: data.data[i].first_name,
+                b: data.data[i].first_name
+              });
+            }
+            resolve({'data':result, hasNextPage:false});
+          }
+        });
+        this.set('lazyCallbackAjax', ajax);
+      });
+
+      return a;
     }
   }
 });

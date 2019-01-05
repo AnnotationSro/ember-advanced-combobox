@@ -26,3 +26,7 @@ div.combo-focused .input-group {
 .fixed-positioned-dropdown .dropdown{
   background-color: red;
 }
+
+.advanced-combo-box.empty-selection input{
+  color: grey;
+}

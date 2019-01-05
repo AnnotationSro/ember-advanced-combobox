@@ -172,6 +172,7 @@ export default Component.extend({
     let noValueLabel = this.get('noValueLabel');
     if (isEmpty(this.get('valueList')) && isPresent(noValueLabel) && noValueLabel.length > 0) {
       this.set('inputValue', noValueLabel);
+      this.set('isEmptySelectionLabelVisible', false);
     } else {
       this.set('inputValue', this.get('selectedValueLabel'));
     }
