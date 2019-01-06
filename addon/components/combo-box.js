@@ -544,7 +544,9 @@ export default Component.extend({
       this.set('inputValue', this.get('noValueLabel'));
       return;
     }
-    this.initSelectedValues(true);
+    let canAutoselect = isNone(this.get('lazyCallback'));
+    this.initSelectedValues(canAutoselect);
+
     if (isNone(this.get('valueList'))) {
       let noValueLabel = this.get('noValueLabel');
       if (isPresent(noValueLabel) && isNone(this.get('lazyCallback'))) {
