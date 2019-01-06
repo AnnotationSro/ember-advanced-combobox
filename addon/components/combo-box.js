@@ -362,9 +362,9 @@ export default Component.extend({
     let selectedItems = this.get('internalSelectedList');
     if (this.get('labelOnly')) {
       this._handleLabelOnlyNoValue();
-      this.initFocusHandler();
-    } else {
       this.destroyFocusHandler();
+    } else {
+      this.initFocusHandler();
       let noValueLabel = this.get('noValueLabel');
       if (isEmpty(this.get('valueList')) && isPresent(noValueLabel) && noValueLabel.length > 0) {
         this.set('inputValue', noValueLabel);
@@ -544,7 +544,7 @@ export default Component.extend({
       this.set('inputValue', this.get('noValueLabel'));
       return;
     }
-    this.initSelectedValues(false);
+    this.initSelectedValues(true);
     if (isNone(this.get('valueList'))) {
       let noValueLabel = this.get('noValueLabel');
       if (isPresent(noValueLabel) && isNone(this.get('lazyCallback'))) {
@@ -628,7 +628,7 @@ export default Component.extend({
     if (isEmpty(this.get('valueList')) && isNone(this.get('lazyCallback'))) {
       notClickable = true;
     }
-    if (this.get('isInputEditable') === false) {
+    if (this.get('canFilter') === false && isNone(this.get('lazyCallback'))) {
       notClickable = true;
     }
 
