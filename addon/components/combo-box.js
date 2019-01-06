@@ -1095,7 +1095,7 @@ export default Component.extend({
       //only 1 item in value list
       //
       next(this, function() {
-        this._selectItem(getObjectFromArray(valueList, 0));
+        selectFirstItem.bind(this)();
       });
       return;
     }
@@ -1103,9 +1103,16 @@ export default Component.extend({
     if (this.get('preselectFirst') === true) {
       //preselect item
       next(this, function() {
-        this._selectItem(getObjectFromArray(valueList, 0));
+        selectFirstItem.bind(this)();
       });
       return;
+    }
+
+    function selectFirstItem(){
+      this._selectItem(getObjectFromArray(valueList, 0));
+      this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), null);
+      this.createSelectedLabel(this.get('internalSelectedList'));
+      this.set('inputValue', this.get('selectedValueLabel'));
     }
   },
 
