@@ -15,6 +15,10 @@
   border: 1px solid black;
 }
 
+.advanced-combo-box .input-group:focus{
+  outline: none;
+}
+
  .advanced-combo-box .dropdown-icon{
    outline: none;
  }
@@ -52,6 +56,10 @@
   overflow-y: auto;
   padding-bottom: 1px;
   padding-top: 1px;
+}
+
+.advanced-combo-box .dropdown:focus {
+  outline: none;
 }
 
 .ember-modal-dialog.combobox-mobile-dialog{

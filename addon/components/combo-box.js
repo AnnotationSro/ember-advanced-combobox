@@ -196,7 +196,7 @@ export default Component.extend({
       }
       if (this.get('isComboFocused') === false) {
         scheduleOnce('afterRender', this, function () {
-          $element.find('.dropdown').focus();
+          $element.find('input').focus();
         });
       }
 
@@ -225,7 +225,9 @@ export default Component.extend({
     this._super(...arguments);
 
     let $element = $(this.element);
-    this.initFocusHandler();
+    if (this.get('labelOnly') === false) {
+      this.initFocusHandler();
+    }
 
     if (this.get('_isTesting') === false) {
       let onResizeCallback = () => {
@@ -360,7 +362,9 @@ export default Component.extend({
     let selectedItems = this.get('internalSelectedList');
     if (this.get('labelOnly')) {
       this._handleLabelOnlyNoValue();
+      this.initFocusHandler();
     } else {
+      this.destroyFocusHandler();
       let noValueLabel = this.get('noValueLabel');
       if (isEmpty(this.get('valueList')) && isPresent(noValueLabel) && noValueLabel.length > 0) {
         this.set('inputValue', noValueLabel);
@@ -606,6 +610,11 @@ export default Component.extend({
     return false;
   }),
 
+  isInputEditable: computed('canFilter', 'lazyCallback', function () {
+    return this.get('canFilter') === true || isPresent(this.get('lazyCallback'));
+
+  }),
+
   //we cannot use {{input readonly=readonly}} because of bug https://github.com/emberjs/ember.js/issues/11828
   // eslint-disable-next-line ember/no-on-calls-in-components
   inputNotClickableObserver: on('init', observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', 'lazyCallback', function() {
@@ -619,7 +628,7 @@ export default Component.extend({
     if (isEmpty(this.get('valueList')) && isNone(this.get('lazyCallback'))) {
       notClickable = true;
     }
-    if (this.get('canFilter') === false && isNone(this.get('lazyCallback'))) {
+    if (this.get('isInputEditable') === false) {
       notClickable = true;
     }
 
@@ -649,7 +658,7 @@ export default Component.extend({
       }
 
     } else {
-      if (this.get('canFilter') === true || isPresent(this.get('lazyCallback'))) {
+      if (this.get('isInputEditable') === true) {
         if (isNone(this.get('_oldInputValue'))) {
           this.set('_oldInputValue', this.get('inputValue'));
         }
@@ -744,7 +753,7 @@ export default Component.extend({
     if (isNone(this.get('_oldInputValue'))) {
       this.set('_oldInputValue', this.get('inputValue'));
     }
-    if (this.get('canFilter') === true || isPresent(this.get('lazyCallback'))) {
+    if (this.get('isInputEditable') === true) {
       this.set('inputValue', '');
     }
     if (isPresent(this.get('lazyCallback'))){
