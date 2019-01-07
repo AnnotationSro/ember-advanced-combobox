@@ -31,6 +31,7 @@
 .advanced-combo-box .input-wrapper[readonly="readonly"] input{
   cursor: default;
   pointer-events: none; /*this will prevent cursor showing in readonly mode in Firefox (and perhaps IE, too)*/
+  caret-color: transparent;
 }
 
  .advanced-combo-box .input-wrapper input {
