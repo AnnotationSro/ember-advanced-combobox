@@ -2,7 +2,7 @@
 <input placeholder="just a random input">
 </p>
 
-<div>
+{{!--<div>
 Lazy select (queries server after user types at least 3 characters into filter)
 <br>
 {{combo-box
@@ -28,14 +28,35 @@ Lazy select (queries server after user types at least 3 characters into filter)
   abortLazyCallback=(action 'abortLazyCallback')
   minLazyCharacters=2
 }}
-<button {{action 'actionClearLazyCombo'}}>clear lazy</button>
+<button {{action 'actionClearLazyCombo'}}>clear lazy</button>--}}
 
-<div>
+{{!--<div>
 Raw value: {{comboSelectedLazy}}<br>
 Formatted: {{oneItemSelectedLazyFormatted}}
-</div>
+</div>--}}
+<div>
+<p>
+{{combo-box
+  canFilter=false
+  lazyCallback=(action 'lazyCallbackSimpleCombo')
+  itemKey='a'
+  itemLabel='b'
+  selected=x
+  showDropdownButton=false
+  noValueLabel=noValueLabelProfession
+  showLabelWhenDisabled=false
+  showChooseLabel=false
+  emptySelectionLabel='combobox.placeholder.3chars'
+  showEmptySelectionLabel=false
+  simpleCombobox=true
+  preselectFirst=false
+  maxDropdownHeight=175
+  showDropdownOnClick=false
+}}
+</p>
 
 </div>
+{{!--
 
 
 <div>
@@ -446,3 +467,4 @@ Single select in fixed container
 {{/if}}
 <button {{action 'showHideFixed'}}>show/hide fixed panel</button>
 </div>
+--}}
