@@ -1,84 +1,61 @@
 <p>
-<input placeholder="just a random input">
+  <input placeholder="just a random input">
 </p>
 
-{{!--<div>
-Lazy select (queries server after user types at least 3 characters into filter)
-<br>
-{{combo-box
-  selected=comboSelectedLazy
-  itemKey='a'
-  itemLabel='b'
-  onSelected=(action 'onLazySingle')
-  disabled=disabled
-  lazyCallback=(action 'lazyCallback')
-  abortLazyCallback=(action 'abortLazyCallback')
-  minLazyCharacters=2
-  pagination=true
-  maxDropdownHeight=100
-}}
-<br>
-{{combo-box
-  selected=comboSelectedLazy
-  itemKey='a'
-  itemLabel='b'
-  onSelected=(action 'onLazySingle')
-  disabled=disabled
-  lazyCallback=(action 'lazyCallback')
-  abortLazyCallback=(action 'abortLazyCallback')
-  minLazyCharacters=2
-}}
-<button {{action 'actionClearLazyCombo'}}>clear lazy</button>--}}
-
-{{!--<div>
-Raw value: {{comboSelectedLazy}}<br>
-Formatted: {{oneItemSelectedLazyFormatted}}
-</div>--}}
 <div>
-<p>
-{{combo-box
-  canFilter=false
-  lazyCallback=(action 'lazyCallbackSimpleCombo')
-  itemKey='a'
-  itemLabel='b'
-  selected=x
-  showDropdownButton=false
-  noValueLabel=noValueLabelProfession
-  showLabelWhenDisabled=false
-  showChooseLabel=false
-  emptySelectionLabel='combobox.placeholder.3chars'
-  showEmptySelectionLabel=false
-  simpleCombobox=true
-  preselectFirst=false
-  maxDropdownHeight=175
-  showDropdownOnClick=false
-}}
-</p>
+  Lazy select (queries server after user types at least 3 characters into filter)
+  <br>
+  {{combo-box
+    selected=comboSelectedLazy
+    itemKey='a'
+    itemLabel='b'
+    onSelected=(action 'onLazySingle')
+    disabled=disabled
+    lazyCallback=(action 'lazyCallback')
+    abortLazyCallback=(action 'abortLazyCallback')
+    minLazyCharacters=2
+    pagination=true
+    maxDropdownHeight=100
+  }}
+  <br>
+  {{combo-box
+    selected=comboSelectedLazy
+    itemKey='a'
+    itemLabel='b'
+    onSelected=(action 'onLazySingle')
+    disabled=disabled
+    lazyCallback=(action 'lazyCallback')
+    abortLazyCallback=(action 'abortLazyCallback')
+    minLazyCharacters=2
+  }}
+  <button {{action 'actionClearLazyCombo'}}>clear lazy</button>
 
+
+  <div>
+    Raw value: {{comboSelectedLazy}}<br>
+    Formatted: {{oneItemSelectedLazyFormatted}}
+  </div>
 </div>
-{{!--
-
-
 <div>
   Simple combobox
   {{combo-box
-					canFilter=false
-					lazyCallback=(action 'lazyCallbackSimpleCombo')
-          itemKey='a'
-          itemLabel='b'
-					selected=selectedSimpleCombo
-					onSelected=(action 'actionSimpleSelectedCombo')
-					showDropdownButton=false
-					showLabelWhenDisabled=false
-					showChooseLabel=false
-					showEmptySelectionLabel=false
-					simpleCombobox=true
-					preselectFirst=false
-					maxDropdownHeight=175
-          pagination=false
-			}}
+    canFilter=false
+    lazyCallback=(action 'lazyCallbackSimpleCombo')
+    itemKey='a'
+    itemLabel='b'
+    selected=selectedSimpleCombo
+    onSelected=(action 'actionSimpleSelectedCombo')
+    showDropdownButton=false
+    showLabelWhenDisabled=false
+    showChooseLabel=false
+    showEmptySelectionLabel=false
+    simpleCombobox=true
+    preselectFirst=false
+    maxDropdownHeight=175
+    pagination=false
+  }}
 </div>
- <p>
+<p>
 
 </p>
 
@@ -113,155 +90,29 @@ Formatted: {{oneItemSelectedLazyFormatted}}
     emptySelectionLabel=myChooseLabel
   }}
 
-      {{input value=myChooseLabel}}
-      {{myChooseLabel}}
+  {{input value=myChooseLabel}}
+  {{myChooseLabel}}
 </div>
- <p>
+<p>
 
 </p>
 
 <div>
   Sorted combobox
   {{combo-box
-					canFilter=false
-          orderBy='a'
-          valueList=comboValueList
-          selected=comboSelectedSingle
-          itemKey='a'
-          itemLabel='b'
-          multiselect=false
-          onSelected=(action 'onSelectedSingle')
-          disabled=disabled
-          labelOnly=labelOnly
-          emptySelectionLabel='empty value'
-          noValueLabel='hello'
-			}}
-</div>
- <p>
-
-</p>
-
-
-<div>
- Async value
-{{combo-box
-  valuePromise=asyncValueList
-  selected=comboSelectedSingleAsync
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onDropdownShow=(action 'actionCreateAsyncValueList')
-  onSelected=(action 'onSelectedSingleAsync')
-  disabledWhenEmpty=false
-  canFilter=false
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboSelectedSingleFormattedAsync}}
-</div>
-<p>
-
-</p>
-
-<div>
-Single select
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedSingle
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedSingle')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-  emptySelectionLabel='empty value'
-}}
-{{comboSelectedSingleFormatted}}
-<button {{action 'actionClearSingleCombo'}}>clear</button>
-</div>
- <p>
-
-</p>
-
-<div>
-Custom selected label
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedPreviewSingle
-  itemKey='a'
-  itemLabel='b'
-  itemLabelForSelectedPreview=(action 'customPreviewLabelFn')
-  multiselect=false
-  onSelected=(action 'onSelectedPreviewSingle')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-  showLabelWhenDisabled=false
-}}
-{{comboSelectedPreviewSingleFormatted}}
-</div>
-<p>
-
-</p>
-
-<div>
-Custom label in dropdown list
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedCustomDropdownSingle
-  itemKey='a'
-  itemLabel=(action 'customDropdownLabelFn')
-  multiselect=false
-  onSelected=(action 'onSelectedCustomDropdownSingle')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboSelectedCustomDropdownSingleFormatted}}
-</div>
- <p>
-
-</p>
-
-<div>
-Without dropdown button
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedNoButton
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedNoButton')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-  showDropdownButton=false
-}}
-{{comboSelectedNoButtonFormatted}}
-</div>
- <p>
-
-</p>
-
-<p>
-
-</p>
-
-<div>
-Single select - only 1 item in value list
-{{combo-box
-  valueList=oneItemValueList
-  selected=oneItemSelectedSingle1
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onOneItemSelected1')
-  canFilter=false
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{oneItemSelectedSingleFormatted1}}
+    canFilter=false
+    orderBy='a'
+    valueList=comboValueList
+    selected=comboSelectedSingle
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onSelectedSingle')
+    disabled=disabled
+    labelOnly=labelOnly
+    emptySelectionLabel='empty value'
+    noValueLabel='hello'
+  }}
 </div>
 <p>
 
@@ -269,58 +120,125 @@ Single select - only 1 item in value list
 
 
 <div>
-Single select without filtering
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedSingleWithoutFilter
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedSingleWithoutWilter')
-  canFilter=false
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboSelectedSingleFormattedWithoutFilter}}
-</div>
-<p>
-
-</p>
-<div>
-Async value
-{{combo-box
-  valuePromise=asyncValueList
-  selected=comboSelectedSingleAsync
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedSingleAsync')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-  noValueLabel="I am async combobox"
-}}
-{{comboSelectedSingleFormattedAsync}}
+  Async value
+  {{combo-box
+    valuePromise=asyncValueList
+    selected=comboSelectedSingleAsync
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onDropdownShow=(action 'actionCreateAsyncValueList')
+    onSelected=(action 'onSelectedSingleAsync')
+    disabledWhenEmpty=false
+    canFilter=false
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+  {{comboSelectedSingleFormattedAsync}}
 </div>
 <p>
 
 </p>
 
 <div>
-Single select without filtering - preselect
-{{combo-box
-  valueList=comboValueList
-  selected=comboPreSelectedSingle
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  preselectFirst=true
-  onSelected=(action 'onPreSelectedSingle')
-  canFilter=false
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboPreSelectedSingleFormatted}}
+  Single select
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedSingle
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onSelectedSingle')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+    emptySelectionLabel='empty value'
+  }}
+  {{comboSelectedSingleFormatted}}
+  <button {{action 'actionClearSingleCombo'}}>clear</button>
+</div>
+<p>
+
+</p>
+
+<div>
+  Custom selected label
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedPreviewSingle
+    itemKey='a'
+    itemLabel='b'
+    itemLabelForSelectedPreview=(action 'customPreviewLabelFn')
+    multiselect=false
+    onSelected=(action 'onSelectedPreviewSingle')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+    showLabelWhenDisabled=false
+  }}
+  {{comboSelectedPreviewSingleFormatted}}
+</div>
+<p>
+
+</p>
+
+<div>
+  Custom label in dropdown list
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedCustomDropdownSingle
+    itemKey='a'
+    itemLabel=(action 'customDropdownLabelFn')
+    multiselect=false
+    onSelected=(action 'onSelectedCustomDropdownSingle')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+  {{comboSelectedCustomDropdownSingleFormatted}}
+</div>
+<p>
+
+</p>
+
+<div>
+  Without dropdown button
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedNoButton
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onSelectedNoButton')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+    showDropdownButton=false
+  }}
+  {{comboSelectedNoButtonFormatted}}
+</div>
+<p>
+
+</p>
+
+<p>
+
+</p>
+
+<div>
+  Single select - only 1 item in value list
+  {{combo-box
+    valueList=oneItemValueList
+    selected=oneItemSelectedSingle1
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onOneItemSelected1')
+    canFilter=false
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+  {{oneItemSelectedSingleFormatted1}}
 </div>
 <p>
 
@@ -328,19 +246,78 @@ Single select without filtering - preselect
 
 
 <div>
-Multi select
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedMulti
-  itemKey='a'
-  itemLabel='b'
-  multiselect=true
-  onSelected=(action 'onSelectedMulti')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboSelectedMultiFormatted}}
+  Single select without filtering
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedSingleWithoutFilter
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onSelectedSingleWithoutWilter')
+    canFilter=false
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+  {{comboSelectedSingleFormattedWithoutFilter}}
+</div>
+<p>
+
+</p>
+<div>
+  Async value
+  {{combo-box
+    valuePromise=asyncValueList
+    selected=comboSelectedSingleAsync
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    onSelected=(action 'onSelectedSingleAsync')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+    noValueLabel="I am async combobox"
+  }}
+  {{comboSelectedSingleFormattedAsync}}
+</div>
+<p>
+
+</p>
+
+<div>
+  Single select without filtering - preselect
+  {{combo-box
+    valueList=comboValueList
+    selected=comboPreSelectedSingle
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    preselectFirst=true
+    onSelected=(action 'onPreSelectedSingle')
+    canFilter=false
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+  {{comboPreSelectedSingleFormatted}}
+</div>
+<p>
+
+</p>
+
+
+<div>
+  Multi select
+  {{combo-box
+    valueList=comboValueList
+    selected=comboSelectedMulti
+    itemKey='a'
+    itemLabel='b'
+    multiselect=true
+    onSelected=(action 'onSelectedMulti')
+    canFilter=true
+    disabled=disabled
+    labelOnly=labelOnly
+  }}
+  {{comboSelectedMultiFormatted}}
 </div>
 <p>
 
@@ -348,16 +325,16 @@ Multi select
 
 <div>
 
-Labelonly combobox
-{{combo-box
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  canFilter=true
-  disabled=disabled
-  labelOnly=true
-  noValueLabel="I am label only combobox with no value"
-}}
+  Labelonly combobox
+  {{combo-box
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    canFilter=true
+    disabled=disabled
+    labelOnly=true
+    noValueLabel="I am label only combobox with no value"
+  }}
 </div>
 
 <p>
@@ -366,19 +343,19 @@ Labelonly combobox
 
 <div>
 
-Complex combobox with callbacks and valuePromise that resolves after dropdown is shown
-{{combo-box
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  canFilter=true
-  disabled=disabled
-  valuePromise=complexValuePromise
-  labelOnly=labelOnlyWithNoValue
-  noValueLabel="I am label only combobox with no value"
-  onDropdownShow=(action 'onDropdownShow')
-  onDropdownHide=(action 'onDropdownHide')
-}}
+  Complex combobox with callbacks and valuePromise that resolves after dropdown is shown
+  {{combo-box
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    canFilter=true
+    disabled=disabled
+    valuePromise=complexValuePromise
+    labelOnly=labelOnlyWithNoValue
+    noValueLabel="I am label only combobox with no value"
+    onDropdownShow=(action 'onDropdownShow')
+    onDropdownHide=(action 'onDropdownHide')
+  }}
 </div>
 labelOnly: {{labelOnly}}
 <button {{action 'actionToggleLabelOnlyWithNoValue'}}>Toggle label only for this combobox</button>
@@ -424,17 +401,17 @@ labelOnly: {{labelOnly}}
 </p>
 
 <div id="manyItems">
-Many items - automatic scrollbar
-{{combo-box
-  valueList=comboValueListMany
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  canFilter=true
-}}
+  Many items - automatic scrollbar
+  {{combo-box
+    valueList=comboValueListMany
+    itemKey='a'
+    itemLabel='b'
+    multiselect=false
+    canFilter=true
+  }}
 </div>
 
- <p>
+<p>
 
 </p>
 
@@ -446,25 +423,25 @@ Many items - automatic scrollbar
 <input>
 
 <p>
-<input placeholder="just a random input">
+  <input placeholder="just a random input">
 </p>
 
 <div class="fixed-positioned-dropdown">
-Single select in fixed container
-{{#if showFixedCombo}}
-{{combo-box
-  valueList=comboValueList
-  selected=comboSelectedSingle
-  itemKey='a'
-  itemLabel='b'
-  multiselect=false
-  onSelected=(action 'onSelectedSingle')
-  canFilter=true
-  disabled=disabled
-  labelOnly=labelOnly
-}}
-{{comboSelectedSingleFormatted}}
-{{/if}}
-<button {{action 'showHideFixed'}}>show/hide fixed panel</button>
+  Single select in fixed container
+  {{#if showFixedCombo}}
+    {{combo-box
+      valueList=comboValueList
+      selected=comboSelectedSingle
+      itemKey='a'
+      itemLabel='b'
+      multiselect=false
+      onSelected=(action 'onSelectedSingle')
+      canFilter=true
+      disabled=disabled
+      labelOnly=labelOnly
+    }}
+    {{comboSelectedSingleFormatted}}
+  {{/if}}
+  <button {{action 'showHideFixed'}}>show/hide fixed panel</button>
 </div>
---}}
+
