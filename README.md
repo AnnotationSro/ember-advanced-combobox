@@ -62,7 +62,8 @@ __For more usage examples see dummy application.__
 | chooseLabel | overrides `chooseLabel` (see global configuration section)|
 | pagination| boolean (default: false); `true` if you want items in dropdown to be fetched with pagination|
 | pageSize| number (default: 10)|
-| showDropdownOnClick| boolean (default: true); `true` if dropdown should be opened on click| 
+| showDropdownOnClick| boolean (default: true); `true` if dropdown should be opened on click|
+| confirmInputValueOnBlur| boolean (default: false)| when set to `true`, user can enter value into the filter and DID NOT select filtered value in the dropdown - he can just click outside the combobox, and the value will still be selected| 
 
 
 

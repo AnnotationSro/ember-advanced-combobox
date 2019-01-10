@@ -117,6 +117,7 @@ export default Component.extend({
   pageSize: 10,
   showDropdownOnClick: true, //automatically show dropdown when clicked anywhere in a combobox
   placeholder: null,
+  confirmInputValueOnBlur: false,
 
 
   //internals
@@ -211,7 +212,27 @@ export default Component.extend({
         // let the browser set focus on the newly clicked elem before check
         setTimeout(() => {
           if (!$element.find(':focus').length) {
-            this._hideDropdown(false);
+            if (this.get('confirmInputValueOnBlur') === true && isPresent(this.get('inputValue')) && this.get('inputValue').length > 0){
+              //first select value that is in the inputValue
+              let objectToSelect = this._itemKeysListToItemObjects(this.get('inputValue'));
+              if (!isEmpty(objectToSelect)){
+                objectToSelect = objectToSelect[0];
+              }
+
+              if (isPresent(objectToSelect)) {
+                this._addOrRemoveFromSelected(objectToSelect);
+                this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), null);
+                this.createSelectedLabel(this.get('internalSelectedList'));
+                this.set('inputValue', this.get('selectedValueLabel'));
+
+                this._hideDropdown(true, false);
+              } else {
+                this._hideDropdown(false);
+              }
+
+            } else {
+              this._hideDropdown(false);
+            }
           }
         }, 0);
 
@@ -1177,8 +1198,8 @@ export default Component.extend({
         if (inputValue.length < this.getMinLazyCharacters() && inputValue.length > 0) {
           this.cancelLazyDebounce();
           /*if (this.get('dropdownVisible')) {
-            this._hideDropdown(false, false);
-          }*/
+                      this._hideDropdown(false, false);
+                    }*/
         } else {
           if (inputValue.length === 0) {
             this._resetLazyCombobox();
