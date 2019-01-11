@@ -851,7 +851,10 @@ module('Integration | Component | combo box', function (hooks) {
 
     await click('.dropdown-icon');
     $this.find('input').val('label1');
-    $this.find('input').trigger('keyup');
+
+    var e = $.Event('keyup');
+    e.key = '1';
+    $this.find('input').trigger(e);
 
 
     //open dropdown
@@ -887,7 +890,10 @@ module('Integration | Component | combo box', function (hooks) {
 
     await click('.dropdown-icon');
     $this.find('input').val('label1');
-    $this.find('input').trigger('keyup');
+
+    var e = $.Event('keyup');
+    e.key = '1';
+    $this.find('input').trigger(e);
 
 
     //open dropdown
