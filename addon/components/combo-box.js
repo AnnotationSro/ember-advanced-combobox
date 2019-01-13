@@ -920,6 +920,7 @@ export default Component.extend({
       this.set('inputValue', this.get('_oldInputValue'));
     }
     this.set('_oldInputValue', null);
+    this.set('_page', 1);
 
     this._destroyDropdownCloseListeners();
 
@@ -1191,11 +1192,12 @@ export default Component.extend({
   actions: {
 
     inputValueChanged(input, event) {
-
       if (event.key.length > 1){
         //some non printable character was pressed - ignore it, otherwise lazyCallback may be triggered
         return;
       }
+
+      this.set('_page', 1);
 
       let lazyCallback = this.get('lazyCallback');
       let inputValue = this.get('inputValue');
@@ -1203,9 +1205,6 @@ export default Component.extend({
 
         if (inputValue.length < this.getMinLazyCharacters() && inputValue.length > 0) {
           this.cancelLazyDebounce();
-          /*if (this.get('dropdownVisible')) {
-                      this._hideDropdown(false, false);
-                    }*/
         } else {
           if (inputValue.length === 0) {
             this._resetLazyCombobox();
