@@ -892,7 +892,9 @@ export default Component.extend({
     let $dropdown = $element.find('.dropdown');
     let $input = $element.find('.combo-input');
     adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
-    this.initKeyboardSupport();
+    if (this.get('multiselect') === false) {
+      this.initKeyboardSupport();
+    }
   },
 
   _initPopper() {
