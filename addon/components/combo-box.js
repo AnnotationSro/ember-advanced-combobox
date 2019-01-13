@@ -12,6 +12,8 @@ import {isEmpty, isNone, isPresent} from '@ember/utils';
 import layout from '../templates/components/combo-box';
 import {accentRemovalHelper} from '../helpers/accent-removal-helper';
 import {comboItemLabel} from '../helpers/combo-item-label';
+import { addObserver, removeObserver } from '@ember/object/observers';
+
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -130,6 +132,7 @@ export default Component.extend({
   valuePromiseResolving: false,
   isComboFocused: false,
   _hasNextPage: true,
+  preselectedDropdownItem: 0, //index of currently preselected item in dropdown (has focus)
   configurationService: service('adv-combobox-configuration-service'),
 
   sortedValueList: sort('valueList', function (a, b) {
@@ -313,6 +316,84 @@ export default Component.extend({
       this.get('_erd').uninstall($(this.element).find('.dropdown')[0]);
     }
     $(this.element).find('.dropdown').unbind('scroll.pagination');
+  },
+
+  initKeyboardSupport() {
+    this.set('preselectedDropdownItem', 0);
+    $('body').on('keydown.keyboard-support', (event) => {
+
+      //from MSDN documentation
+      // Internet Explorer, Edge (16 and earlier), and Firefox (36 and earlier)
+      //use "Left", "Right", "Up", and "Down" instead of "ArrowLeft", "ArrowRight", "ArrowUp", and "ArrowDown".
+      switch (event.key) {
+        case 'ArrowUp':
+        case 'Up':
+          this.keyboardSelect(-1);
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          break;
+        case 'ArrowDown':
+        case 'Down':
+          this.keyboardSelect(1);
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          break;
+        case 'Enter': {
+
+          let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
+
+          this._addOrRemoveFromSelected(selectedItem);
+          this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), null);
+          this.createSelectedLabel(this.get('internalSelectedList'));
+          this.set('inputValue', this.get('selectedValueLabel'));
+
+          this._hideDropdown(true, false);
+          $(this.element).find('*').blur();
+
+          event.preventDefault();
+          event.stopPropagation();
+          break;
+        }
+      }
+
+    });
+
+    addObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
+    this.keyboardSupportValueListChanged();
+  },
+
+  keyboardSupportValueListChanged(){
+    $(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
+
+    scheduleOnce('afterRender', this, function () {
+      let $items = $(this.element).find('.dropdown .dropdown-item');
+      $items.on('mouseover.keyboard-item', (e) => {
+        let selectedItem = $items.toArray().indexOf(e.target);
+        this.set('preselectedDropdownItem', selectedItem);
+      });
+    });
+  },
+
+  destroyKeyboardSupport() {
+    $('body').off('keydown.keyboard-support');
+    removeObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
+  },
+
+  keyboardSelect(delta) {
+    let preselectedDropdownItem = this.get('preselectedDropdownItem');
+    preselectedDropdownItem += delta;
+    if (preselectedDropdownItem < 0) {
+      preselectedDropdownItem = this.get('valueList.length') - 1;
+    }
+    if (preselectedDropdownItem > this.get('valueList.length') - 1) {
+      preselectedDropdownItem = 0;
+    }
+
+    this.set('preselectedDropdownItem', preselectedDropdownItem);
   },
 
   initPagination() {
@@ -811,6 +892,7 @@ export default Component.extend({
     let $dropdown = $element.find('.dropdown');
     let $input = $element.find('.combo-input');
     adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
+    this.initKeyboardSupport();
   },
 
   _initPopper() {
@@ -923,7 +1005,7 @@ export default Component.extend({
     this.set('_page', 1);
 
     this._destroyDropdownCloseListeners();
-
+    this.destroyKeyboardSupport();
   },
 
   _equalsSelectedList(list1, list2) {

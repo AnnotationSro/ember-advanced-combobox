@@ -1,7 +1,12 @@
-{{#each filteredValueList as |value|}}
-  <li class="dropdown-item" {{action 'actionItemSelect' value bubbles=false}} title={{combo-item-label value itemLabel}}>
+{{#each filteredValueList as |value index|}}
+  <li
+    class={{concat "dropdown-item" (if (eq index preselectedDropdownItem) ' selected')}}
+    {{action 'actionItemSelect' value bubbles=false}}
+    title={{combo-item-label value itemLabel}}
+  >
     {{#if multiselect}}
-      {{#if (is-item-selected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
+      {{#if
+        (is-item-selected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
         <i class='{{font-icon "checkbox-checked"}}' aria-hidden="true"></i>
       {{else}}
         <i class='{{font-icon "checkbox-unchecked"}}' aria-hidden="true"></i>
@@ -10,11 +15,11 @@
     {{combo-item-label value itemLabel}}
   </li>
 {{else}}
-    {{!-- filteredValueList is empty = either because of filter or valuePromise is not yet resolved --}}
-    {{#if valuePromiseResolving}}
-      <i class='{{font-icon "loading"}}'></i>
-      {{asyncLoaderStartLabel}}
-    {{else}}
-      <li class="dropdown-item">{{emptyValueListLabel}}</li>
-    {{/if}}
+{{!-- filteredValueList is empty = either because of filter or valuePromise is not yet resolved --}}
+  {{#if valuePromiseResolving}}
+    <i class='{{font-icon "loading"}}'></i>
+    {{asyncLoaderStartLabel}}
+  {{else}}
+    <li class="dropdown-item">{{emptyValueListLabel}}</li>
+  {{/if}}
 {{/each}}

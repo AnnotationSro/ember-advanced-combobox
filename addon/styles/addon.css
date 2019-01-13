@@ -94,9 +94,11 @@
   padding: 10px 0;
 }
 
-.advanced-combo-box .dropdown li:hover{
+
+.advanced-combo-box .dropdown li.selected{
   background-color: grey;
 }
+
 
 .advanced-combo-box.dropdown-hidden .dropdown{
   display: none;
