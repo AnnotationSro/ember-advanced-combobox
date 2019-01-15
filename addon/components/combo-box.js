@@ -370,10 +370,12 @@ export default Component.extend({
     $(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
 
     scheduleOnce('afterRender', this, function () {
-      let $items = $(this.element).find('.dropdown .dropdown-item');
-      $items.on('mouseover.keyboard-item', (e) => {
-        let selectedItem = $items.toArray().indexOf(e.target);
-        this.set('preselectedDropdownItem', selectedItem);
+      next(this, ()=>{
+        let $items = $(this.element).find('.dropdown .dropdown-item');
+        $items.on('mouseover.keyboard-item', (e) => {
+          let selectedItem = $items.toArray().indexOf(e.target);
+          this.set('preselectedDropdownItem', selectedItem);
+        });
       });
     });
   },
@@ -381,6 +383,7 @@ export default Component.extend({
   destroyKeyboardSupport() {
     $('body').off('keydown.keyboard-support');
     removeObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
+    $(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
   },
 
   keyboardSelect(delta) {
