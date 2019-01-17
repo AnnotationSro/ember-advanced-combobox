@@ -20,6 +20,8 @@ Ember combobox that can (beside others):
 ember install ember-advanced-combobox
 ```
 
+This addon uses FontAwesome by default - **at the moment you have to provide it for yourself** (this addon does not install it for you).
+You can however use any font icon set you want, but do not forget to configure this addon (more in section *Global configuration* -> propery *icons*)
 
 ```
 {{combo-box  
