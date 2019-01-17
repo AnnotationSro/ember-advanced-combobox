@@ -12,8 +12,7 @@ import {isEmpty, isNone, isPresent} from '@ember/utils';
 import layout from '../templates/components/combo-box';
 import {accentRemovalHelper} from '../helpers/accent-removal-helper';
 import {comboItemLabel} from '../helpers/combo-item-label';
-import { addObserver, removeObserver } from '@ember/object/observers';
-
+import {addObserver, removeObserver} from '@ember/object/observers';
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -215,7 +214,11 @@ export default Component.extend({
         // let the browser set focus on the newly clicked elem before check
         setTimeout(() => {
           if (!$element.find(':focus').length) {
-            if (this.get('confirmInputValueOnBlur') === true && isPresent(this.get('inputValue')) && this.get('inputValue').length > 0){
+            if (this.get('multiselect') === true) {
+              this._hideDropdown(true, false);
+              return;
+            }
+            if (this.get('confirmInputValueOnBlur') === true && isPresent(this.get('inputValue')) && this.get('inputValue').length > 0) {
               //first select value that is in the inputValue
               let objectToSelect = this._itemKeysListToItemObjects(this.get('inputValue'));
               if (!isEmpty(objectToSelect)){
@@ -343,7 +346,9 @@ export default Component.extend({
 
           break;
         case 'Enter': {
-
+          if (this.get('multiselect') === true) {
+            break;
+          }
           let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
 
           this._addOrRemoveFromSelected(selectedItem);
@@ -355,7 +360,6 @@ export default Component.extend({
           $(this.element).find('*').blur();
 
           event.preventDefault();
-          event.stopPropagation();
           break;
         }
       }
@@ -389,14 +393,41 @@ export default Component.extend({
   keyboardSelect(delta) {
     let preselectedDropdownItem = this.get('preselectedDropdownItem');
     preselectedDropdownItem += delta;
+    let moveDown = delta > 0;
     if (preselectedDropdownItem < 0) {
-      preselectedDropdownItem = this.get('valueList.length') - 1;
+      preselectedDropdownItem = 0;
+      // moveDown = !moveDown;
     }
     if (preselectedDropdownItem > this.get('valueList.length') - 1) {
-      preselectedDropdownItem = 0;
+      preselectedDropdownItem = this.get('valueList.length') - 1;
+      // moveDown = !moveDown;
     }
 
     this.set('preselectedDropdownItem', preselectedDropdownItem);
+    this.checkDropdownItemVisible(preselectedDropdownItem, moveDown);
+  },
+
+  checkDropdownItemVisible(itemIndex, moveDown) {
+    let $dropdown = $(this.element).find('.dropdown');
+    let $item = $($dropdown.find('.dropdown-item')[itemIndex]);
+
+    adjustItemVisible();
+
+    function adjustItemVisible() {
+      if (moveDown === true) {
+        //move down
+        if ($dropdown.height() < $item.position().top + $item.height()) {
+          var scrollTop = (itemIndex - (Math.floor($dropdown.height() / $item.height())) + 1) * $item.height();
+          $dropdown.scrollTop(scrollTop);
+        }
+      }
+      if (moveDown === false) {
+        //move up
+        if ($item.position().top - $item.height() * 2 < $item.height()) {
+          $dropdown.scrollTop(itemIndex * $item.height());
+        }
+      }
+    }
   },
 
   initPagination() {
@@ -406,10 +437,10 @@ export default Component.extend({
     $(this.element).find('.dropdown').bind('scroll.pagination', function () {
       if (scrollEnabled === false) {
         //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
-        return;
+        // return;
       }
 
-      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
         scrollEnabled = false;
         that.fetchNextPage(() => {
           scrollEnabled = true;
@@ -895,9 +926,9 @@ export default Component.extend({
     let $dropdown = $element.find('.dropdown');
     let $input = $element.find('.combo-input');
     adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
-    if (this.get('multiselect') === false) {
-      this.initKeyboardSupport();
-    }
+
+    this.initKeyboardSupport();
+
   },
 
   _initPopper() {
@@ -1219,6 +1250,7 @@ export default Component.extend({
       clearTimeout(this.get('lazyDebounce'));
       this.set('lazyDebounce', null);
     }
+    this.set('lazyCallbackInProgress', false);
   },
 
   setLazyDebounce(inputValue, runImmidiate = false, clearOldValueList = true, onFetchDone) {
@@ -1272,7 +1304,7 @@ export default Component.extend({
 
   fetchNextPage(onFetchDone) {
     if (this.get('_hasNextPage') === true) {
-      this.setLazyDebounce(this.get('inputValue'), true, false, onFetchDone);
+      this.setLazyDebounce(this.get('inputValue'), false, false, onFetchDone);
     }
   },
 
