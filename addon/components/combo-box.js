@@ -352,9 +352,6 @@ export default Component.extend({
           let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
 
           this._addOrRemoveFromSelected(selectedItem);
-          this._callOnSelectedCallback(this.convertItemListToKeyList(this.get('internalSelectedList')), null);
-          this.createSelectedLabel(this.get('internalSelectedList'));
-          this.set('inputValue', this.get('selectedValueLabel'));
 
           this._hideDropdown(true, false);
           $(this.element).find('*').blur();
