@@ -278,6 +278,7 @@ export default Component.extend({
     //initInputClickHandler
     $(this.element).find(' *').on('touchstart', (event) => {
       event.stopPropagation();
+      event.preventDefault();
       if (this.get('_disabledCombobox')) {
         return;
       }
@@ -966,12 +967,15 @@ export default Component.extend({
       // this.set('inputValue', '');
       // }
     } else {
-      if (isNone('lazyCallback')) {
+      if (isNone(this.get('lazyCallback'))) {
         let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
         if (this.get('showChooseLabel') === false) {
           chooseLabel = null;
         }
         this.set('inputValue', chooseLabel);
+      } else {
+        let promise = this.get('lazyCallback')("", this.get('_page'), this.get('pageSize'));
+        this.set('valuePromise', promise);
       }
     }
   },
@@ -994,7 +998,7 @@ export default Component.extend({
     let $element = $(this.element);
     $element.off('focusout');
 
-    if (this.get('isComboFocused') === false) {
+    if (this.get('isComboFocused') === false && this.get('mobileDropdownVisible') === false) {
       return;
     }
     this.set('isComboFocused', false);

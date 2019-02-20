@@ -24,17 +24,19 @@
     {{partial 'components/item-list'}}
   </ul>
   {{#if mobileDropdownVisible}}
-    {{#modal-dialog close="toggleModal"
-                  targetAttachment="center"
-                  containerClassNames="combobox-mobile-dialog"
-                  translucentOverlay=true}}
+    {{#modal-dialog
+        close="toggleModal"
+        targetAttachment="center"
+        containerClassNames="combobox-mobile-dialog"
+        translucentOverlay=true
+    }}
                   <div class="header">
                   </div>
                   {{#if canFilter}}
                     {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder}}
                   {{/if}}
                   <div class="dropdown">
-                    {{partial 'components/item-list'}}
+                    {{partial "components/item-list"}}
                   </div>
                   <div class="footer">
                     <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>
@@ -42,5 +44,5 @@
                       <button class="btn-accept" {{action 'actionAcceptMobile'}}>{{mobileOkButton}}</button>
                     {{/if}}
                   </div>
-  {{/modal-dialog}}
+    {{/modal-dialog}}
   {{/if}}
