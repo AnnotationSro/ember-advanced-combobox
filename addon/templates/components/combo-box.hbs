@@ -32,8 +32,8 @@
     }}
                   <div class="header">
                   </div>
-                  {{#if canFilter}}
-                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder}}
+                  {{#if (or canFilter minLazyCharacters)}}
+                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
                   {{/if}}
                   <div class="dropdown">
                     {{partial "components/item-list"}}

@@ -279,7 +279,7 @@ export default Component.extend({
     $(this.element).find(' *').on('touchstart', (event) => {
       event.stopPropagation();
       event.preventDefault();
-      if (this.get('_disabledCombobox')) {
+      if (this.get('_disabledCombobox') || this.get('labelOnly') === true) {
         return;
       }
       this._showMobileDropdown();
@@ -306,6 +306,26 @@ export default Component.extend({
     return false;
   },
 
+  didRender() {
+    this._super(...arguments);
+
+    let that = this;
+    let touchMoveEnabled = true;
+    $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', function () {
+
+      if (touchMoveEnabled === false) {
+        return;
+      }
+
+      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
+        touchMoveEnabled = false;
+        that.fetchNextPage(() => {
+          touchMoveEnabled = true;
+        });
+      }
+    });
+  },
+
   willDestroyElement() {
     this._super(...arguments);
 
@@ -320,6 +340,7 @@ export default Component.extend({
       this.get('_erd').uninstall($(this.element).find('.dropdown')[0]);
     }
     $(this.element).find('.dropdown').unbind('scroll.pagination');
+    $(this.element).find('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
   },
 
   initKeyboardSupport() {
@@ -692,7 +713,7 @@ export default Component.extend({
       }
       return;
     }
-    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected'))) && !this.get('dropdownVisible') && isNone(this.get('lazyCallback'))) {
+    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected'))) && (!this.get('dropdownVisible') && !this.get('mobileDropdownVisible')) && isNone(this.get('lazyCallback'))) {
       let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
       if (this.get('showChooseLabel') === false) {
         chooseLabel = null;
@@ -955,16 +976,18 @@ export default Component.extend({
   },
 
   _showMobileDropdown() {
-    this.set('mobileDropdownVisible', true);
+    this.setProperties({
+      'mobileDropdownVisible': true,
+      '_oldInputValue': this.get('inputValue')
+    });
 
     this.get('onDropdownShow')();
 
     this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
-
     if (this.get('canFilter')) {
       // if (isNone('lazyCallback')) {
-      //when we are using layzCallback, do not clear inputValue, otherwise clear it
-      // this.set('inputValue', '');
+        //when we are using layzCallback, do not clear inputValue, otherwise clear it
+        this.set('inputValue', '');
       // }
     } else {
       if (isNone(this.get('lazyCallback'))) {
@@ -973,9 +996,13 @@ export default Component.extend({
           chooseLabel = null;
         }
         this.set('inputValue', chooseLabel);
+
       } else {
         let promise = this.get('lazyCallback')("", this.get('_page'), this.get('pageSize'));
-        this.set('valuePromise', promise);
+        this.setProperties({
+          'valuePromise': promise,
+          'inputValue': ''
+        });
       }
     }
   },
@@ -1275,6 +1302,9 @@ export default Component.extend({
     let debounceTimer = setTimeout(() => {
       let promise;
       if (this.get('pagination') === true) {
+        if (this.get('mobileDropdownVisible') === true && this.get('_page') === 1) {
+          this.incrementProperty('_page');
+        }
         promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
       } else {
         promise = this.get('lazyCallback')(inputValue);
@@ -1289,7 +1319,10 @@ export default Component.extend({
         }
         this.incrementProperty('_page');
         scheduleOnce('afterRender', this, () => {
-          this._showDropdown();
+          if (this.get('mobileDropdownVisible') === false) {
+            this._showDropdown();
+          }
+          // this._showDropdown();
           if (this.get('simpleCombobox') === true && isNone(this.get('lazyCallback'))) {
             this.set('inputValue', '');
           }
@@ -1354,7 +1387,7 @@ export default Component.extend({
     },
 
     actionCancelMobile() {
-      this.set('mobileDropdownVisible', false);
+      this._hideDropdown(false);
     },
 
     actionAcceptMobile() {
