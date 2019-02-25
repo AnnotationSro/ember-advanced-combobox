@@ -14,7 +14,7 @@
     {{#if canShowDropdownButton}}
       <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
     {{/if}}
-    {{#if lazyCallbackInProgress}}
+    {{#if (and lazyCallbackInProgress (not mobileDropdownVisible))}}
       <i class="{{font-icon "loading"}} dropdown-icon" aria-hidden="true"></i>
     {{/if}}
   </div>
@@ -37,6 +37,10 @@
                   {{/if}}
                   <div class="dropdown">
                     {{partial "components/item-list"}}
+                    {{#if mobileLoader}}
+                      <i class='{{font-icon "loading"}}'></i>
+                      {{asyncLoaderStartLabel}}
+                    {{/if}}
                   </div>
                   <div class="footer">
                     <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>

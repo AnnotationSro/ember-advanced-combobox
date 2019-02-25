@@ -1,4 +1,4 @@
-import {next, scheduleOnce} from '@ember/runloop';
+import {next, scheduleOnce, schedule, debounce} from '@ember/runloop';
 import {isHTMLSafe} from '@ember/string';
 import $ from 'jquery';
 import {on} from '@ember/object/evented';
@@ -119,6 +119,8 @@ export default Component.extend({
   showDropdownOnClick: true, //automatically show dropdown when clicked anywhere in a combobox
   placeholder: null,
   confirmInputValueOnBlur: false,
+  mobileDropdownVisible: false,
+  mobileLoader: false,
 
 
   //internals
@@ -304,26 +306,6 @@ export default Component.extend({
       this.initPagination();
     }
     return false;
-  },
-
-  didRender() {
-    this._super(...arguments);
-
-    let that = this;
-    let touchMoveEnabled = true;
-    $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', function () {
-
-      if (touchMoveEnabled === false) {
-        return;
-      }
-
-      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
-        touchMoveEnabled = false;
-        that.fetchNextPage(() => {
-          touchMoveEnabled = true;
-        });
-      }
-    });
   },
 
   willDestroyElement() {
@@ -904,6 +886,7 @@ export default Component.extend({
     this.set('valueList', null);
     this.set('_page', 1);
     this.set('_hasNextPage', 1);
+    this.set('mobileLoader', false);
   },
 
   _showDropdown() {
@@ -979,6 +962,26 @@ export default Component.extend({
     this.setProperties({
       'mobileDropdownVisible': true,
       '_oldInputValue': this.get('inputValue')
+    });
+    if (isPresent(this.get('lazyCallback')) && this.get('lazyCallbackInProgress') === false) {
+      this._resetLazyCombobox();
+    }
+
+    schedule('afterRender', this, function() {
+      let that = this;
+      $(this.element).find('.dropdown').on('touchmove.mobilePagination', function () {
+        debounce(that, () => {
+          if (that.get('lazyCallbackInProgress') === true) {
+            that.set('mobileLoader', true);
+          }
+          if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
+            that.fetchNextPage(() => {
+              that.set('mobileLoader', false);
+            });
+          }
+
+        }, 500);
+      });
     });
 
     this.get('onDropdownShow')();
@@ -1302,7 +1305,7 @@ export default Component.extend({
     let debounceTimer = setTimeout(() => {
       let promise;
       if (this.get('pagination') === true) {
-        if (this.get('mobileDropdownVisible') === true && this.get('_page') === 1) {
+        if (this.get('mobileDropdownVisible') === true) {
           this.incrementProperty('_page');
         }
         promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
@@ -1322,7 +1325,6 @@ export default Component.extend({
           if (this.get('mobileDropdownVisible') === false) {
             this._showDropdown();
           }
-          // this._showDropdown();
           if (this.get('simpleCombobox') === true && isNone(this.get('lazyCallback'))) {
             this.set('inputValue', '');
           }
