@@ -966,7 +966,7 @@ export default Component.extend({
     }
 
     schedule('afterRender', this, function() {
-      $(this.element).find('.dropdown').on('touchmove.mobilePagination', () => {
+      $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
         debounce(this, debouncedFunc, 200);
       });
 
@@ -1023,6 +1023,7 @@ export default Component.extend({
 
     let $element = $(this.element);
     $element.off('focusout');
+    $('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
 
     if (this.get('isComboFocused') === false && this.get('mobileDropdownVisible') === false) {
       return;
