@@ -120,7 +120,6 @@ export default Component.extend({
   placeholder: null,
   confirmInputValueOnBlur: false,
   mobileDropdownVisible: false,
-  mobileLoader: false,
 
 
   //internals
@@ -886,7 +885,6 @@ export default Component.extend({
     this.set('valueList', null);
     this.set('_page', 1);
     this.set('_hasNextPage', 1);
-    this.set('mobileLoader', false);
   },
 
   _showDropdown() {
@@ -968,20 +966,18 @@ export default Component.extend({
     }
 
     schedule('afterRender', this, function() {
-      let that = this;
-      $(this.element).find('.dropdown').on('touchmove.mobilePagination', function () {
-        debounce(that, () => {
-          if (that.get('lazyCallbackInProgress') === true) {
-            that.set('mobileLoader', true);
-          }
-          if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
-            that.fetchNextPage(() => {
-              that.set('mobileLoader', false);
-            });
-          }
-
-        }, 500);
+      $(this.element).find('.dropdown').on('touchmove.mobilePagination', () => {
+        debounce(this, debouncedFunc, 200);
       });
+
+      function debouncedFunc() {
+        let $dialogDropdown = $('.combobox-mobile-dialog .dropdown');
+        
+        if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight && this.get('lazyCallbackInProgress') === false) {
+          this.fetchNextPage(() => {
+          });
+        }
+      }
     });
 
     this.get('onDropdownShow')();
