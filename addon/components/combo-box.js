@@ -1,4 +1,4 @@
-import {next, scheduleOnce} from '@ember/runloop';
+import {next, scheduleOnce, schedule, debounce} from '@ember/runloop';
 import {isHTMLSafe} from '@ember/string';
 import $ from 'jquery';
 import {on} from '@ember/object/evented';
@@ -119,6 +119,7 @@ export default Component.extend({
   showDropdownOnClick: true, //automatically show dropdown when clicked anywhere in a combobox
   placeholder: null,
   confirmInputValueOnBlur: false,
+  mobileDropdownVisible: false,
 
 
   //internals
@@ -278,7 +279,8 @@ export default Component.extend({
     //initInputClickHandler
     $(this.element).find(' *').on('touchstart', (event) => {
       event.stopPropagation();
-      if (this.get('_disabledCombobox')) {
+      event.preventDefault();
+      if (this.get('_disabledCombobox') || this.get('labelOnly') === true) {
         return;
       }
       this._showMobileDropdown();
@@ -319,6 +321,7 @@ export default Component.extend({
       this.get('_erd').uninstall($(this.element).find('.dropdown')[0]);
     }
     $(this.element).find('.dropdown').unbind('scroll.pagination');
+    $(this.element).find('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
   },
 
   initKeyboardSupport() {
@@ -691,7 +694,7 @@ export default Component.extend({
       }
       return;
     }
-    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected'))) && !this.get('dropdownVisible') && isNone(this.get('lazyCallback'))) {
+    if ((isEmpty(this.get('internalSelectedList')) && isEmpty(this.get('selected'))) && (!this.get('dropdownVisible') && !this.get('mobileDropdownVisible')) && isNone(this.get('lazyCallback'))) {
       let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
       if (this.get('showChooseLabel') === false) {
         chooseLabel = null;
@@ -954,24 +957,51 @@ export default Component.extend({
   },
 
   _showMobileDropdown() {
-    this.set('mobileDropdownVisible', true);
+    this.setProperties({
+      'mobileDropdownVisible': true,
+      '_oldInputValue': this.get('inputValue')
+    });
+    if (isPresent(this.get('lazyCallback')) && this.get('lazyCallbackInProgress') === false) {
+      this._resetLazyCombobox();
+    }
+
+    schedule('afterRender', this, function() {
+      $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
+        debounce(this, debouncedFunc, 200);
+      });
+
+      function debouncedFunc() {
+        let $dialogDropdown = $('.combobox-mobile-dialog .dropdown');
+        
+        if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight && this.get('lazyCallbackInProgress') === false) {
+          this.fetchNextPage(() => {
+          });
+        }
+      }
+    });
 
     this.get('onDropdownShow')();
 
     this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
-
     if (this.get('canFilter')) {
       // if (isNone('lazyCallback')) {
-      //when we are using layzCallback, do not clear inputValue, otherwise clear it
-      // this.set('inputValue', '');
+        //when we are using layzCallback, do not clear inputValue, otherwise clear it
+        this.set('inputValue', '');
       // }
     } else {
-      if (isNone('lazyCallback')) {
+      if (isNone(this.get('lazyCallback'))) {
         let chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
         if (this.get('showChooseLabel') === false) {
           chooseLabel = null;
         }
         this.set('inputValue', chooseLabel);
+
+      } else {
+        let promise = this.get('lazyCallback')("", this.get('_page'), this.get('pageSize'));
+        this.setProperties({
+          'valuePromise': promise,
+          'inputValue': ''
+        });
       }
     }
   },
@@ -993,8 +1023,9 @@ export default Component.extend({
 
     let $element = $(this.element);
     $element.off('focusout');
+    $('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
 
-    if (this.get('isComboFocused') === false) {
+    if (this.get('isComboFocused') === false && this.get('mobileDropdownVisible') === false) {
       return;
     }
     this.set('isComboFocused', false);
@@ -1271,6 +1302,9 @@ export default Component.extend({
     let debounceTimer = setTimeout(() => {
       let promise;
       if (this.get('pagination') === true) {
+        if (this.get('mobileDropdownVisible') === true) {
+          this.incrementProperty('_page');
+        }
         promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
       } else {
         promise = this.get('lazyCallback')(inputValue);
@@ -1285,7 +1319,9 @@ export default Component.extend({
         }
         this.incrementProperty('_page');
         scheduleOnce('afterRender', this, () => {
-          this._showDropdown();
+          if (this.get('mobileDropdownVisible') === false) {
+            this._showDropdown();
+          }
           if (this.get('simpleCombobox') === true && isNone(this.get('lazyCallback'))) {
             this.set('inputValue', '');
           }
@@ -1350,7 +1386,7 @@ export default Component.extend({
     },
 
     actionCancelMobile() {
-      this.set('mobileDropdownVisible', false);
+      this._hideDropdown(false);
     },
 
     actionAcceptMobile() {

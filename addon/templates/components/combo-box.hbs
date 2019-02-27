@@ -14,7 +14,7 @@
     {{#if canShowDropdownButton}}
       <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
     {{/if}}
-    {{#if lazyCallbackInProgress}}
+    {{#if (and lazyCallbackInProgress (not mobileDropdownVisible))}}
       <i class="{{font-icon "loading"}} dropdown-icon" aria-hidden="true"></i>
     {{/if}}
   </div>
@@ -24,17 +24,23 @@
     {{partial 'components/item-list'}}
   </ul>
   {{#if mobileDropdownVisible}}
-    {{#modal-dialog close="toggleModal"
-                  targetAttachment="center"
-                  containerClassNames="combobox-mobile-dialog"
-                  translucentOverlay=true}}
+    {{#modal-dialog
+        close="toggleModal"
+        targetAttachment="center"
+        containerClassNames="combobox-mobile-dialog"
+        translucentOverlay=true
+    }}
                   <div class="header">
                   </div>
-                  {{#if canFilter}}
-                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder}}
+                  {{#if (or canFilter minLazyCharacters)}}
+                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
                   {{/if}}
                   <div class="dropdown">
-                    {{partial 'components/item-list'}}
+                    {{partial "components/item-list"}}
+                    {{#if lazyCallbackInProgress}}
+                      <i class='{{font-icon "loading"}}'></i>
+                      {{asyncLoaderStartLabel}}
+                    {{/if}}
                   </div>
                   <div class="footer">
                     <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>
@@ -42,5 +48,5 @@
                       <button class="btn-accept" {{action 'actionAcceptMobile'}}>{{mobileOkButton}}</button>
                     {{/if}}
                   </div>
-  {{/modal-dialog}}
+    {{/modal-dialog}}
   {{/if}}
