@@ -1302,7 +1302,7 @@ export default Component.extend({
     let debounceTimer = setTimeout(() => {
       let promise;
       if (this.get('pagination') === true) {
-        if (this.get('mobileDropdownVisible') === true) {
+        if (this.get('mobileDropdownVisible') === true && isEmpty(inputValue) === true) {
           this.incrementProperty('_page');
         }
         promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
