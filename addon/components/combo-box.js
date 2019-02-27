@@ -133,6 +133,7 @@ export default Component.extend({
   isComboFocused: false,
   _hasNextPage: true,
   preselectedDropdownItem: 0, //index of currently preselected item in dropdown (has focus)
+  _isKeyboardSupportEnabled: false,
   configurationService: service('adv-combobox-configuration-service'),
 
   sortedValueList: sort('valueList', function (a, b) {
@@ -325,6 +326,8 @@ export default Component.extend({
   },
 
   initKeyboardSupport() {
+    this.set('_isKeyboardSupportEnabled', true);
+
     this.set('preselectedDropdownItem', 0);
     $('body').on('keydown.keyboard-support', (event) => {
 
@@ -385,9 +388,14 @@ export default Component.extend({
   },
 
   destroyKeyboardSupport() {
+    if (this.get('_isKeyboardSupportEnabled') === false) {
+      return;
+    }
+
     $('body').off('keydown.keyboard-support');
     removeObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
     $(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
+    this.set('_isKeyboardSupportEnabled', false);
   },
 
   keyboardSelect(delta) {
@@ -972,7 +980,7 @@ export default Component.extend({
 
       function debouncedFunc() {
         let $dialogDropdown = $('.combobox-mobile-dialog .dropdown');
-        
+
         if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight && this.get('lazyCallbackInProgress') === false) {
           this.fetchNextPage(() => {
           });
