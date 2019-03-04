@@ -831,6 +831,10 @@ export default Component.extend({
     return this.get('configurationService').getMobileCancelButton();
   }),
 
+  computedMinLazyCharacters: computed(function() {
+    return this.getMinLazyCharacters();
+  }),
+
   /**
    * creates Ember's MutableArray from either single object or array (array may be a plain JS array or Ember MutableArray)
    */
