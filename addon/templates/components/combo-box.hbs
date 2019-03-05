@@ -33,7 +33,12 @@
                   <div class="header">
                   </div>
                   {{#if (or canFilter computedMinLazyCharacters)}}
-                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
+                    {{input
+                      value=inputValue
+                      class="intput-filter"
+                      placeholder=mobileFilterPlaceholder
+                      input=(action "inputValueChanged")
+                    }}
                   {{/if}}
                   <div class="dropdown">
                     {{partial "components/item-list"}}

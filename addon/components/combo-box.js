@@ -1347,12 +1347,7 @@ export default Component.extend({
 
   actions: {
 
-    inputValueChanged(input, event) {
-      if (event.key.length > 1){
-        //some non printable character was pressed - ignore it, otherwise lazyCallback may be triggered
-        return;
-      }
-
+    inputValueChanged() {
       this.set('_page', 1);
 
       let lazyCallback = this.get('lazyCallback');
