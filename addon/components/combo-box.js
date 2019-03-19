@@ -154,6 +154,10 @@ export default Component.extend({
     return this.get('minLazyCharacters') || this.get('configurationService').getMinLazyCharacters();
   },
 
+  minLazyCharactersProperty: computed(function(){
+    return this.getMinLazyCharacters();
+  }),
+
   _isTesting: computed(function () {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
@@ -1310,7 +1314,7 @@ export default Component.extend({
     let debounceTimer = setTimeout(() => {
       let promise;
       if (this.get('pagination') === true) {
-        if (this.get('mobileDropdownVisible') === true) {
+        if (this.get('mobileDropdownVisible') === true && isEmpty(inputValue) === true) {
           this.incrementProperty('_page');
         }
         promise = this.get('lazyCallback')(inputValue, this.get('_page'), this.get('pageSize'));
@@ -1352,7 +1356,7 @@ export default Component.extend({
   actions: {
 
     inputValueChanged(input, event) {
-      if (event.key.length > 1){
+      if (this.get('mobileDropdownVisible') === false && event.key.length > 1){
         //some non printable character was pressed - ignore it, otherwise lazyCallback may be triggered
         return;
       }
