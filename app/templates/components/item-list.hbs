@@ -14,9 +14,10 @@
     {{/if}}
     {{combo-item-label value itemLabel}}
   </li>
+
 {{else}}
 {{!-- filteredValueList is empty = either because of filter or valuePromise is not yet resolved --}}
-  {{#if valuePromiseResolving}}
+  {{#if (or valuePromiseResolving lazyCallbackInProgress)}}
     <i class='{{font-icon "loading"}}'></i>
     {{asyncLoaderStartLabel}}
   {{else}}

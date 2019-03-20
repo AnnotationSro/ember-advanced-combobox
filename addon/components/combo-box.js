@@ -154,10 +154,6 @@ export default Component.extend({
     return this.get('minLazyCharacters') || this.get('configurationService').getMinLazyCharacters();
   },
 
-  minLazyCharactersProperty: computed(function(){
-    return this.getMinLazyCharacters();
-  }),
-
   _isTesting: computed(function () {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
@@ -984,8 +980,10 @@ export default Component.extend({
 
       function debouncedFunc() {
         let $dialogDropdown = $('.combobox-mobile-dialog .dropdown');
-
-        if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight && this.get('lazyCallbackInProgress') === false) {
+        if ($dialogDropdown.length === 0){
+          return;
+        }
+        if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight - 200 && this.get('lazyCallbackInProgress') === false) {
           this.fetchNextPage(() => {
           });
         }
