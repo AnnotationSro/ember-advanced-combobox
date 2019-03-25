@@ -194,3 +194,7 @@
   left: 0;
   z-index: 50;
 }
+
+.ember-advanced-combobox-modal-active {
+  overflow: hidden;
+}
