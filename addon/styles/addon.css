@@ -165,7 +165,7 @@
 .ember-modal-wrapper.emd-static.emd-wrapper-target-attachment-center .ember-modal-dialog {
   top: 10%;
   left: 50%;
-  transform: translate(-50%, 0);
+  transform: translateX(-50%);
 }
 .ember-modal-wrapper.emd-animatable.emd-wrapper-target-attachment-center {
   width: 100vw;

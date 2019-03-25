@@ -978,10 +978,9 @@ export default Component.extend({
 
     schedule('afterRender', this, function() {
 
-     const overlay = document.getElementsByClassName('ember-modal-overlay')[0];
-      overlay.addEventListener('touchmove', function(e){
+      $('.ember-modal-overlay').on('touchmove', function(e){
         e.preventDefault();
-      }, false);
+      });
 
       $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
         debounce(this, debouncedFunc, 200);
@@ -1041,6 +1040,7 @@ export default Component.extend({
     }
 
     $('body').removeClass('ember-advanced-combobox-modal-active ');
+    $('.ember-modal-overlay').off('touchmove');
 
     let $element = $(this.element);
     $element.off('focusout');
