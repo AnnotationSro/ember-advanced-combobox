@@ -29,6 +29,7 @@
         targetAttachment="center"
         containerClassNames="combobox-mobile-dialog"
         translucentOverlay=true
+        overlayPosition='sibling'
     }}
                   <div class="header">
                   </div>
@@ -37,10 +38,6 @@
                   {{/if}}
                   <div class="dropdown">
                     {{partial "components/item-list"}}
-                    {{#if lazyCallbackInProgress}}
-                      <i class={{font-icon "loading"}}></i>
-                      {{asyncLoaderStartLabel}}
-                    {{/if}}
                   </div>
                   <div class="footer">
                     <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>
