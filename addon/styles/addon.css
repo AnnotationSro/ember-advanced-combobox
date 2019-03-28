@@ -161,10 +161,11 @@
 .ember-modal-dialog.emd-in-place {
   position: static;
 }
+
 .ember-modal-wrapper.emd-static.emd-wrapper-target-attachment-center .ember-modal-dialog {
-  top: 50%;
+  top: 10%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
 }
 .ember-modal-wrapper.emd-animatable.emd-wrapper-target-attachment-center {
   width: 100vw;
@@ -192,4 +193,8 @@
   top: 0;
   left: 0;
   z-index: 50;
+}
+
+.ember-advanced-combobox-modal-active {
+  overflow: hidden;
 }

@@ -973,7 +973,15 @@ export default Component.extend({
       this._resetLazyCombobox();
     }
 
+    $('body').addClass('ember-advanced-combobox-modal-active ');
+
+
     schedule('afterRender', this, function() {
+
+      $('.ember-modal-overlay').on('touchmove', function(e){
+        e.preventDefault();
+      });
+
       $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
         debounce(this, debouncedFunc, 200);
       });
@@ -1030,6 +1038,9 @@ export default Component.extend({
     if ((this.get('isDestroyed') || this.get('isDestroying'))) {
       return;
     }
+
+    $('body').removeClass('ember-advanced-combobox-modal-active ');
+    $('.ember-modal-overlay').off('touchmove');
 
     let $element = $(this.element);
     $element.off('focusout');
