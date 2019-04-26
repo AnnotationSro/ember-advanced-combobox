@@ -198,3 +198,7 @@
 .ember-advanced-combobox-modal-active {
   overflow: hidden;
 }
+
+.ember-modal-dialog.combobox-mobile-dialog .dropdown.dropdown-mobile{
+  max-height: 250px;
+}

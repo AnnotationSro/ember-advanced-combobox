@@ -1,18 +1,50 @@
-import {next, scheduleOnce, schedule, debounce} from '@ember/runloop';
-import {isHTMLSafe} from '@ember/string';
+import {
+  next,
+  scheduleOnce,
+  schedule,
+  debounce
+} from '@ember/runloop';
+import {
+  isHTMLSafe
+} from '@ember/string';
 import $ from 'jquery';
-import {on} from '@ember/object/evented';
-import {getOwner} from '@ember/application';
-import {computed, get, observer} from '@ember/object';
-import {sort} from '@ember/object/computed';
-import {inject as service} from '@ember/service';
-import {A} from '@ember/array';
+import {
+  on
+} from '@ember/object/evented';
+import {
+  getOwner
+} from '@ember/application';
+import {
+  computed,
+  get,
+  observer
+} from '@ember/object';
+import {
+  sort
+} from '@ember/object/computed';
+import {
+  inject as service
+} from '@ember/service';
+import {
+  A
+} from '@ember/array';
 import Component from '@ember/component';
-import {isEmpty, isNone, isPresent} from '@ember/utils';
+import {
+  isEmpty,
+  isNone,
+  isPresent
+} from '@ember/utils';
 import layout from '../templates/components/combo-box';
-import {accentRemovalHelper} from '../helpers/accent-removal-helper';
-import {comboItemLabel} from '../helpers/combo-item-label';
-import {addObserver, removeObserver} from '@ember/object/observers';
+import {
+  accentRemovalHelper
+} from '../helpers/accent-removal-helper';
+import {
+  comboItemLabel
+} from '../helpers/combo-item-label';
+import {
+  addObserver,
+  removeObserver
+} from '@ember/object/observers';
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -22,6 +54,7 @@ function getObjectFromArray(array, index) {
 }
 
 function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
+  $dropdown = $dropdown.filter(':not(.dropdown-mobile)');
   let oldScrollPosition = $dropdown.scrollTop();
   $dropdown.css({
     'maxHeight': ''
@@ -92,19 +125,15 @@ export default Component.extend({
   itemLabel: null,
   itemLabelForSelectedPreview: null, //similar to 'itemLabel', but this one is used when creating selected preview label (if not speficied, defaults to 'itemLabel')
   multiselect: false,
-  onSelected() {
-  },
+  onSelected() {},
   canFilter: false,
   preselectFirst: false,
   orderBy: null,
   noValueLabel: null, //label shown in labelOnly mode when there is no valueList available
-  onDropdownShow() {
-  },
-  onDropdownHide() {
-  },
+  onDropdownShow() {},
+  onDropdownHide() {},
   lazyCallback: null,
-  abortLazyCallback() {
-  },
+  abortLazyCallback() {},
   showDropdownButton: true,
   disabledWhenEmpty: true,
   showLabelWhenDisabled: true,
@@ -136,7 +165,7 @@ export default Component.extend({
   _isKeyboardSupportEnabled: false,
   configurationService: service('adv-combobox-configuration-service'),
 
-  sortedValueList: sort('valueList', function (a, b) {
+  sortedValueList: sort('valueList', function(a, b) {
     let orderBy = this.get('orderBy');
     if (isNone(orderBy)) {
       //no sorting - it would be nice to completely disable this computed property somehow...
@@ -154,16 +183,16 @@ export default Component.extend({
     return this.get('minLazyCharacters') || this.get('configurationService').getMinLazyCharacters();
   },
 
-  _isTesting: computed(function () {
+  _isTesting: computed(function() {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
   }),
 
-  canShowDropdownButton: computed('showDropdownButton', 'lazyCallbackInProgress', function () {
+  canShowDropdownButton: computed('showDropdownButton', 'lazyCallbackInProgress', function() {
     return this.get('showDropdownButton') && !this.get('lazyCallbackInProgress')
   }),
 
-  hasEmptySelectionClass: computed('isEmptySelectionLabelVisible', 'dropdownVisible', function () {
+  hasEmptySelectionClass: computed('isEmptySelectionLabelVisible', 'dropdownVisible', function() {
     if (this.get('dropdownVisible') === true) {
       return false;
     }
@@ -204,7 +233,7 @@ export default Component.extend({
         return;
       }
       if (this.get('isComboFocused') === false) {
-        scheduleOnce('afterRender', this, function () {
+        scheduleOnce('afterRender', this, function() {
           $element.find('input').focus();
         });
       }
@@ -223,7 +252,7 @@ export default Component.extend({
             if (this.get('confirmInputValueOnBlur') === true && isPresent(this.get('inputValue')) && this.get('inputValue').length > 0) {
               //first select value that is in the inputValue
               let objectToSelect = this._itemKeysListToItemObjects(this.get('inputValue'));
-              if (!isEmpty(objectToSelect)){
+              if (!isEmpty(objectToSelect)) {
                 objectToSelect = objectToSelect[0];
               }
 
@@ -351,20 +380,21 @@ export default Component.extend({
           event.stopPropagation();
 
           break;
-        case 'Enter': {
-          if (this.get('multiselect') === true) {
+        case 'Enter':
+          {
+            if (this.get('multiselect') === true) {
+              break;
+            }
+            let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
+
+            this._addOrRemoveFromSelected(selectedItem);
+
+            this._hideDropdown(true, false);
+            $(this.element).find('*').blur();
+
+            event.preventDefault();
             break;
           }
-          let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
-
-          this._addOrRemoveFromSelected(selectedItem);
-
-          this._hideDropdown(true, false);
-          $(this.element).find('*').blur();
-
-          event.preventDefault();
-          break;
-        }
       }
 
     });
@@ -373,11 +403,11 @@ export default Component.extend({
     this.keyboardSupportValueListChanged();
   },
 
-  keyboardSupportValueListChanged(){
+  keyboardSupportValueListChanged() {
     $(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
 
-    scheduleOnce('afterRender', this, function () {
-      next(this, ()=>{
+    scheduleOnce('afterRender', this, function() {
+      next(this, () => {
         let $items = $(this.element).find('.dropdown .dropdown-item');
         $items.on('mouseover.keyboard-item', (e) => {
           let selectedItem = $items.toArray().indexOf(e.target);
@@ -442,7 +472,7 @@ export default Component.extend({
     let that = this;
     let scrollEnabled = true;
 
-    $(this.element).find('.dropdown').bind('scroll.pagination', function () {
+    $(this.element).find('.dropdown').bind('scroll.pagination', function() {
       if (scrollEnabled === false) {
         //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
         // return;
@@ -459,12 +489,12 @@ export default Component.extend({
   },
 
   //if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
-  internalItemLabelForSelectedPreview: computed('itemLabelForSelectedPreview', 'itemLabel', function () {
+  internalItemLabelForSelectedPreview: computed('itemLabelForSelectedPreview', 'itemLabel', function() {
     return this.get('itemLabelForSelectedPreview') || this.get('itemLabel');
   }),
 
   // eslint-disable-next-line ember/no-on-calls-in-components
-  disabledComboboxObserver: on('init', observer('_disabledCombobox', 'showLabelWhenDisabled', function () {
+  disabledComboboxObserver: on('init', observer('_disabledCombobox', 'showLabelWhenDisabled', function() {
     if (this.get('lazyCallbackInProgress') === true) {
       return;
     }
@@ -477,7 +507,7 @@ export default Component.extend({
     }
   })),
 
-  tabbable: computed('labelOnly', '_disabledCombobox', 'isComboFocused', function () {
+  tabbable: computed('labelOnly', '_disabledCombobox', 'isComboFocused', function() {
     if (this.get('labelOnly') || this.get('_disabledCombobox')) {
       return false;
     }
@@ -506,7 +536,7 @@ export default Component.extend({
     }
   },
 
-  labelOnlyObserver: observer('labelOnly', function () {
+  labelOnlyObserver: observer('labelOnly', function() {
     let selectedItems = this.get('internalSelectedList');
     if (this.get('labelOnly')) {
       this._handleLabelOnlyNoValue();
@@ -524,13 +554,13 @@ export default Component.extend({
   }),
 
 
-  inputValueObserver: observer('inputValue', function () {
+  inputValueObserver: observer('inputValue', function() {
     if (isPresent(this.get('lazyCallback')) && this.get('simpleCombobox') === false) {
       // this._hideDropdown(false, false);
     }
   }),
 
-  filteredValueList: computed('inputValue', 'sortedValueList.[]', 'valueList.[]', function () {
+  filteredValueList: computed('inputValue', 'sortedValueList.[]', 'valueList.[]', function() {
     let valueList = null;
     if (isPresent(this.get('orderBy'))) {
       valueList = this.get('sortedValueList');
@@ -633,7 +663,7 @@ export default Component.extend({
     return itemsLength;
   },
 
-  selectedObserver: observer('selected', function () {
+  selectedObserver: observer('selected', function() {
     let selected = this.get('selected');
     if (isEmpty(selected)) {
       this.set('internalSelectedList', A([]));
@@ -654,10 +684,12 @@ export default Component.extend({
   }),
 
   // eslint-disable-next-line ember/no-on-calls-in-components
-  valuePromiseObserver: on('init', observer('valuePromise', function () {
+  valuePromiseObserver: on('init', observer('valuePromise', function() {
     if (this.get('valuePromise')) {
       this.set('valuePromiseResolving', true);
-      this._changeDropdownPosition();
+      if (this.get('dropdownVisible') === false) {
+        this._changeDropdownPosition();
+      }
 
       this.get('valuePromise').then((result) => {
 
@@ -684,7 +716,7 @@ export default Component.extend({
   })),
 
 
-  valueListObserver: observer('valueList.[]', function () {
+  valueListObserver: observer('valueList.[]', function() {
     if (this.get('simpleCombobox') === true) {
       return;
     }
@@ -739,7 +771,7 @@ export default Component.extend({
     }
   },
 
-  _disabledCombobox: computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', 'lazyCallback', function () {
+  _disabledCombobox: computed('disabled', 'valueList.[]', 'labelOnly', 'noValueLabel', 'lazyCallback', function() {
     if (this.get('disabled')) {
       return true;
     }
@@ -760,14 +792,14 @@ export default Component.extend({
     return false;
   }),
 
-  isInputEditable: computed('canFilter', 'lazyCallback', function () {
+  isInputEditable: computed('canFilter', 'lazyCallback', function() {
     return this.get('canFilter') === true || isPresent(this.get('lazyCallback'));
 
   }),
 
   //we cannot use {{input readonly=readonly}} because of bug https://github.com/emberjs/ember.js/issues/11828
   // eslint-disable-next-line ember/no-on-calls-in-components
-  inputNotClickableObserver: on('init', observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', 'lazyCallback', function () {
+  inputNotClickableObserver: on('init', observer('_disabledCombobox', 'labelOnly', 'valueList.[]', 'canFilter', 'lazyCallback', function() {
     let notClickable = false;
     if (this.get('_disabledCombobox')) {
       notClickable = true;
@@ -782,20 +814,20 @@ export default Component.extend({
       notClickable = true;
     }
 
-    scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function() {
       $(this.element).find('.combo-input').prop('readonly', notClickable);
       $(this.element).find('.input-wrapper').attr('readonly', notClickable);
     });
 
   })),
 
-  filterObserver: observer('inputValue', function () {
+  filterObserver: observer('inputValue', function() {
     if (this.get('dropdownVisible') && this.get('canFilter')) {
       this._changeDropdownPosition();
     }
   }),
   //
-  comboFocusedObserver: observer('isComboFocused', function () {
+  comboFocusedObserver: observer('isComboFocused', function() {
     if (this.get('_disabledCombobox') === true || this.get('labelOnly') === true) {
       return;
     }
@@ -819,23 +851,23 @@ export default Component.extend({
 
   }),
 
-  asyncLoaderStartLabel: computed(function () {
+  asyncLoaderStartLabel: computed(function() {
     return this.get('configurationService').getAsyncLoaderStartLabel();
   }),
 
-  emptyValueListLabel: computed(function () {
+  emptyValueListLabel: computed(function() {
     return this.get('configurationService').getEmptyValueListLabel();
   }),
 
-  mobileFilterPlaceholder: computed(function () {
+  mobileFilterPlaceholder: computed(function() {
     return this.get('configurationService').getMobileFilterPlaceholder();
   }),
 
-  mobileOkButton: computed(function () {
+  mobileOkButton: computed(function() {
     return this.get('configurationService').getMobileOkButton();
   }),
 
-  mobileCancelButton: computed(function () {
+  mobileCancelButton: computed(function() {
     return this.get('configurationService').getMobileCancelButton();
   }),
 
@@ -930,10 +962,12 @@ export default Component.extend({
 
     this._initPopper();
 
-    let $element = $(this.element);
-    let $dropdown = $element.find('.dropdown');
-    let $input = $element.find('.combo-input');
-    adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
+    if (this.get('mobileDropdownVisible') === false) {
+      let $element = $(this.element);
+      let $dropdown = $element.find('.dropdown');
+      let $input = $element.find('.combo-input');
+      adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
+    }
 
     this.initKeyboardSupport();
 
@@ -978,22 +1012,17 @@ export default Component.extend({
 
     schedule('afterRender', this, function() {
 
-      $('.ember-modal-overlay').on('touchmove', function(e){
-        e.preventDefault();
-      });
-
       $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
         debounce(this, debouncedFunc, 200);
       });
 
       function debouncedFunc() {
         let $dialogDropdown = $('.combobox-mobile-dialog .dropdown');
-        if ($dialogDropdown.length === 0){
+        if ($dialogDropdown.length === 0) {
           return;
         }
         if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight - 200 && this.get('lazyCallbackInProgress') === false) {
-          this.fetchNextPage(() => {
-          });
+          this.fetchNextPage(() => {});
         }
       }
     });
@@ -1003,8 +1032,8 @@ export default Component.extend({
     this.set('oldInternalSelectionKeys', this._createArray(this.get('selected')));
     if (this.get('canFilter')) {
       // if (isNone('lazyCallback')) {
-        //when we are using layzCallback, do not clear inputValue, otherwise clear it
-        this.set('inputValue', '');
+      //when we are using layzCallback, do not clear inputValue, otherwise clear it
+      this.set('inputValue', '');
       // }
     } else {
       if (isNone(this.get('lazyCallback'))) {
@@ -1025,7 +1054,7 @@ export default Component.extend({
   },
 
   _changeDropdownPosition() {
-    scheduleOnce('afterRender', this, function () {
+    scheduleOnce('afterRender', this, function() {
       let $element = $(this.element);
       let $dropdown = $element.find('.dropdown');
       let $input = $element.find('.combo-input');
@@ -1266,7 +1295,7 @@ export default Component.extend({
     if (this.getValueListLength() === 1) {
       //only 1 item in value list
       //
-      next(this, function () {
+      next(this, function() {
         selectFirstItem.bind(this)();
       });
       return;
@@ -1274,7 +1303,7 @@ export default Component.extend({
 
     if (this.get('preselectFirst') === true) {
       //preselect item
-      next(this, function () {
+      next(this, function() {
         selectFirstItem.bind(this)();
       });
       return;
@@ -1365,7 +1394,7 @@ export default Component.extend({
   actions: {
 
     inputValueChanged(input, event) {
-      if (this.get('mobileDropdownVisible') === false && event.key.length > 1){
+      if (this.get('mobileDropdownVisible') === false && event.key.length > 1) {
         //some non printable character was pressed - ignore it, otherwise lazyCallback may be triggered
         return;
       }
