@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/AnnotationSro/ember-advanced-combobox.svg?branch=master)](https://travis-ci.org/AnnotationSro/ember-advanced-combobox)
 
+<<<<<<< HEAD
 Ember combobox that can (beside others):
  - filter items
  - sort items
@@ -15,6 +16,18 @@ Ember combobox that can (beside others):
 ## Installation
 
 **Warning: works for Ember >= 2.8.0**
+=======
+
+Compatibility
+------------------------------------------------------------------------------
+
+* Ember.js v2.18 or above
+* Ember CLI v2.13 or above
+
+
+Installation
+------------------------------------------------------------------------------
+>>>>>>> 44242da... message
 
 ```
 ember install ember-advanced-combobox
@@ -135,6 +148,17 @@ Configuration service `ember-advanced-combobox/adv-combobox-configuration-servic
 ```
   comboboxConfig: Ember.inject.service('adv-combobox-configuration-service');
 
+<<<<<<< HEAD
   this.get('comboboxConfig').setConfiguration("emptySelectionLabel", "some value");
+=======
+Contributing
+------------------------------------------------------------------------------
+
+See the [Contributing](CONTRIBUTING.md) guide for details.
+
+
+License
+------------------------------------------------------------------------------
+>>>>>>> 44242da... message
 
 ```
