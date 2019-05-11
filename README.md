@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/AnnotationSro/ember-advanced-combobox.svg?branch=master)](https://travis-ci.org/AnnotationSro/ember-advanced-combobox)
 
-<<<<<<< HEAD
 Ember combobox that can (beside others):
  - filter items
  - sort items
@@ -16,18 +15,6 @@ Ember combobox that can (beside others):
 ## Installation
 
 **Warning: works for Ember >= 2.8.0**
-=======
-
-Compatibility
-------------------------------------------------------------------------------
-
-* Ember.js v2.18 or above
-* Ember CLI v2.13 or above
-
-
-Installation
-------------------------------------------------------------------------------
->>>>>>> 44242da... message
 
 ```
 ember install ember-advanced-combobox
@@ -80,7 +67,7 @@ __For more usage examples see dummy application.__
 | pagination| boolean (default: false); `true` if you want items in dropdown to be fetched with pagination|
 | pageSize| number (default: 10)|
 | showDropdownOnClick| boolean (default: true); `true` if dropdown should be opened on click|
-| confirmInputValueOnBlur| boolean (default: false)| when set to `true`, user can enter value into the filter and DID NOT select filtered value in the dropdown - he can just click outside the combobox, and the value will still be selected| 
+| confirmInputValueOnBlur| boolean (default: false)| when set to `true`, user can enter value into the filter and DID NOT select filtered value in the dropdown - he can just click outside the combobox, and the value will still be selected|
 
 
 
@@ -148,17 +135,6 @@ Configuration service `ember-advanced-combobox/adv-combobox-configuration-servic
 ```
   comboboxConfig: Ember.inject.service('adv-combobox-configuration-service');
 
-<<<<<<< HEAD
   this.get('comboboxConfig').setConfiguration("emptySelectionLabel", "some value");
-=======
-Contributing
-------------------------------------------------------------------------------
-
-See the [Contributing](CONTRIBUTING.md) guide for details.
-
-
-License
-------------------------------------------------------------------------------
->>>>>>> 44242da... message
 
 ```
