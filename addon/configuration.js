@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import jQuery from 'jquery';
 
 let CONFIG_PROPERTIES = {
   emptySelectionLabel: "",
@@ -22,7 +22,7 @@ let CONFIG_PROPERTIES = {
 
 export default {
   load(config) {
-    CONFIG_PROPERTIES = $.extend(true, {}, CONFIG_PROPERTIES, config);
+    CONFIG_PROPERTIES = jQuery.extend(true, {}, CONFIG_PROPERTIES, config);
   },
 
   getConfig(){

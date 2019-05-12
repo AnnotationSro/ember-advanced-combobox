@@ -1,7 +1,7 @@
 /* eslint no-console: 0 */
 /* eslint-disable*/
 
-import $ from 'jquery';
+import jQuery from 'jquery';
 import {
   Promise as EmberPromise
 } from 'rsvp';
@@ -232,7 +232,7 @@ export default Controller.extend({
 
     lazyCallback(query, page, pageSize) {
       let a = new EmberPromise((resolve, reject) => {
-        let ajax = $.ajax({
+        let ajax = jQuery.ajax({
           type: "GET",
           url: `/api/users?delay=2&page=${page}&pageSize=${pageSize}&query=${query}`,
           success: function(data) {
@@ -254,7 +254,7 @@ export default Controller.extend({
 
     lazyCallbackSimpleCombo(query){
       let a = new EmberPromise((resolve, reject) => {
-        let ajax = $.ajax({
+        let ajax = jQuery.ajax({
           type: "GET",
           url: `/api/users?delay=2&page=1&pageSize=50&query=${query}`,
           success: function(data) {
