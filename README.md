@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/AnnotationSro/ember-advanced-combobox.svg?branch=master)](https://travis-ci.org/AnnotationSro/ember-advanced-combobox)
 
+
 Ember combobox that can (beside others):
  - filter items
  - sort items
@@ -10,6 +11,11 @@ Ember combobox that can (beside others):
  - lazy loading of combobox items
 
 **Beware** ember >=2.0.0 is supported
+
+
+<img src="https://p14.zdusercontent.com/attachment/1015988/z091UzHxJ3yilMuoLOnJUgRns?token=eyJhbGciOiJkaXIiLCJlbmMiOiJBMTI4Q0JDLUhTMjU2In0.._Y_x4A6cqH2q09GM1xHuhw.EMoCIDA03QBVh23szJ8i2JT8PdVmK6R6Lv54WPGYIUktw9WfCGmJC0RzTagan9U233n1xVBDY6Rdi2uSGd3pwGGpAnh3KrXutd9fx51I51rYppGFmcnqzc71kD0niNivXh1SvhLdEN519Vtnbefj6HUr00UZqdVMrjs9nJ9mcG9WyTQhmnFtLvjdQRAFI4v8lBV4mo-8QRL8zrCi1T6qG_BF4LMEYvmHXUKAEJsLI4ZFWVtQ4cgxsPdcsXa186OnC3lXFF-Jz8hUlGzL0xYTfNIgkovjsMRby1qE3jNSPnU.XAnQl34dy-sGCPWWuoXR9Q" width="150">
+
+We use [BrowserStack](https://www.browserstack.com/) to make sure this addon works on all browsers.
 
 
 ## Installation
