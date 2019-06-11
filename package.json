@@ -15,7 +15,6 @@
     "node": "6.* || 8.* || >= 10.*"
   },
   "devDependencies": {
-    "@ember/jquery": "^0.6.0",
     "@ember/optional-features": "^0.7.0",
     "broccoli-asset-rev": "3.0.0",
     "ember-cli": "~3.9.0",
@@ -64,6 +63,7 @@
     "test": "tests"
   },
   "dependencies": {
+    "@ember/jquery": "^0.6.0",
     "element-resize-detector": "1.2.0",
     "ember-cli-babel": "^7.2.0",
     "ember-cli-htmlbars": "^3.0.0",

@@ -8,6 +8,7 @@
             key-up=(action "inputValueChanged")
             autocorrect="off"
             autocapitalize="off"
+            autocomplete="off"
             spellcheck="false"
             placeholder=pleceholder
     }}
@@ -21,7 +22,17 @@
 
 </div>
   <ul class="dropdown dropdown-hidden" tabindex="-1">
-    {{partial 'components/item-list'}}
+    {{item-list
+      filteredValueList=filteredValueList
+      multiselect=multiselect
+      internalSelectedList=internalSelectedList
+      emptyValueListLabel=emptyValueListLabel
+      lazyCallbackInProgress=lazyCallbackInProgress
+      valuePromiseResolving=valuePromiseResolving
+      asyncLoaderStartLabel=asyncLoaderStartLabel
+      itemLabel=itemLabel
+      actionItemSelect=(action 'actionItemSelect')
+    }}
   </ul>
   {{#if mobileDropdownVisible}}
     {{#modal-dialog
@@ -37,7 +48,17 @@
                     {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
                   {{/if}}
                   <div class="dropdown dropdown-mobile">
-                    {{partial "components/item-list"}}
+                    {{item-list
+                      filteredValueList=filteredValueList
+                      multiselect=multiselect
+                      internalSelectedList=internalSelectedList
+                      emptyValueListLabel=emptyValueListLabel
+                      lazyCallbackInProgress=lazyCallbackInProgress
+                      valuePromiseResolving=valuePromiseResolving
+                      asyncLoaderStartLabel=asyncLoaderStartLabel
+                      itemLabel=itemLabel
+                      actionItemSelect=(action 'actionItemSelect')
+                    }}
                   </div>
                   <div class="footer">
                     <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>

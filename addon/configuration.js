@@ -1,4 +1,4 @@
-import jQuery from 'jquery';
+import { assign } from '@ember/polyfills';
 
 let CONFIG_PROPERTIES = {
   emptySelectionLabel: "",
@@ -22,7 +22,7 @@ let CONFIG_PROPERTIES = {
 
 export default {
   load(config) {
-    CONFIG_PROPERTIES = jQuery.extend(true, {}, CONFIG_PROPERTIES, config);
+    CONFIG_PROPERTIES = assign({}, CONFIG_PROPERTIES, config)
   },
 
   getConfig(){

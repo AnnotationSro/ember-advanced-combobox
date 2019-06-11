@@ -7,7 +7,6 @@ import {
 import {
   isHTMLSafe
 } from '@ember/string';
-import jQuery from 'jquery';
 import {
   on
 } from '@ember/object/evented';
@@ -164,6 +163,7 @@ export default Component.extend({
   preselectedDropdownItem: 0, //index of currently preselected item in dropdown (has focus)
   _isKeyboardSupportEnabled: false,
   configurationService: service('adv-combobox-configuration-service'),
+  _emberAdvancedComboboxHideDropdownListenerFn: null,
 
   sortedValueList: sort('valueList', function(a, b) {
     let orderBy = this.get('orderBy');
@@ -218,16 +218,13 @@ export default Component.extend({
     this._handleLabelOnlyNoValue();
 
 
-    jQuery(document).bind('ember-advanced-combobox-hide-dropdown', (event, doNotHideComboboxId) => {
-      if (this.get('dropdownVisible') === true && (isPresent(doNotHideComboboxId) && this.elementId !== doNotHideComboboxId)) {
-        this._hideDropdown(false);
-      }
-    });
+    this.set('_emberAdvancedComboboxHideDropdownListenerFn', this.emberAdvancedComboboxHideDropdownListener.bind(this));
+    document.addEventListener('ember-advanced-combobox-hide-dropdown', this.get('_emberAdvancedComboboxHideDropdownListenerFn'));
 
   },
 
   initFocusHandler() {
-    let $element = jQuery(this.element);
+    let $element = this.$(this.element);
     $element.focusin(() => {
       if (this.get('isComboFocused') === true) {
         return;
@@ -278,7 +275,7 @@ export default Component.extend({
 
   },
   destroyFocusHandler() {
-    let $element = jQuery(this.element);
+    let $element = this.$(this.element);
     $element.off('focusin');
     $element.off('focusout');
   },
@@ -286,7 +283,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
 
-    let $element = jQuery(this.element);
+    let $element = this.$(this.element);
     if (this.get('labelOnly') === false) {
       this.initFocusHandler();
     }
@@ -307,7 +304,7 @@ export default Component.extend({
     $element.find('.dropdown').css('min-width', $element.css('width'));
 
     //initInputClickHandler
-    jQuery(this.element).find(' *').on('touchstart', (event) => {
+    this.$(this.element).find(' *').on('touchstart', (event) => {
       event.stopPropagation();
       event.preventDefault();
       if (this.get('_disabledCombobox') || this.get('labelOnly') === true) {
@@ -316,7 +313,7 @@ export default Component.extend({
       this._showMobileDropdown();
     });
 
-    jQuery(this.element).find('.combo-input').on('click', (event) => {
+    this.$(this.element).find('.combo-input').on('click', (event) => {
       //comobobox input was clicked on
       if (this.get('_disabledCombobox') || this.get('labelOnly')) {
         //no clicking on input allowed
@@ -325,7 +322,9 @@ export default Component.extend({
 
       if (this.get('simpleCombobox') === false) {
         //hide all other dropdowns except this one (if user clicks on the same dropdown even if already visible - keep that one opened)
-        jQuery(document).trigger('ember-advanced-combobox-hide-dropdown', this.elementId);
+        this.triggerJsEvent('ember-advanced-combobox-hide-dropdown', {
+          elementId: this.elementId
+        });
 
         event.stopPropagation();
       }
@@ -335,6 +334,30 @@ export default Component.extend({
       this.initPagination();
     }
     return false;
+  },
+
+  triggerJsEvent(eventName, data) {
+    let event;
+    try {
+
+      // For modern browsers except IE:
+      event = new CustomEvent(eventName, {
+        detail: data
+      });
+
+    } catch (err) {
+
+      // If IE 11 (or 10 or 9...?) do it this way:
+
+      // Create the event.
+      event = document.createEvent('Event');
+      // Define that the event name is 'build'.
+      event.initEvent(eventName, true, true);
+      event.detail = data;
+
+    }
+    // Dispatch/Trigger/Fire the event
+    document.dispatchEvent(event);
   },
 
   willDestroyElement() {
@@ -348,17 +371,26 @@ export default Component.extend({
       popper.destroy();
     }
     if (this.get('_isTesting') === false && isPresent(this.get('_erd'))) {
-      this.get('_erd').uninstall(jQuery(this.element).find('.dropdown')[0]);
+      this.get('_erd').uninstall(this.$(this.element).find('.dropdown')[0]);
     }
-    jQuery(this.element).find('.dropdown').unbind('scroll.pagination');
-    jQuery(this.element).find('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
+    this.$(this.element).find('.dropdown').unbind('scroll.pagination');
+    this.$(this.element).find('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
+    document.removeEventListener('ember-advanced-combobox-hide-dropdown', this.get('_emberAdvancedComboboxHideDropdownListenerFn'));
+    this.set('_emberAdvancedComboboxHideDropdownListenerFn', null);
+  },
+
+  emberAdvancedComboboxHideDropdownListener(event) {
+    let doNotHideComboboxId = isPresent(event.detail) ? event.detail.elementId : null;
+    if (this.get('dropdownVisible') === true && (isPresent(doNotHideComboboxId) && this.elementId !== doNotHideComboboxId)) {
+      this._hideDropdown(false);
+    }
   },
 
   initKeyboardSupport() {
     this.set('_isKeyboardSupportEnabled', true);
 
     this.set('preselectedDropdownItem', 0);
-    jQuery('body').on('keydown.keyboard-support', (event) => {
+    this.$('body').on('keydown.keyboard-support', (event) => {
 
       //from MSDN documentation
       // Internet Explorer, Edge (16 and earlier), and Firefox (36 and earlier)
@@ -390,7 +422,7 @@ export default Component.extend({
             this._addOrRemoveFromSelected(selectedItem);
 
             this._hideDropdown(true, false);
-            jQuery(this.element).find('*').blur();
+            this.$(this.element).find('*').blur();
 
             event.preventDefault();
             break;
@@ -404,11 +436,11 @@ export default Component.extend({
   },
 
   keyboardSupportValueListChanged() {
-    jQuery(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
+    this.$(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
 
     scheduleOnce('afterRender', this, function() {
       next(this, () => {
-        let $items = jQuery(this.element).find('.dropdown .dropdown-item');
+        let $items = this.$(this.element).find('.dropdown .dropdown-item');
         $items.on('mouseover.keyboard-item', (e) => {
           let selectedItem = $items.toArray().indexOf(e.target);
           this.set('preselectedDropdownItem', selectedItem);
@@ -422,9 +454,9 @@ export default Component.extend({
       return;
     }
 
-    jQuery('body').off('keydown.keyboard-support');
+    this.$('body').off('keydown.keyboard-support');
     removeObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
-    jQuery(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
+    this.$(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
     this.set('_isKeyboardSupportEnabled', false);
   },
 
@@ -446,8 +478,8 @@ export default Component.extend({
   },
 
   checkDropdownItemVisible(itemIndex, moveDown) {
-    let $dropdown = jQuery(this.element).find('.dropdown');
-    let $item = jQuery($dropdown.find('.dropdown-item')[itemIndex]);
+    let $dropdown = this.$(this.element).find('.dropdown');
+    let $item = this.$($dropdown.find('.dropdown-item')[itemIndex]);
 
     adjustItemVisible();
 
@@ -472,13 +504,13 @@ export default Component.extend({
     let that = this;
     let scrollEnabled = true;
 
-    jQuery(this.element).find('.dropdown').bind('scroll.pagination', function() {
+    this.$(this.element).find('.dropdown').bind('scroll.pagination', function() {
       if (scrollEnabled === false) {
         //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
         // return;
       }
 
-      if (jQuery(this).scrollTop() + jQuery(this).innerHeight() >= jQuery(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
+      if (this.$(this).scrollTop() + this.$(this).innerHeight() >= this.$(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
         scrollEnabled = false;
         that.fetchNextPage(() => {
           scrollEnabled = true;
@@ -815,8 +847,8 @@ export default Component.extend({
     }
 
     scheduleOnce('afterRender', this, function() {
-      jQuery(this.element).find('.combo-input').prop('readonly', notClickable);
-      jQuery(this.element).find('.input-wrapper').attr('readonly', notClickable);
+      this.$(this.element).find('.combo-input').prop('readonly', notClickable);
+      this.$(this.element).find('.input-wrapper').attr('readonly', notClickable);
     });
 
   })),
@@ -963,7 +995,7 @@ export default Component.extend({
     this._initPopper();
 
     if (this.get('mobileDropdownVisible') === false) {
-      let $element = jQuery(this.element);
+      let $element = this.$(this.element);
       let $dropdown = $element.find('.dropdown');
       let $input = $element.find('.combo-input');
       adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
@@ -982,7 +1014,7 @@ export default Component.extend({
       return;
     }
 
-    let $element = jQuery(this.element);
+    let $element = this.$(this.element);
     let $dropdown = $element.find('.dropdown');
     let $input = $element.find('.input-group');
 
@@ -1007,17 +1039,17 @@ export default Component.extend({
       this._resetLazyCombobox();
     }
 
-    jQuery('body').addClass('ember-advanced-combobox-modal-active ');
+    this.$('body').addClass('ember-advanced-combobox-modal-active ');
 
 
     schedule('afterRender', this, function() {
 
-      jQuery(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
+      this.$(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
         debounce(this, debouncedFunc, 200);
       });
 
       function debouncedFunc() {
-        let $dialogDropdown = jQuery('.combobox-mobile-dialog .dropdown');
+        let $dialogDropdown = this.$('.combobox-mobile-dialog .dropdown');
         if ($dialogDropdown.length === 0) {
           return;
         }
@@ -1055,7 +1087,7 @@ export default Component.extend({
 
   _changeDropdownPosition() {
     scheduleOnce('afterRender', this, function() {
-      let $element = jQuery(this.element);
+      let $element = this.$(this.element);
       let $dropdown = $element.find('.dropdown');
       let $input = $element.find('.combo-input');
       adjustDropdownMaxHeight($dropdown, $input, this.get('maxDropdownHeight'));
@@ -1068,12 +1100,12 @@ export default Component.extend({
       return;
     }
 
-    jQuery('body').removeClass('ember-advanced-combobox-modal-active ');
-    jQuery('.ember-modal-overlay').off('touchmove');
+    this.$('body').removeClass('ember-advanced-combobox-modal-active ');
+    this.$('.ember-modal-overlay').off('touchmove');
 
-    let $element = jQuery(this.element);
+    let $element = this.$(this.element);
     $element.off('focusout');
-    jQuery('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
+    this.$('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
 
     if (this.get('isComboFocused') === false && this.get('mobileDropdownVisible') === false) {
       return;
@@ -1087,7 +1119,7 @@ export default Component.extend({
 
     this.get('onDropdownHide')();
 
-    // Ember.jQuery(window).off(`scroll.combobox-scroll-${this.elementId}`);
+    // Ember.this.$(window).off(`scroll.combobox-scroll-${this.elementId}`);
     this.set('dropdownVisible', false);
     this.set('mobileDropdownVisible', false);
 
@@ -1226,7 +1258,7 @@ export default Component.extend({
       var hideDropdown = (event) => {
 
         //click on arrow button
-        let $combo = jQuery(this.element);
+        let $combo = this.$(this.element);
         if (isElementClicked($combo.find('.dropdown-icon'), event)) {
           this._hideDropdown(false);
           return;
@@ -1248,7 +1280,7 @@ export default Component.extend({
 
             //multiselect checkboxes should not trigger dropdown collapse
 
-            if (jQuery(event.target).hasClass('do-not-hide-dropdown')) {
+            if (this.$(event.target).hasClass('do-not-hide-dropdown')) {
               return;
             }
 
@@ -1265,7 +1297,7 @@ export default Component.extend({
       };
 
       if (this.get('isComboFocused')) {
-        jQuery('body').on(`click.hideDropdown_${this.elementId}`, hideDropdown);
+        this.$('body').on(`click.hideDropdown_${this.elementId}`, hideDropdown);
       }
     });
 
@@ -1318,7 +1350,7 @@ export default Component.extend({
   },
 
   _destroyDropdownCloseListeners() {
-    jQuery('body').off(`click.hideDropdown_${this.elementId}`);
+    this.$('body').off(`click.hideDropdown_${this.elementId}`);
   },
 
   cancelLazyDebounce() {
@@ -1426,7 +1458,7 @@ export default Component.extend({
           this.setLazyDebounce('', true);
           return;
         }
-        jQuery(document).trigger('ember-advanced-combobox-hide-dropdown');
+        this.triggerJsEvent('ember-advanced-combobox-hide-dropdown');
         // this._showDropdown();
       }
     },

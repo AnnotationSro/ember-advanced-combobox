@@ -1,23 +1,43 @@
-import {Promise as EmberPromise} from 'rsvp';
+import {
+  Promise as EmberPromise
+} from 'rsvp';
 import jQuery from 'jquery';
 import EmberObject from '@ember/object';
-import {later, run} from '@ember/runloop';
-import {A} from '@ember/array';
-import {isNone} from '@ember/utils';
+import {
+  later,
+  run
+} from '@ember/runloop';
+import {
+  A
+} from '@ember/array';
+import {
+  isNone
+} from '@ember/utils';
 import Service from '@ember/service';
-import {module, test} from 'qunit';
-import {setupRenderingTest} from 'ember-qunit';
-import {click, render, settled, triggerEvent} from '@ember/test-helpers';
+import {
+  module,
+  test
+} from 'qunit';
+import {
+  setupRenderingTest
+} from 'ember-qunit';
+import {
+  click,
+  render,
+  settled,
+  triggerEvent
+} from '@ember/test-helpers';
 import hbs from 'htmlbars-inline-precompile';
 
+
 const i18nMock = Service.extend({
-  t(key){
+  t(key) {
     return `dummy-translated-message for ${key}`;
   }
 });
 
-function stripComments(str){
-  if (isNone(str)){
+function stripComments(str) {
+  if (isNone(str)) {
     return str;
   }
   return str.replace(/<!--(.*?)-->/gm, "");
@@ -33,10 +53,10 @@ function focus(selector) {
   triggerEvent(selector, 'focus');
 }
 
-module('Integration | Component | combo box', function (hooks) {
+module('Integration | Component | combo box', function(hooks) {
   setupRenderingTest(hooks);
 
-  hooks.beforeEach(function () {
+  hooks.beforeEach(function() {
     this.actions = {};
     this.send = (actionName, ...args) => this.actions[actionName].apply(this, args);
 
@@ -50,9 +70,18 @@ module('Integration | Component | combo box', function (hooks) {
   //----------
 
 
-  test('it shows and hides dropdown when clicked into input', async function (assert) {
+  test('it shows and hides dropdown when clicked into input', async function(assert) {
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label2"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -61,7 +90,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -84,11 +113,20 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
-  test('it shows and hides dropdown when clicked on button', async function (assert) {
+  test('it shows and hides dropdown when clicked on button', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label2"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -97,7 +135,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -125,11 +163,20 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
-  test('it DOES NOT show and hides dropdown when clicked on button with `showDropdownOnClick=false`', async function (assert) {
+  test('it DOES NOT show and hides dropdown when clicked on button with `showDropdownOnClick=false`', async function(assert) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.on('myAction', function(val) { ... });
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label2"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -138,7 +185,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -167,9 +214,18 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
-  test('it shows and hides dropdown when clicked into input - without button', async function (assert) {
+  test('it shows and hides dropdown when clicked into input - without button', async function(assert) {
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label2"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -178,7 +234,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -198,7 +254,7 @@ module('Integration | Component | combo box', function (hooks) {
 
     focus('.combo-input');
 
-    later(this, function () {
+    later(this, function() {
       //dropdown should be visible
       assert.ok(isElementVisible('.dropdown.dropdown-hidden'));
     }, 100);
@@ -206,9 +262,18 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
-  test('it DOES NOT shows and hides dropdown when clicked into input - without button - with `showDropdownOnClick=false`', async function (assert) {
+  test('it DOES NOT shows and hides dropdown when clicked into input - without button - with `showDropdownOnClick=false`', async function(assert) {
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label2"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -217,7 +282,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -238,7 +303,7 @@ module('Integration | Component | combo box', function (hooks) {
 
     focus('.combo-input');
 
-    later(this, function () {
+    later(this, function() {
       //dropdown should be visible
       assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
     }, 100);
@@ -247,9 +312,18 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it renders plain JSON array as valueList', async function (assert) {
+  test('it renders plain JSON array as valueList', async function(assert) {
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label2"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label2"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -258,7 +332,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -280,7 +354,7 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it renders Ember Object array as valueList', async function (assert) {
+  test('it renders Ember Object array as valueList', async function(assert) {
 
     let obj1 = EmberObject.extend({}).create({
       key: 'a',
@@ -304,7 +378,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -315,7 +389,7 @@ module('Integration | Component | combo box', function (hooks) {
       }}
     `);
 
-    let $this = jQuery(this.elemnt);
+    let $this = jQuery(this.element);
 
     //open dropdown
     await click('.dropdown-icon');
@@ -324,9 +398,18 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
-  test('it sorts plain JSON array', async function (assert) {
+  test('it sorts plain JSON array', async function(assert) {
 
-    let valueList = A([{key: "f", label: "labela"}, {key: "b", label: "labelb"}, {key: "aa", label: "labelaa"}]);
+    let valueList = A([{
+      key: "f",
+      label: "labela"
+    }, {
+      key: "b",
+      label: "labelb"
+    }, {
+      key: "aa",
+      label: "labelaa"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -336,7 +419,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -362,7 +445,7 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it sorts Ember Object array', async function (assert) {
+  test('it sorts Ember Object array', async function(assert) {
 
     let obj1 = EmberObject.extend({}).create({
       key: 'a',
@@ -387,7 +470,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -413,7 +496,7 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it resolves valueList Promise ', async function (assert) {
+  test('it resolves valueList Promise ', async function(assert) {
     let done = assert.async();
 
     let obj1 = EmberObject.extend({}).create({
@@ -431,8 +514,8 @@ module('Integration | Component | combo box', function (hooks) {
 
     let valueList = A([obj1, obj2, obj3]);
 
-    let valueListPromise = new EmberPromise(function (resolve) {
-      setTimeout(function () {
+    let valueListPromise = new EmberPromise(function(resolve) {
+      setTimeout(function() {
         resolve(valueList);
       }, 10);
     });
@@ -445,7 +528,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valuePromise=valuePromise
         selected=selected
@@ -460,7 +543,7 @@ module('Integration | Component | combo box', function (hooks) {
     let $this = jQuery(this.element);
 
     settled().then(() => {
-      valueListPromise.then(function () {
+      valueListPromise.then(function() {
         run(() => {
           $this.find('.dropdown-icon').click();
 
@@ -472,10 +555,10 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it handles empty valueList - cliking on dropdown button', async function (assert) {
+  test('it handles empty valueList - cliking on dropdown button', async function(assert) {
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         itemKey='key'
         itemLabel='label'
@@ -489,17 +572,17 @@ module('Integration | Component | combo box', function (hooks) {
     //open dropdown - should not work
     focus('.dropdown-icon');
 
-    later(this, ()=>{
+    later(this, () => {
       assert.notOk(isElementVisible('.dropdown.dropdown-hidden'));
     }, 100);
 
 
   });
 
-  test('it handles empty valueList - cliking on combobox input', async function (assert) {
+  test('it handles empty valueList - cliking on combobox input', async function(assert) {
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
         {{combo-box
           itemKey='key'
           itemLabel='label'
@@ -520,7 +603,7 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it calls selected callback', async function (assert) {
+  test('it calls selected callback', async function(assert) {
 
     let obj1 = EmberObject.extend({}).create({
       key: 'a',
@@ -541,7 +624,7 @@ module('Integration | Component | combo box', function (hooks) {
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
-    this.actions.onSelected = function (value) {
+    this.actions.onSelected = function(value) {
       assert.ok(value);
       assert.equal(value.get('key'), obj1.get('key'));
       assert.equal(value.get('label'), obj1.get('label'));
@@ -550,7 +633,7 @@ module('Integration | Component | combo box', function (hooks) {
     };
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -574,7 +657,7 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it calls multiselect selected callback - adds new selected items', async function (assert) {
+  test('it calls multiselect selected callback - adds new selected items', async function(assert) {
 
     let obj1 = EmberObject.extend({}).create({
       key: 'a',
@@ -595,7 +678,7 @@ module('Integration | Component | combo box', function (hooks) {
 
     this.set('valueList', valueList);
     this.set('selected', 'c');
-    this.actions.onSelected = function (value) {
+    this.actions.onSelected = function(value) {
       assert.ok(value);
 
       assert.equal(value.length, 3);
@@ -611,7 +694,7 @@ module('Integration | Component | combo box', function (hooks) {
     };
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -629,7 +712,7 @@ module('Integration | Component | combo box', function (hooks) {
     //open dropdown
     focus('.dropdown-icon');
 
-    later(this, ()=>{
+    later(this, () => {
       jQuery($this.find('.dropdown-item')[0]).click();
       // Ember.$($this.find('.dropdown-item')[1]).click();
 
@@ -644,7 +727,7 @@ module('Integration | Component | combo box', function (hooks) {
   /**
    * user clicks on already selected item -> it sould not be selected at the end
    */
-  test('it calls multiselect selected callback - removes selected items', async function (assert) {
+  test('it calls multiselect selected callback - removes selected items', async function(assert) {
 
     let obj1 = EmberObject.extend({}).create({
       key: 'a',
@@ -665,7 +748,7 @@ module('Integration | Component | combo box', function (hooks) {
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
-    this.actions.onSelected = function (value) {
+    this.actions.onSelected = function(value) {
       assert.ok(value);
       assert.equal(value.length, 1);
       assert.equal(value[0].get('key'), obj1.get('key'));
@@ -676,7 +759,7 @@ module('Integration | Component | combo box', function (hooks) {
     };
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -694,7 +777,7 @@ module('Integration | Component | combo box', function (hooks) {
     //open dropdown
     focus('.dropdown-icon');
 
-    later(this, ()=> {
+    later(this, () => {
       jQuery($this.find('.dropdown-item')[0]).click();
       // Ember.$($this.find('.dropdown-item')[1]).click();
 
@@ -706,7 +789,7 @@ module('Integration | Component | combo box', function (hooks) {
     });
   });
 
-  test('it does not call selected callback because user selected value that was already selected', async function (assert) {
+  test('it does not call selected callback because user selected value that was already selected', async function(assert) {
     assert.expect(0);
 
     let obj1 = EmberObject.extend({}).create({
@@ -728,12 +811,12 @@ module('Integration | Component | combo box', function (hooks) {
 
     this.set('valueList', valueList);
     this.set('selected', 'a');
-    this.actions.onSelected = function () {
-      assert.ok(null, "onSelected callback was called - this is wrong");//should not be called
+    this.actions.onSelected = function() {
+      assert.ok(null, "onSelected callback was called - this is wrong"); //should not be called
     };
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -761,7 +844,7 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it calls onDropdownShow/Hide callbacks', async function (assert) {
+  test('it calls onDropdownShow/Hide callbacks', async function(assert) {
     assert.expect(2);
 
     let obj1 = EmberObject.extend({}).create({
@@ -783,16 +866,16 @@ module('Integration | Component | combo box', function (hooks) {
 
     this.set('valueList', valueList);
     this.set('selected', 'a');
-    this.actions.onDropdownShow = function () {
+    this.actions.onDropdownShow = function() {
       assert.ok(true);
     };
 
-    this.actions.onDropdownHide = function () {
+    this.actions.onDropdownHide = function() {
       assert.ok(true);
     };
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -810,7 +893,7 @@ module('Integration | Component | combo box', function (hooks) {
     //open dropdown
     focus('.dropdown-icon');
 
-    later(this, ()=>{
+    later(this, () => {
       jQuery($this.find('.dropdown-item')[0]).click();
 
 
@@ -824,9 +907,18 @@ module('Integration | Component | combo box', function (hooks) {
   });
 
 
-  test('it filters valueList', async function (assert) {
+  test('it filters valueList', async function(assert) {
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label12"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label12"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', null);
@@ -835,7 +927,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
@@ -864,9 +956,18 @@ module('Integration | Component | combo box', function (hooks) {
 
   });
 
-  test('it filters valueList with previously selected value', async function (assert) {
+  test('it filters valueList with previously selected value', async function(assert) {
 
-    let valueList = A([{key: "a", label: "label1"}, {key: "b", label: "label12"}, {key: "aa", label: "label3"}]);
+    let valueList = A([{
+      key: "a",
+      label: "label1"
+    }, {
+      key: "b",
+      label: "label12"
+    }, {
+      key: "aa",
+      label: "label3"
+    }]);
 
     this.set('valueList', valueList);
     this.set('selected', 'b');
@@ -875,7 +976,7 @@ module('Integration | Component | combo box', function (hooks) {
     // });
 
     // Template block usage:
-    await render(hbs`
+    await render(hbs `
       {{combo-box
         valueList=valueList
         selected=selected
