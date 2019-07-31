@@ -148,7 +148,7 @@ export default Component.extend({
   placeholder: null,
   confirmInputValueOnBlur: false,
   mobileDropdownVisible: false,
-
+  hideSelected: false, //if false, selected value will not be shown
 
   //internals
   _page: 1,

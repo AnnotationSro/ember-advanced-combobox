@@ -3,7 +3,7 @@
 
   <div class="input-wrapper">
     {{input class="combo-input"
-            value=inputValue
+            value=(if hideSelected '' inputValue)
             tabindex=(if tabbable '0' '-1')
             key-up=(action "inputValueChanged")
             autocorrect="off"
