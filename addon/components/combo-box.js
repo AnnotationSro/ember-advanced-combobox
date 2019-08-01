@@ -223,6 +223,19 @@ export default Component.extend({
 
   },
 
+  inputValueDisplayed: computed('hideSelected', 'inputValue', {
+    set(key, value) {
+      this.set('inputValue', value);
+      return value;
+    },
+    get() {
+      if (this.get('hideSelected') === true) {
+        return '';
+      }
+      return this.get('inputValue');
+    }
+  }),
+
   initFocusHandler() {
     let $element = this.$(this.element);
     $element.focusin(() => {
