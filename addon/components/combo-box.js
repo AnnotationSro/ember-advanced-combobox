@@ -403,8 +403,8 @@ export default Component.extend({
     this.set('_isKeyboardSupportEnabled', true);
 
     this.set('preselectedDropdownItem', 0);
-    this.$('body').on('keydown.keyboard-support', (event) => {
 
+    let keyboardCallback = (event) => {
       //from MSDN documentation
       // Internet Explorer, Edge (16 and earlier), and Firefox (36 and earlier)
       //use "Left", "Right", "Up", and "Down" instead of "ArrowLeft", "ArrowRight", "ArrowUp", and "ArrowDown".
@@ -441,8 +441,11 @@ export default Component.extend({
             break;
           }
       }
+    }
 
-    });
+    this.set('_keyboardCallback', keyboardCallback);
+
+    document.getElementsByTagName('body')[0].addEventListener('keydown', this.get('_keyboardCallback'));
 
     addObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
     this.keyboardSupportValueListChanged();
@@ -468,6 +471,7 @@ export default Component.extend({
     }
 
     this.$('body').off('keydown.keyboard-support');
+    document.getElementsByTagName('body')[0].removeEventListener('keydown', this.keyboardCallback);
     removeObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
     this.$(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
     this.set('_isKeyboardSupportEnabled', false);
