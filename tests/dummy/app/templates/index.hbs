@@ -76,6 +76,21 @@
 </p>
 
 <div>
+  Simple combobox with plain array valueList
+  {{combo-box
+    valueList=plainArrayValueList
+    selected=plainArraySelected
+    onSelected=(action 'onSelectedPlainArray')
+    preselectFirst=true
+  }}
+</div>
+
+{{plainArraySelected}}
+<p>
+
+</p>
+
+<div>
   Combobox with dynamic chooseLabel
   {{combo-box
     valueList=comboValueList

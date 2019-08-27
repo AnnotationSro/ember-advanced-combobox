@@ -50,6 +50,7 @@ export default Controller.extend({
     a: 'hello',
     b: 'I am the only one here'
   }],
+  plainArrayValueList: ['a', 'b', 'c', 'd'],
   disabled: false,
   labelOnly: false,
   labelOnlyWithNoValue: true,
@@ -272,6 +273,10 @@ export default Controller.extend({
       });
 
       return a;
+    },
+
+    onSelectedPlainArray(selected){
+      this.set('plainArraySelected', selected);
     }
   }
 });
