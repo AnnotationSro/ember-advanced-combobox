@@ -13,6 +13,10 @@ export default Service.extend({
     return configuration;
   },
 
+  getOnDisabledCallback(){
+    return configuration.getConfig().onDisabledCallback;
+  },
+
   getIconStyles(){
     return configuration.getConfig().icons;
   },

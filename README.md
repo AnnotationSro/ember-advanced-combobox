@@ -104,7 +104,7 @@ Most often you would like to style the mobile version of combobox. To do this yo
 | lazyDebounceTime | debounce time (in msec) when typing - used for lazy loading of comobobox items | 1000 |
 | minLazyCharacters | minimum number of characters to trigger lazy load fetch | 3 |
 | icons | JSON of font icons used | see example below |
-
+|onDisabledCallback| | callback that will be called when component changes its disabled or labelOnly state|
 
 There are 2 ways to configure the combobox: using `config/environment.js` or by injecting service `ember-advanced-combobox/adv-combobox-configuration-service`:
 

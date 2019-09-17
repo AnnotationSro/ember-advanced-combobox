@@ -17,7 +17,8 @@ let CONFIG_PROPERTIES = {
     'checkbox-checked': 'fa fa-check-square-o',
     'checkbox-unchecked': 'fa fa-square-o',
     loading: 'fa fa-circle-o-notch fa-spin fa-fw'
-  }
+  },
+  onDisabledCallback(){}
 };
 
 export default {

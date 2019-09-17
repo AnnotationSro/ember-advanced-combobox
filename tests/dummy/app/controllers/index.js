@@ -73,7 +73,9 @@ export default Controller.extend({
       });
     }
 
-
+this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, element)=>{
+  // console.log('I am global onDisabledCallback', disabled, element);
+});
 
     this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'choose value');
     this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');

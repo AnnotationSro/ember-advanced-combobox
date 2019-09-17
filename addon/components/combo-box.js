@@ -247,7 +247,12 @@ export default Component.extend({
   })),
 
   callOnDisabledCallback(){
-    this.get('onDisabledCallback')(this.get('_disabledCombobox') || this.get('labelOnly'));
+    let disabledStatus = this.get('_disabledCombobox') || this.get('labelOnly');
+    this.get('onDisabledCallback')(disabledStatus);
+    let configCallback = this.get('configurationService').getOnDisabledCallback();
+    if (typeof configCallback === 'function'){
+      configCallback(disabledStatus, this.element);
+    }
   },
 
   initFocusHandler() {
