@@ -277,6 +277,10 @@ export default Controller.extend({
 
     onSelectedPlainArray(selected){
       this.set('plainArraySelected', selected);
+    },
+
+    onDisabledCallback(disabled){
+      console.log('disabled', disabled);
     }
   }
 });

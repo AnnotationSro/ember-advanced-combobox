@@ -2,7 +2,8 @@ import {
   next,
   scheduleOnce,
   schedule,
-  debounce
+  debounce,
+  once
 } from '@ember/runloop';
 import {
   isHTMLSafe
@@ -45,6 +46,7 @@ import {
   removeObserver
 } from '@ember/object/observers';
 import $ from 'jquery';
+
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -150,6 +152,7 @@ export default Component.extend({
   confirmInputValueOnBlur: false,
   mobileDropdownVisible: false,
   hideSelected: false, //if false, selected value will not be shown
+  onDisabledCallback(){},
 
   //internals
   _page: 1,
@@ -236,6 +239,16 @@ export default Component.extend({
       return this.get('inputValue');
     }
   }),
+
+  // eslint-disable-next-line ember/no-on-calls-in-components
+  disabledObserver: on('init', observer('_disabledCombobox', 'labelOnly', function(){
+     once(this, 'callOnDisabledCallback');
+
+  })),
+
+  callOnDisabledCallback(){
+    this.get('onDisabledCallback')(this.get('_disabledCombobox') || this.get('labelOnly'));
+  },
 
   initFocusHandler() {
     let $element = $(this.element);

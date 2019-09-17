@@ -80,7 +80,7 @@
   {{combo-box
     valueList=plainArrayValueList
     selected=plainArraySelected
-    onSelected=(action 'onSelectedPlainArray')
+
     preselectFirst=true
   }}
 </div>
@@ -103,6 +103,7 @@
     disabled=disabled
     labelOnly=labelOnly
     emptySelectionLabel=myChooseLabel
+    onDisabledCallback=(action 'onDisabledCallback')
   }}
 
   {{input value=myChooseLabel}}
