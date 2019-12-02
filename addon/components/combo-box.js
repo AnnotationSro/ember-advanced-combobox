@@ -152,7 +152,7 @@ export default Component.extend({
   confirmInputValueOnBlur: false,
   mobileDropdownVisible: false,
   hideSelected: false, //if false, selected value will not be shown
-  onDisabledCallback(){},
+  onDisabledCallback() {},
 
   //internals
   _page: 1,
@@ -241,16 +241,16 @@ export default Component.extend({
   }),
 
   // eslint-disable-next-line ember/no-on-calls-in-components
-  disabledObserver: on('init', observer('_disabledCombobox', 'labelOnly', function(){
-     once(this, 'callOnDisabledCallback');
+  disabledObserver: on('init', observer('_disabledCombobox', 'labelOnly', function() {
+    once(this, 'callOnDisabledCallback');
 
   })),
 
-  callOnDisabledCallback(){
+  callOnDisabledCallback() {
     let disabledStatus = this.get('_disabledCombobox') || this.get('labelOnly');
     this.get('onDisabledCallback')(disabledStatus);
     let configCallback = this.get('configurationService').getOnDisabledCallback();
-    if (typeof configCallback === 'function'){
+    if (typeof configCallback === 'function') {
       configCallback(disabledStatus, this.element);
     }
   },
@@ -1080,9 +1080,42 @@ export default Component.extend({
 
     schedule('afterRender', this, function() {
 
-      $(this.element).find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
+      const $mobileDropdown = $(this.element).find('.combobox-mobile-dialog .dropdown');
+      const $scrollIndicator = $(this.element).find('.combobox-mobile-dialog .scroll-indicator');
+
+      let debounce_timer;
+
+      $mobileDropdown.scroll(function() {
+
+        if (debounce_timer) {
+          window.clearTimeout(debounce_timer);
+        }
+
+        debounce_timer = window.setTimeout(function() {
+          showScrollIndicator();
+        }, 100);
+
+      });
+
+      $mobileDropdown.find('.combobox-mobile-dialog .dropdown').on('touchmove.mobilePagination', () => {
         debounce(this, debouncedFunc, 200);
       });
+
+      showScrollIndicator();
+
+      function showScrollIndicator() {
+        if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown.height()) {
+          $scrollIndicator.removeClass("overflow-scroll-bottom");
+        } else {
+          $scrollIndicator.addClass("overflow-scroll-bottom");
+        }
+
+        if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown[0].scrollHeight) {
+          $scrollIndicator.removeClass("overflow-scroll-top");
+        } else {
+          $scrollIndicator.addClass("overflow-scroll-top");
+        }
+      }
 
       function debouncedFunc() {
         let $dialogDropdown = $('.combobox-mobile-dialog .dropdown');

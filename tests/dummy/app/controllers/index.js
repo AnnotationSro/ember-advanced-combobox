@@ -35,7 +35,25 @@ export default Controller.extend({
   },{
    a: 'xhello21',
    b: "prvy"
- }],
+ },{
+  a: 'xhello211',
+  b: "prvy2"
+},{
+ a: 'xhello211',
+ b: "prvy3"
+},{
+ a: 'xhello2111',
+ b: "prvy4"
+},{
+ a: 'xhello21111',
+ b: "prvy5"
+},{
+ a: 'xhello211111',
+ b: "prvy6"
+},{
+ a: 'xhello2111111a',
+ b: "prvy7"
+}],
   comboValueListMany: [],
   comboSelectedSingle: null,
   comboPreSelectedSingle: null,

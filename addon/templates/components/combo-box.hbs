@@ -21,8 +21,8 @@
   </div>
 
 </div>
-  <ul class="dropdown dropdown-hidden" tabindex="-1">
-    {{item-list
+<ul class="dropdown dropdown-hidden" tabindex="-1">
+  {{item-list
       filteredValueList=filteredValueList
       multiselect=multiselect
       internalSelectedList=internalSelectedList
@@ -34,22 +34,24 @@
       actionItemSelect=(action 'actionItemSelect')
       preselectedDropdownItem=preselectedDropdownItem
     }}
-  </ul>
-  {{#if mobileDropdownVisible}}
-    {{#modal-dialog
+</ul>
+{{#if mobileDropdownVisible}}
+  {{#modal-dialog
         close="toggleModal"
         targetAttachment="center"
         containerClassNames="combobox-mobile-dialog"
         translucentOverlay=true
 
     }}
-                  <div class="header">
-                  </div>
-                  {{#if isInputEditable}}
-                    {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
-                  {{/if}}
-                  <div class="dropdown dropdown-mobile">
-                    {{item-list
+    <div class="header">
+    </div>
+    {{#if isInputEditable}}
+      {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
+    {{/if}}
+    <div class="scroll-indicator scroll-indicator-top"></div>
+      <div class="dropdown dropdown-mobile">
+
+        {{item-list
                       filteredValueList=filteredValueList
                       multiselect=multiselect
                       internalSelectedList=internalSelectedList
@@ -61,12 +63,13 @@
                       actionItemSelect=(action 'actionItemSelect')
                       preselectedDropdownItem=preselectedDropdownItem
                     }}
-                  </div>
-                  <div class="footer">
-                    <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>
-                    {{#if multiselect}}
-                      <button class="btn-accept" {{action 'actionAcceptMobile'}}>{{mobileOkButton}}</button>
-                    {{/if}}
-                  </div>
-    {{/modal-dialog}}
-  {{/if}}
+      </div>
+      <div class="scroll-indicator scroll-indicator-bottom"></div>
+    <div class="footer">
+      <button class="btn-cancel" {{action 'actionCancelMobile'}}>{{mobileCancelButton}}</button>
+      {{#if multiselect}}
+        <button class="btn-accept" {{action 'actionAcceptMobile'}}>{{mobileOkButton}}</button>
+      {{/if}}
+    </div>
+  {{/modal-dialog}}
+{{/if}}

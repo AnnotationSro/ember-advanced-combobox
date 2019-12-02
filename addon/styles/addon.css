@@ -1,55 +1,57 @@
-.advanced-combo-box{
+.advanced-combo-box {
   display: inline-block;
 }
 
-.advanced-combo-box.combobox-disabled:not(.combobox-label-only) .input-group{
-    background-color: grey;
+.advanced-combo-box.combobox-disabled:not(.combobox-label-only) .input-group {
+  background-color: grey;
 }
 
- .advanced-combo-box.combobox-disabled:not(.combobox-label-only) .combo-input{
+.advanced-combo-box.combobox-disabled:not(.combobox-label-only) .combo-input {
   background-color: grey;
   color: white;
 }
 
-.advanced-combo-box .input-group{
+.advanced-combo-box .input-group {
   border: 1px solid black;
 }
 
-.advanced-combo-box .input-group:focus{
+.advanced-combo-box .input-group:focus {
   outline: none;
 }
 
- .advanced-combo-box .dropdown-icon{
-   outline: none;
- }
- .advanced-combo-box .input-wrapper {
-   border: none;
-   outline: none;
-   height: 20px;
- }
+.advanced-combo-box .dropdown-icon {
+  outline: none;
+}
+
+.advanced-combo-box .input-wrapper {
+  border: none;
+  outline: none;
+  height: 20px;
+}
+
 .advanced-combo-box .input-wrapper[readonly="readonly"] {
   pointer-events: none;
 }
 
-.advanced-combo-box .input-wrapper[readonly="readonly"] input{
+.advanced-combo-box .input-wrapper[readonly="readonly"] input {
   cursor: default;
-  pointer-events: none; /*this will prevent cursor showing in readonly mode in Firefox (and perhaps IE, too)*/
+  pointer-events: none;
+  /*this will prevent cursor showing in readonly mode in Firefox (and perhaps IE, too)*/
   caret-color: transparent;
 }
 
- .advanced-combo-box .input-wrapper input {
-   padding-top: 1px;
- }
+.advanced-combo-box .input-wrapper input {
+  padding-top: 1px;
+}
 
-
-.advanced-combo-box input{
+.advanced-combo-box input {
   border: none;
-  width: calc( 100% - 20px);
+  width: calc(100% - 20px);
   outline: none;
   text-overflow: ellipsis;
 }
 
-.advanced-combo-box .dropdown{
+.advanced-combo-box .dropdown {
   border: 1px solid black;
   margin: 2px 0;
   /*position: fixed;*/
@@ -66,44 +68,43 @@
   outline: none;
 }
 
-.ember-modal-dialog.combobox-mobile-dialog{
+.ember-modal-dialog.combobox-mobile-dialog {
   padding: 0;
   min-width: 100px;
 }
 
- .combobox-mobile-dialog .dropdown{
-   margin: 0;
-   z-index: 99999;
-   list-style: none;
-   padding: 0;
-   background: white;
-   overflow-y: auto;
-   padding-left: 10px;
-   padding-right: 10px;
-   max-height: 300px;
-   max-height: 30vh;
-   -webkit-transform: translateZ(0);
-    -webkit-filter: blur(0);
- }
- .combobox-mobile-dialog button{
-   margin: 10px;
- }
+.combobox-mobile-dialog .dropdown {
+  margin: 0;
+  z-index: 99999;
+  list-style: none;
+  padding: 0;
+  background: white;
+  overflow-y: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  max-height: 300px;
+  max-height: 30vh;
+  -webkit-transform: translateZ(0);
+  -webkit-filter: blur(0);
+}
 
-.combobox-mobile-dialog .intput-filter{
+.combobox-mobile-dialog button {
   margin: 10px;
 }
 
-.combobox-mobile-dialog .dropdown li{
+.combobox-mobile-dialog .intput-filter {
+  margin: 10px;
+}
+
+.combobox-mobile-dialog .dropdown li {
   padding: 10px 0;
 }
 
-
-.advanced-combo-box .dropdown li.selected{
+.advanced-combo-box .dropdown li.selected {
   background-color: grey;
 }
 
-
-.advanced-combo-box.dropdown-hidden .dropdown{
+.advanced-combo-box.dropdown-hidden .dropdown {
   display: none;
 }
 
@@ -111,19 +112,19 @@
   cursor: default;
 }
 
-.advanced-combo-box:not(.combobox-disabled) .dropdown-icon{
+.advanced-combo-box:not(.combobox-disabled) .dropdown-icon {
   cursor: pointer;
 }
 
-.advanced-combo-box.combobox-label-only .dropdown-icon{
+.advanced-combo-box.combobox-label-only .dropdown-icon {
   visibility: hidden;
 }
 
-.advanced-combo-box.combobox-label-only .combo-input{
+.advanced-combo-box.combobox-label-only .combo-input {
   cursor: default;
 }
 
-.advanced-combo-box.lazy-loading-in-progress .input-group .dropdown-icon{
+.advanced-combo-box.lazy-loading-in-progress .input-group .dropdown-icon {
   font-size: 14px;
 }
 
@@ -133,6 +134,7 @@
   box-shadow: 0 0 10px #222;
   padding: 10px;
 }
+
 .ember-modal-overlay.translucent {
   background-color: rgba(128, 128, 128, 0.77);
 }
@@ -145,6 +147,7 @@
   top: 0;
   z-index: 50;
 }
+
 .ember-modal-dialog {
   z-index: 50;
   position: fixed;
@@ -158,6 +161,7 @@
   z-index: 51;
   position: fixed;
 }
+
 .ember-modal-dialog.emd-in-place {
   position: static;
 }
@@ -167,6 +171,7 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
 .ember-modal-wrapper.emd-animatable.emd-wrapper-target-attachment-center {
   width: 100vw;
   height: 100vh;
@@ -178,14 +183,17 @@
   align-items: center;
   justify-content: center;
 }
+
 .ember-modal-wrapper.emd-animatable.emd-wrapper-target-attachment-center .ember-modal-overlay {
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
 .ember-modal-wrapper.emd-animatable .ember-modal-dialog {
   position: relative;
 }
+
 .ember-modal-overlay {
   width: 100vw;
   height: 100vh;
@@ -199,6 +207,19 @@
   overflow: hidden;
 }
 
-.ember-modal-dialog.combobox-mobile-dialog .dropdown.dropdown-mobile{
+.ember-modal-dialog.combobox-mobile-dialog .dropdown.dropdown-mobile {
   max-height: 250px;
+}
+
+.combobox-mobile-dialog .overflow-scroll-bottom.scroll-indicator-bottom {
+  box-shadow: inset 0 -25px 50px -35px rgba(0, 0, 0, .35);
+}
+
+.combobox-mobile-dialog .overflow-scroll-top.scroll-indicator-top {
+  box-shadow: inset 0px 25px 50px -35px rgba(0, 0, 0, .35);
+}
+
+.combobox-mobile-dialog .scroll-indicator {
+  height: 10px;
+  width: 100%;
 }
