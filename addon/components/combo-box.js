@@ -1105,13 +1105,13 @@ export default Component.extend({
       showScrollIndicator();
 
       function showScrollIndicator() {
-        if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown.outerHeight()) {
+        if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop()) == Math.round($mobileDropdown.outerHeight())) {
           $scrollIndicatorBottom.removeClass("overflow-scroll-bottom");
         } else {
           $scrollIndicatorBottom.addClass("overflow-scroll-bottom");
         }
 
-        if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown[0].scrollHeight) {
+        if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop()) == Math.round($mobileDropdown[0].scrollHeight)) {
           $scrollIndicatorTop.removeClass("overflow-scroll-top");
         } else {
           $scrollIndicatorTop.addClass("overflow-scroll-top");
