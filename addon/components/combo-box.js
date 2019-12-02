@@ -1081,7 +1081,8 @@ export default Component.extend({
     schedule('afterRender', this, function() {
 
       const $mobileDropdown = $(this.element).find('.combobox-mobile-dialog .dropdown');
-      const $scrollIndicator = $(this.element).find('.combobox-mobile-dialog .scroll-indicator');
+      const $scrollIndicatorTop = $(this.element).find('.combobox-mobile-dialog .scroll-indicator.scroll-indicator-top');
+      const $scrollIndicatorBottom = $(this.element).find('.combobox-mobile-dialog .scroll-indicator.scroll-indicator-bottom');
 
       let debounce_timer;
 
@@ -1104,16 +1105,16 @@ export default Component.extend({
       showScrollIndicator();
 
       function showScrollIndicator() {
-        if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown.height()) {
-          $scrollIndicator.removeClass("overflow-scroll-bottom");
+        if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown.outerHeight()) {
+          $scrollIndicatorBottom.removeClass("overflow-scroll-bottom");
         } else {
-          $scrollIndicator.addClass("overflow-scroll-bottom");
+          $scrollIndicatorBottom.addClass("overflow-scroll-bottom");
         }
 
         if ($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop() == $mobileDropdown[0].scrollHeight) {
-          $scrollIndicator.removeClass("overflow-scroll-top");
+          $scrollIndicatorTop.removeClass("overflow-scroll-top");
         } else {
-          $scrollIndicator.addClass("overflow-scroll-top");
+          $scrollIndicatorTop.addClass("overflow-scroll-top");
         }
       }
 
