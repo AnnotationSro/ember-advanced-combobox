@@ -490,7 +490,7 @@ export default Component.extend({
     }
 
     $('body').off('keydown.keyboard-support');
-    document.getElementsByTagName('body')[0].removeEventListener('keydown', this.keyboardCallback);
+    document.getElementsByTagName('body')[0].removeEventListener('keydown', this.get('_keyboardCallback'));
     removeObserver(this, 'filteredValueList.[]', this, this.keyboardSupportValueListChanged);
     $(this.element).find('.dropdown .dropdown-item').off('mouseover.keyboard-item');
     this.set('_isKeyboardSupportEnabled', false);
@@ -516,6 +516,10 @@ export default Component.extend({
   checkDropdownItemVisible(itemIndex, moveDown) {
     let $dropdown = $(this.element).find('.dropdown');
     let $item = $($dropdown.find('.dropdown-item')[itemIndex]);
+
+    if ($item.length === 0){
+      return;
+    }
 
     adjustItemVisible();
 
