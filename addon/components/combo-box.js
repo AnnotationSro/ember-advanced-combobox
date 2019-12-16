@@ -227,13 +227,16 @@ export default Component.extend({
 
   },
 
-  inputValueDisplayed: computed('hideSelected', 'inputValue', {
+  inputValueDisplayed: computed('hideSelected', 'inputValue', 'labelOnly', {
     set(key, value) {
       this.set('inputValue', value);
       return value;
     },
     get() {
       if (this.get('hideSelected') === true) {
+        return '';
+      }
+      if (this.get('labelOnly') === true && isEmpty(this.get('internalSelectedList'))) {
         return '';
       }
       return this.get('inputValue');
@@ -517,7 +520,7 @@ export default Component.extend({
     let $dropdown = $(this.element).find('.dropdown');
     let $item = $($dropdown.find('.dropdown-item')[itemIndex]);
 
-    if ($item.length === 0){
+    if ($item.length === 0) {
       return;
     }
 
