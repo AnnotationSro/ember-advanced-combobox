@@ -1,6 +1,6 @@
 {
   "name": "ember-advanced-combobox",
-  "version": "2.12.5",
+  "version": "2.12.6",
   "description": "Swiss-knife ember combobox",
   "scripts": {
     "build": "ember build",
