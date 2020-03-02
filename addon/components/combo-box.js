@@ -609,7 +609,7 @@ export default Component.extend({
     } else {
       this.set('internalSelectedList', A([]));
     }
-    if (canAutoselect === true) {
+    if (canAutoselect === true && (this.get('disabled') === false && this.get('labelOnly') === false) ) {
       this._automaticallySelect();
     }
   },
