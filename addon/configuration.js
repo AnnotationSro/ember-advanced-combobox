@@ -16,7 +16,8 @@ let CONFIG_PROPERTIES = {
     dropdown: 'fa fa-chevron-down',
     'checkbox-checked': 'fa fa-check-square-o',
     'checkbox-unchecked': 'fa fa-square-o',
-    loading: 'fa fa-circle-o-notch fa-spin fa-fw'
+    loading: 'fa fa-circle-o-notch fa-spin fa-fw',
+    'mobile-filter': 'fa fa-search'
   },
   onDisabledCallback(){}
 };

@@ -46,7 +46,10 @@
     <div class="header">
     </div>
     {{#if isInputEditable}}
-      {{input value=inputValue class="intput-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
+    <div class="filter-wrapper">
+      {{input value=inputValue class="input-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
+      <i class="icon {{font-icon "mobile-filter"}}" aria-hidden="true"></i>
+    </div>
     {{/if}}
     <div class="scroll-indicator scroll-indicator-top"></div>
       <div class="dropdown dropdown-mobile">

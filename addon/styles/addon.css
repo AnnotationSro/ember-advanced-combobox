@@ -92,8 +92,19 @@
   margin: 10px;
 }
 
-.combobox-mobile-dialog .intput-filter {
+.combobox-mobile-dialog .input-filter {
   margin: 10px;
+}
+
+.combobox-mobile-dialog .filter-wrapper {
+  position: relative;
+}
+
+.combobox-mobile-dialog .filter-wrapper .icon{
+  right: 13px;
+  top: 13px;
+  position: absolute;
+  background-color: white;
 }
 
 .combobox-mobile-dialog .dropdown li {

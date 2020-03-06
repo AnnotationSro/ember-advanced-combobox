@@ -101,7 +101,8 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
       dropdown: 'fa fa-chevron-down',
       'checkbox-checked': 'far fa-check-square',
       'checkbox-unchecked': 'far fa-square',
-      loading: 'fas fa-circle-notch fa-spin'
+      loading: 'fas fa-circle-notch fa-spin',
+      'mobile-filter': 'fas fa-search'
     });
 
   },

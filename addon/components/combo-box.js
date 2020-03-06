@@ -237,7 +237,7 @@ export default Component.extend({
         return '';
       }
       if (this.get('labelOnly') === true && isEmpty(this.get('internalSelectedList'))) {
-        var chooseLabel = Ember.isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
+        var chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
         if (this.get('inputValue') === chooseLabel) {
           return '';
         }
