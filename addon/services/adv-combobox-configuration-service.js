@@ -4,6 +4,32 @@ import configuration from 'ember-advanced-combobox/configuration';
 
 export default Service.extend({
 
+isTouchDevice: false,
+
+  init(){
+    this._super(...arguments);
+
+		window.addEventListener('touchstart', handleTouch, false);
+		window.addEventListener('mousemove', handleMouse, false);
+
+		let that = this;
+
+		function handleTouch() {
+
+			window.removeEventListener('touchstart', handleTouch);
+			window.removeEventListener('mousemove', handleMouse);
+
+			that.set('isTouchDevice', true);
+		}
+
+		function handleMouse() {
+
+			window.removeEventListener('touchstart', handleTouch);
+			window.removeEventListener('mousemove', handleMouse);
+
+			that.set('isTouchDevice', false);
+		}
+  },
 
   setConfiguration(key, value){
     configuration.getConfig()[key] = value;

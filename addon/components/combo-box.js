@@ -277,6 +277,11 @@ export default Component.extend({
 
       $element.focusout(() => {
 
+        if (this.get('mobileDropdownVisible') === true){
+          //mobile dropdowns should be closed manually
+          return false;
+        }
+
         // let the browser set focus on the newly clicked elem before check
         setTimeout(() => {
           if (!$element.find(':focus').length) {
@@ -914,7 +919,11 @@ export default Component.extend({
       if (this.get('isComboFocused') === true) {
         //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
         //and then 2nd time when it receives focus afterwards, but that does not matter
-        this._showDropdown();
+        if (this.get('configurationService.isTouchDevice')===true){
+          this._showMobileDropdown();
+        } else {
+          this._showDropdown();
+        }
       }
 
     } else {
