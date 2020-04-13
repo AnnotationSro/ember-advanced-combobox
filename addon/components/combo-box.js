@@ -1443,7 +1443,7 @@ export default Component.extend({
   },
 
   _destroyDropdownCloseListeners() {
-    this.$('body').off(`click.hideDropdown_${this.elementId}`);
+    $('body').off(`click.hideDropdown_${this.elementId}`);
   },
 
   cancelLazyDebounce() {
