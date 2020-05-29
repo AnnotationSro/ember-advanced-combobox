@@ -931,8 +931,10 @@ export default Component.extend({
         if (isNone(this.get('_oldInputValue'))) {
           this.set('_oldInputValue', this.get('inputValue'));
         }
-        this.set('inputValue', '');
-        this._initDropdownCloseListeners();
+        if (this.isComboFocused === true) {
+			this.set('inputValue', '');
+			this._initDropdownCloseListeners();
+		}
       }
     }
 
