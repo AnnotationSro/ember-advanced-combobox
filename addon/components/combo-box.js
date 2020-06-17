@@ -343,8 +343,6 @@ export default Component.extend({
       this.set('_erd', erd);
     }
 
-    //setDropdownWidth
-    $element.find('.dropdown').css('min-width', $element.css('width'));
 
     //initInputClickHandler
     $(this.element).find(' *').on('touchstart', (event) => {
@@ -1030,6 +1028,10 @@ export default Component.extend({
     if (isPresent(this.get('lazyCallback')) && this.get('lazyCallbackInProgress') === false) {
       this._resetLazyCombobox();
     }
+
+    let $element = $(this.element);
+	  //setDropdownWidth
+	$element.find('.dropdown').css('min-width', $element.css('width'));
 
     this.set('dropdownVisible', true);
 
