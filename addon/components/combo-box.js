@@ -153,6 +153,7 @@ export default Component.extend({
   mobileDropdownVisible: false,
   hideSelected: false, //if false, selected value will not be shown
   onDisabledCallback() {},
+  canAutoselect: false,
 
   //internals
   _page: 1,
@@ -277,7 +278,7 @@ export default Component.extend({
 
       $element.focusout(() => {
 
-        if (this.get('mobileDropdownVisible') === true){
+        if (this.get('mobileDropdownVisible') === true) {
           //mobile dropdowns should be closed manually
           return false;
         }
@@ -343,6 +344,8 @@ export default Component.extend({
       this.set('_erd', erd);
     }
 
+    //setDropdownWidth
+    $element.find('.dropdown').css('min-width', $element.css('width'));
 
     //initInputClickHandler
     $(this.element).find(' *').on('touchstart', (event) => {
@@ -453,21 +456,20 @@ export default Component.extend({
           event.stopPropagation();
 
           break;
-        case 'Enter':
-          {
-            if (this.get('multiselect') === true) {
-              break;
-            }
-            let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
-
-            this._addOrRemoveFromSelected(selectedItem);
-
-            this._hideDropdown(true, false);
-            $(this.element).find('*').blur();
-
-            event.preventDefault();
+        case 'Enter': {
+          if (this.get('multiselect') === true) {
             break;
           }
+          let selectedItem = getObjectFromArray(this.get('filteredValueList'), this.get('preselectedDropdownItem'));
+
+          this._addOrRemoveFromSelected(selectedItem);
+
+          this._hideDropdown(true, false);
+          $(this.element).find('*').blur();
+
+          event.preventDefault();
+          break;
+        }
       }
     }
 
@@ -612,7 +614,8 @@ export default Component.extend({
     } else {
       this.set('internalSelectedList', A([]));
     }
-    if (canAutoselect === true && (this.get('disabled') === false && this.get('labelOnly') === false) ) {
+    if (this.canAutoselect && canAutoselect === true && (this.get('disabled') === false && this.get('labelOnly') === false)) {
+
       this._automaticallySelect();
     }
   },
@@ -917,7 +920,7 @@ export default Component.extend({
       if (this.get('isComboFocused') === true) {
         //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
         //and then 2nd time when it receives focus afterwards, but that does not matter
-        if (this.get('configurationService.isTouchDevice')===true){
+        if (this.get('configurationService.isTouchDevice') === true) {
           this._showMobileDropdown();
         } else {
           this._showDropdown();
@@ -929,10 +932,8 @@ export default Component.extend({
         if (isNone(this.get('_oldInputValue'))) {
           this.set('_oldInputValue', this.get('inputValue'));
         }
-        if (this.isComboFocused === true) {
-			this.set('inputValue', '');
-			this._initDropdownCloseListeners();
-		}
+        this.set('inputValue', '');
+        this._initDropdownCloseListeners();
       }
     }
 
@@ -1028,10 +1029,6 @@ export default Component.extend({
     if (isPresent(this.get('lazyCallback')) && this.get('lazyCallbackInProgress') === false) {
       this._resetLazyCombobox();
     }
-
-    let $element = $(this.element);
-	  //setDropdownWidth
-	$element.find('.dropdown').css('min-width', $element.css('width'));
 
     this.set('dropdownVisible', true);
 
@@ -1447,7 +1444,7 @@ export default Component.extend({
   },
 
   _destroyDropdownCloseListeners() {
-    $('body').off(`click.hideDropdown_${this.elementId}`);
+    this.$('body').off(`click.hideDropdown_${this.elementId}`);
   },
 
   cancelLazyDebounce() {
