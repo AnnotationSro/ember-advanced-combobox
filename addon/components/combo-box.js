@@ -779,8 +779,8 @@ export default Component.extend({
 
         this.set('valuePromiseResolving', false);
 
-        let newValueList = (typeof result.data !== 'undefined') ? result.data : result;
-        let hasNextPage = result.hasNextPage;
+        let newValueList = isPresent(result)? ((typeof result.data !== 'undefined') ? result.data : result): [];
+        let hasNextPage = isPresent(result)? result.hasNextPage: false;
         this.set('_hasNextPage', hasNextPage);
 
         if (isEmpty(this.get('valueList'))) {

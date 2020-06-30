@@ -223,13 +223,15 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
     },
 
     actionCreateAsyncValueList() {
-      let valueList = [{
+      let valueList = [
+        {
         a: 'hello2',
         b: 'b'
       }, {
         a: 'hello',
         b: 'a'
-      }];
+      }
+    ];
 
       this.set('asyncValueList', new EmberPromise(function(resolve) {
         setTimeout(function() {
