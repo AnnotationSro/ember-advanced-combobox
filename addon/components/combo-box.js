@@ -779,8 +779,8 @@ export default Component.extend({
 
         this.set('valuePromiseResolving', false);
 
-        let newValueList = isPresent(result)? ((typeof result.data !== 'undefined') ? result.data : result): [];
-        let hasNextPage = isPresent(result)? result.hasNextPage: false;
+        let newValueList = (typeof result.data !== 'undefined') ? result.data : result;
+        let hasNextPage = result.hasNextPage;
         this.set('_hasNextPage', hasNextPage);
 
         if (isEmpty(this.get('valueList'))) {
@@ -932,7 +932,11 @@ export default Component.extend({
         if (isNone(this.get('_oldInputValue'))) {
           this.set('_oldInputValue', this.get('inputValue'));
         }
-        this.set('inputValue', '');
+
+        if (isEmpty(this.get('internalSelectedList'))) {
+        	//there is no selection and perhaps placeholder is shown - so we must clear the placeholder
+			this.set('inputValue', '');
+		}
         this._initDropdownCloseListeners();
       }
     }
