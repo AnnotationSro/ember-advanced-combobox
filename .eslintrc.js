@@ -22,7 +22,7 @@ module.exports = {
   },
   rules: {
     "ember/avoid-leaking-state-in-ember-objects": "off",
-    "ember/no-observers": "off",      
+    "ember/no-observers": "off",
   },
   overrides: [
     // node files
@@ -51,9 +51,7 @@ module.exports = {
         node: true
       },
       plugins: ['node'],
-      rules: Object.assign({}, require('eslint-plugin-node').configs.recommended.rules, {
-        // add your custom rules and overrides for node files here
-      })
+      extends: ['plugin:node/recommended']
     }
   ]
 };
