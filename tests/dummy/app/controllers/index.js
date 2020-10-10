@@ -1,11 +1,11 @@
 /* eslint no-console: 0 */
 /* eslint-disable*/
 
-import jQuery from 'jquery';
+import $ from 'cash-dom';
 import {
   Promise as EmberPromise
 } from 'rsvp';
-
+import fetch from 'fetch';
 import {
   isNone,
   isPresent
@@ -246,30 +246,27 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
 
     abortLazyCallback() {
       if (isPresent(this.get('lazyCallbackAjax'))) {
-        let xhr = this.get('lazyCallbackAjax');
-        if(xhr && xhr.readyState !== 4){
-            xhr.abort();
-        }
+        // let xhr = this.get('lazyCallbackAjax');
+        // if(xhr && xhr.readyState !== 4){
+        //     xhr.abort();
+        // }
         this.set('lazyCallbackAjax', null);
       }
     },
 
     lazyCallback(query, page, pageSize) {
       let a = new EmberPromise((resolve, reject) => {
-        let ajax = jQuery.ajax({
-          type: "GET",
-          url: `/api/users?delay=2&page=${page}&pageSize=${pageSize}&query=${query}`,
-          success: function(data) {
-            let result = [];
-            for (let i = 0; i < data.data.length; i++) {
-              result.push({
-                a: data.data[i].first_name,
-                b: data.data[i].first_name
-              });
-            }
-            resolve({'data':result, hasNextPage:data.hasNextPage});
+        let ajax = fetch(`/api/users?delay=2&page=${page}&pageSize=${pageSize}&query=${query}`).then(data=>data.json());
+        ajax.then((data) => {
+          let result = [];
+          for (let i = 0; i < data.data.length; i++) {
+            result.push({
+              a: data.data[i].first_name,
+              b: data.data[i].first_name
+            });
           }
-        });
+          resolve({'data':result, hasNextPage:data.hasNextPage});
+        })
         this.set('lazyCallbackAjax', ajax);
       });
 
@@ -278,10 +275,8 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
 
     lazyCallbackSimpleCombo(query){
       let a = new EmberPromise((resolve, reject) => {
-        let ajax = jQuery.ajax({
-          type: "GET",
-          url: `/api/users?delay=2&page=1&pageSize=50&query=${query}`,
-          success: function(data) {
+        let ajax = fetch(`/api/users?delay=2&page=1&pageSize=50&query=${query}`).then(data=>data.json());
+          ajax.then((data) => {
             let result = [];
             for (let i = 0; i < data.data.length; i++) {
               result.push({
@@ -290,8 +285,7 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
               });
             }
             resolve({'data':result, hasNextPage:false});
-          }
-        });
+          });
         this.set('lazyCallbackAjax', ajax);
       });
 
