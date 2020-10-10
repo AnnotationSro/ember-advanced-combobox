@@ -45,8 +45,21 @@ import {
   addObserver,
   removeObserver
 } from '@ember/object/observers';
-import $ from 'jquery';
+import $ from 'cash-dom';
 
+
+function scrollTop($element, step) {
+    var start = window.pageYOffset;
+    var count = 0;
+    var intervalRef = setInterval( (function(interval, curOffset) {
+        return function() {
+            curOffset -= (interval * step);
+            $element[0].scrollTo(0, curOffset);
+            count++;
+            if(count > 150 || curOffset < 0) clearInterval(intervalRef);
+        }
+    })(step, start--), 50);
+}
 
 function getObjectFromArray(array, index) {
   if (array.objectAt) {
@@ -57,7 +70,7 @@ function getObjectFromArray(array, index) {
 
 function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
   $dropdown = $dropdown.filter(':not(.dropdown-mobile)');
-  let oldScrollPosition = $dropdown.scrollTop();
+  let oldScrollPosition = $dropdown[0].scrollTop;
   $dropdown.css({
     'maxHeight': ''
   });
@@ -90,7 +103,7 @@ function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
     }
   }
 
-  $dropdown.scrollTop(oldScrollPosition);
+  scrollTop($dropdown, oldScrollPosition);
 
   function calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) {
     let inputBottom = $input[0].getBoundingClientRect().bottom;
@@ -264,19 +277,19 @@ export default Component.extend({
 
   initFocusHandler() {
     let $element = $(this.element);
-    $element.focusin(() => {
+    $element.on('focusin', () => {
       if (this.get('isComboFocused') === true) {
         return;
       }
       if (this.get('isComboFocused') === false) {
         scheduleOnce('afterRender', this, function() {
-          $element.find('input').focus();
+          $element.find('input').trigger('focus');
         });
       }
 
       this.set('isComboFocused', true);
 
-      $element.focusout(() => {
+      $element.on('focusout', () => {
 
         if (this.get('mobileDropdownVisible') === true) {
           //mobile dropdowns should be closed manually
@@ -415,7 +428,7 @@ export default Component.extend({
     if (this.get('_isTesting') === false && isPresent(this.get('_erd'))) {
       this.get('_erd').uninstall($(this.element).find('.dropdown')[0]);
     }
-    $(this.element).find('.dropdown').unbind('scroll.pagination');
+    $(this.element).find('.dropdown').off('scroll.pagination');
     $(this.element).find('.combobox-mobile-dialog .dropdown').off('touchmove.mobilePagination');
     document.removeEventListener('ember-advanced-combobox-hide-dropdown', this.get('_emberAdvancedComboboxHideDropdownListenerFn'));
     this.set('_emberAdvancedComboboxHideDropdownListenerFn', null);
@@ -486,7 +499,7 @@ export default Component.extend({
       next(this, () => {
         let $items = $(this.element).find('.dropdown .dropdown-item');
         $items.on('mouseover.keyboard-item', (e) => {
-          let selectedItem = $items.toArray().indexOf(e.target);
+          let selectedItem = $items.index(e.target);
           this.set('preselectedDropdownItem', selectedItem);
         });
       });
@@ -537,13 +550,13 @@ export default Component.extend({
         //move down
         if ($dropdown.height() < $item.position().top + $item.height()) {
           var scrollTop = (itemIndex - (Math.floor($dropdown.height() / $item.height())) + 1) * $item.height();
-          $dropdown.scrollTop(scrollTop);
+          scrollTop($dropdown, scrollTop);
         }
       }
       if (moveDown === false) {
         //move up
         if ($item.position().top - $item.height() * 2 < $item.height()) {
-          $dropdown.scrollTop(itemIndex * $item.height());
+          scrollTop($dropdown, itemIndex * $item.height());
         }
       }
     }
@@ -553,13 +566,13 @@ export default Component.extend({
     let that = this;
     let scrollEnabled = true;
 
-    $(this.element).find('.dropdown').bind('scroll.pagination', function() {
+    $(this.element).find('.dropdown').on('scroll.pagination', function() {
       if (scrollEnabled === false) {
         //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
         // return;
       }
 
-      if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
+      if ($(this)[0].scrollTop + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
         scrollEnabled = false;
         that.fetchNextPage(() => {
           scrollEnabled = true;
@@ -1131,13 +1144,13 @@ export default Component.extend({
       showScrollIndicator();
 
       function showScrollIndicator() {
-        if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop()) == Math.round($mobileDropdown.outerHeight())) {
+        if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown[0].scrollTop) == Math.round($mobileDropdown.outerHeight())) {
           $scrollIndicatorBottom.removeClass("overflow-scroll-bottom");
         } else {
           $scrollIndicatorBottom.addClass("overflow-scroll-bottom");
         }
 
-        if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown.scrollTop()) == Math.round($mobileDropdown[0].scrollHeight)) {
+        if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown[0].scrollTop) == Math.round($mobileDropdown[0].scrollHeight)) {
           $scrollIndicatorTop.removeClass("overflow-scroll-top");
         } else {
           $scrollIndicatorTop.addClass("overflow-scroll-top");
@@ -1149,7 +1162,7 @@ export default Component.extend({
         if ($dialogDropdown.length === 0) {
           return;
         }
-        if ($dialogDropdown.scrollTop() + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight - 200 && this.get('lazyCallbackInProgress') === false) {
+        if ($dialogDropdown[0].scrollTop + $dialogDropdown.innerHeight() >= $dialogDropdown[0].scrollHeight - 200 && this.get('lazyCallbackInProgress') === false) {
           this.fetchNextPage(() => {});
         }
       }
@@ -1450,7 +1463,7 @@ export default Component.extend({
   },
 
   _destroyDropdownCloseListeners() {
-    this.$('body').off(`click.hideDropdown_${this.elementId}`);
+    $('body').off(`click.hideDropdown_${this.elementId}`);
   },
 
   cancelLazyDebounce() {

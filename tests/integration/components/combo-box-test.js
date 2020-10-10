@@ -1,7 +1,7 @@
 import {
   Promise as EmberPromise
 } from 'rsvp';
-import jQuery from 'jquery';
+import $ from 'cash-dom';
 import EmberObject from '@ember/object';
 import {
   later,
@@ -343,7 +343,7 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     await click('.dropdown-icon');
@@ -389,7 +389,7 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     await click('.dropdown-icon');
@@ -431,15 +431,15 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     await click('.dropdown-icon');
 
     let $items = $this.find('.dropdown-item');
-    assert.equal(stripComments(jQuery($items[0]).html()).trim(), 'labela');
-    assert.equal(stripComments(jQuery($items[1]).html()).trim(), 'labelaa');
-    assert.equal(stripComments(jQuery($items[2]).html()).trim(), 'labelb');
+    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments($($items[2]).html()).trim(), 'labelb');
 
 
   });
@@ -482,15 +482,15 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     await click('.dropdown-icon');
 
     let $items = $this.find('.dropdown-item');
-    assert.equal(stripComments(jQuery($items[0]).html()).trim(), 'labela');
-    assert.equal(stripComments(jQuery($items[1]).html()).trim(), 'labelaa');
-    assert.equal(stripComments(jQuery($items[2]).html()).trim(), 'labelc');
+    assert.equal(stripComments($($items[0]).html()).trim(), 'labela');
+    assert.equal(stripComments($($items[1]).html()).trim(), 'labelaa');
+    assert.equal(stripComments($($items[2]).html()).trim(), 'labelc');
 
 
   });
@@ -540,7 +540,7 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     settled().then(() => {
       valueListPromise.then(function() {
@@ -566,7 +566,7 @@ module('Integration | Component | combo box', function(hooks) {
     `);
 
     run(() => {
-      assert.equal(jQuery(this.element).find('.combobox-disabled').length, 1);
+      assert.equal($(this.element).find('.combobox-disabled').length, 1);
     });
 
     //open dropdown - should not work
@@ -590,7 +590,7 @@ module('Integration | Component | combo box', function(hooks) {
       `);
 
     run(() => {
-      assert.equal(jQuery(this.element).find('.combobox-disabled').length, 1);
+      assert.equal($(this.element).find('.combobox-disabled').length, 1);
     });
 
     //open dropdown - should not work
@@ -645,12 +645,12 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     focus('.dropdown-icon');
     later(this, () => {
-      jQuery($this.find('.dropdown-item')[0]).click();
+      $($this.find('.dropdown-item')[0]).click();
     }, 100);
 
 
@@ -707,16 +707,16 @@ module('Integration | Component | combo box', function(hooks) {
       <button id="confirm">ok</button>
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     focus('.dropdown-icon');
 
     later(this, () => {
-      jQuery($this.find('.dropdown-item')[0]).click();
+      $($this.find('.dropdown-item')[0]).click();
       // Ember.$($this.find('.dropdown-item')[1]).click();
 
-      jQuery($this.find('.dropdown-item')[1]).click();
+      $($this.find('.dropdown-item')[1]).click();
 
       // close dropdown = confirm selection
       click('#confirm');
@@ -772,17 +772,17 @@ module('Integration | Component | combo box', function(hooks) {
        <button id="confirm">ok</button>
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     focus('.dropdown-icon');
 
     later(this, () => {
-      jQuery($this.find('.dropdown-item')[0]).click();
+      $($this.find('.dropdown-item')[0]).click();
       // Ember.$($this.find('.dropdown-item')[1]).click();
 
 
-      jQuery($this.find('.dropdown-item')[1]).click();
+      $($this.find('.dropdown-item')[1]).click();
 
       // close dropdown = confirm selection
       click('#confirm');
@@ -828,12 +828,12 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     await click('.dropdown-icon');
 
-    jQuery($this.find('.dropdown-item')[0]).click();
+    $($this.find('.dropdown-item')[0]).click();
 
     settled().then(() => {
       run(() => {
@@ -888,13 +888,13 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     //open dropdown
     focus('.dropdown-icon');
 
     later(this, () => {
-      jQuery($this.find('.dropdown-item')[0]).click();
+      $($this.find('.dropdown-item')[0]).click();
 
 
       settled().then(() => {
@@ -938,13 +938,13 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
 
     await click('.dropdown-icon');
     $this.find('input').val('label1');
 
-    var e = jQuery.Event('keyup');
+    var e = $.Event('keyup');
     e.key = '1';
     $this.find('input').trigger(e);
 
@@ -987,12 +987,12 @@ module('Integration | Component | combo box', function(hooks) {
       }}
     `);
 
-    let $this = jQuery(this.element);
+    let $this = $(this.element);
 
     await click('.dropdown-icon');
     $this.find('input').val('label1');
 
-    var e = jQuery.Event('keyup');
+    var e = $.Event('keyup');
     e.key = '1';
     $this.find('input').trigger(e);
 
