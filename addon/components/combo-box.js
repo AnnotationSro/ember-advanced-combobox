@@ -1,9 +1,9 @@
 import {
-  next,
-  scheduleOnce,
-  schedule,
   debounce,
-  once
+  next,
+  once,
+  schedule,
+  scheduleOnce
 } from '@ember/runloop';
 import {
   isHTMLSafe
@@ -49,16 +49,16 @@ import $ from 'cash-dom';
 
 
 function scrollTop($element, step) {
-    var start = window.pageYOffset;
-    var count = 0;
-    var intervalRef = setInterval( (function(interval, curOffset) {
-        return function() {
-            curOffset -= (interval * step);
-            $element[0].scrollTo(0, curOffset);
-            count++;
-            if(count > 150 || curOffset < 0) clearInterval(intervalRef);
-        }
-    })(step, start--), 50);
+  var start = window.pageYOffset;
+  var count = 0;
+  var intervalRef = setInterval((function(interval, curOffset) {
+    return function() {
+      curOffset -= (interval * step);
+      $element[0].scrollTo(0, curOffset);
+      count++;
+      if (count > 150 || curOffset < 0) clearInterval(intervalRef);
+    }
+  })(step, start--), 50);
 }
 
 function getObjectFromArray(array, index) {
@@ -182,6 +182,8 @@ export default Component.extend({
   _isKeyboardSupportEnabled: false,
   configurationService: service('adv-combobox-configuration-service'),
   _emberAdvancedComboboxHideDropdownListenerFn: null,
+  _temporaryDisableCloseListener: false,
+  _temporaryDisableCloseListenerTimer: false,
 
   sortedValueList: sort('valueList', function(a, b) {
     let orderBy = this.get('orderBy');
@@ -290,6 +292,10 @@ export default Component.extend({
       this.set('isComboFocused', true);
 
       $element.on('focusout', () => {
+
+        if (this._temporaryDisableCloseListener === true) {
+          return;
+        }
 
         if (this.get('mobileDropdownVisible') === true) {
           //mobile dropdowns should be closed manually
@@ -945,9 +951,9 @@ export default Component.extend({
         }
 
         if (isEmpty(this.get('internalSelectedList'))) {
-        	//there is no selection and perhaps placeholder is shown - so we must clear the placeholder
-			this.set('inputValue', '');
-		}
+          //there is no selection and perhaps placeholder is shown - so we must clear the placeholder
+          this.set('inputValue', '');
+        }
         this._initDropdownCloseListeners();
       }
     }
@@ -1047,9 +1053,9 @@ export default Component.extend({
 
     this.set('dropdownVisible', true);
 
-	//setDropdownWidth
-	let $element = $(this.element);
-	$element.find('.dropdown').css('min-width', $element.css('width'));
+    //setDropdownWidth
+    let $element = $(this.element);
+    $element.find('.dropdown').css('min-width', $element.css('width'));
 
     this.get('onDropdownShow')();
 
@@ -1373,6 +1379,10 @@ export default Component.extend({
         //click on arrow button
         let $combo = $(this.element);
         if (isElementClicked($combo.find('.dropdown-icon'), event)) {
+          if (this._temporaryDisableCloseListener === true) {
+            // this.set('_temporaryDisableCloseListener', false);
+            return;
+          }
           this._hideDropdown(false);
           return;
         }
@@ -1566,6 +1576,12 @@ export default Component.extend({
       if (this.get('_disabledCombobox')) {
         return;
       }
+
+      this.set('_temporaryDisableCloseListener', true);
+      this.set('_temporaryDisableCloseListenerTimer', setTimeout(() => {
+        this.set('_temporaryDisableCloseListener', false);
+      }, 300))
+
       if (this.get('dropdownVisible') === false) {
         if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))) {
           this.setLazyDebounce('', true);
