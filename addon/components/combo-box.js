@@ -56,9 +56,17 @@ function scrollTop($element, step) {
       curOffset -= (interval * step);
       $element[0].scrollTo(0, curOffset);
       count++;
-      if (count > 150 || curOffset < 0) clearInterval(intervalRef);
+      if (count > 150 || curOffset < 0) {
+        $element.off("scroll.stopAnimation");
+        clearInterval(intervalRef)
+      }
     }
   })(step, start--), 50);
+
+  $element.on("scroll.stopAnimation", function() {
+    $element.off("scroll.stopAnimation");
+    clearInterval(intervalRef);
+  })
 }
 
 function getObjectFromArray(array, index) {
