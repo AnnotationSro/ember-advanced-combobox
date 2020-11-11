@@ -578,21 +578,23 @@ export default Component.extend({
   initPagination() {
     let that = this;
     let scrollEnabled = true;
+    setTimeout(() => {
+      $(this.element).find('.dropdown').on('scroll.pagination', function() {
+        if (scrollEnabled === false) {
+          //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
+          // return;
+        }
 
-    $(this.element).find('.dropdown').on('scroll.pagination', function() {
-      if (scrollEnabled === false) {
-        //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
-        // return;
-      }
+        if ($(this)[0].scrollTop + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
+          scrollEnabled = false;
+          that.fetchNextPage(() => {
+            scrollEnabled = true;
+          });
 
-      if ($(this)[0].scrollTop + $(this).innerHeight() >= $(this)[0].scrollHeight && that.get('lazyCallbackInProgress') === false) {
-        scrollEnabled = false;
-        that.fetchNextPage(() => {
-          scrollEnabled = true;
-        });
+        }
+      });
+    }, 100);
 
-      }
-    });
   },
 
   //if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
@@ -1590,8 +1592,10 @@ export default Component.extend({
       }, 300))
 
       if (this.get('dropdownVisible') === false) {
-        if (isEmpty(this.get('valueList')) && isPresent(this.get('lazyCallback'))) {
-          this.setLazyDebounce('', true);
+        if (isPresent(this.get('lazyCallback'))) {
+          // this.setLazyDebounce('', true);
+          this.set('valueList', []);
+          this._showDropdown();
           return;
         }
         this.triggerJsEvent('ember-advanced-combobox-hide-dropdown');
