@@ -1140,7 +1140,7 @@ export default Component.extend({
 
       let debounce_timer;
 
-      $mobileDropdown.scroll(function() {
+      $mobileDropdown.on('scroll', () => {
 
         if (debounce_timer) {
           window.clearTimeout(debounce_timer);
