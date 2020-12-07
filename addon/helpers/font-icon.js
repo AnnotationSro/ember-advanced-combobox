@@ -7,7 +7,9 @@ export default Helper.extend({
   configurationService: service('adv-combobox-configuration-service'),
 
   compute(params) {
-    let [iconClassName] = params;
+    let [iconClassName, customIconClass] = params;
+    if  (isPresent(customIconClass )) return customIconClass;
+
     let icon = this.get('configurationService').getIconStyles()[iconClassName];
     assert(`unknown icon name: ${iconClassName}`, isPresent(icon));
 
