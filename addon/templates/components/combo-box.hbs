@@ -13,7 +13,7 @@
             placeholder=pleceholder
     }}
     {{#if canShowDropdownButton}}
-      <i class="{{font-icon "dropdown"}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
+      <i class="{{font-icon "dropdown" dropdownIcon}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
     {{/if}}
     {{#if (and lazyCallbackInProgress (not mobileDropdownVisible))}}
       <i class="{{font-icon "loading"}} dropdown-icon" aria-hidden="true"></i>
