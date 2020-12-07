@@ -76,6 +76,7 @@ __For more usage examples see dummy application.__
 | confirmInputValueOnBlur| boolean (default: false)| when set to `true`, user can enter value into the filter and DID NOT select filtered value in the dropdown - he can just click outside the combobox, and the value will still be selected|
 | hideSelected| boolean (default: false)| when set to `true` selected value will be hidden|
 |onDisabledCallback| | callback that will be called when component changes its disabled or labelOnly state|
+|dropdownIcon| | custom css class for dropdown icon|
 
 
 Also note that if there is only one item available in combobox, it will be automatically selected.
