@@ -6,12 +6,14 @@
     role="button"
   >
     {{#if multiselect}}
-      {{#if
-        (is-item-selected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
-        <i class={{font-icon "checkbox-checked"}} aria-hidden="true"></i>
-      {{else}}
-        <i class={{font-icon "checkbox-unchecked"}} aria-hidden="true"></i>
-      {{/if}}
+      <div class="multi-dropdown-wrapper">
+        {{#if
+          (is-item-selected internalSelectedList value internalSelectedList.length)}} {{!-- we need to pass length of list to let helper know about changes--}}
+          <i class={{font-icon "checkbox-checked"}} aria-hidden="true"></i>
+        {{else}}
+          <i class={{font-icon "checkbox-unchecked"}} aria-hidden="true"></i>
+        {{/if}}
+      </div>
     {{/if}}
     {{combo-item-label value itemLabel}}
   </li>
