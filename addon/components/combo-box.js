@@ -174,6 +174,9 @@ export default Component.extend({
   hideSelected: false, //if false, selected value will not be shown
   onDisabledCallback() {},
   canAutoselect: false,
+  onDropdownIconClicked() {
+    return true;
+  },
 
   //internals
   _page: 1,
@@ -1586,6 +1589,10 @@ export default Component.extend({
         return;
       }
 
+      let canOpenDropdown = this.onDropdownIconClicked();
+      if (canOpenDropdown === false) {
+        return;
+      }
       this.set('_temporaryDisableCloseListener', true);
       this.set('_temporaryDisableCloseListenerTimer', setTimeout(() => {
         this.set('_temporaryDisableCloseListener', false);

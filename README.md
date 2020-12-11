@@ -77,6 +77,7 @@ __For more usage examples see dummy application.__
 | hideSelected| boolean (default: false)| when set to `true` selected value will be hidden|
 |onDisabledCallback| | callback that will be called when component changes its disabled or labelOnly state|
 |dropdownIcon| | custom css class for dropdown icon|
+|onDropdownIconClicked| callback called when dropdown icon is clicked, if callback returns false, dropdown is not opened afterwards|
 
 
 Also note that if there is only one item available in combobox, it will be automatically selected.
