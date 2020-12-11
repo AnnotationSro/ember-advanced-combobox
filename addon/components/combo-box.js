@@ -177,6 +177,7 @@ export default Component.extend({
   onDropdownIconClicked() {
     return true;
   },
+  hidePlaceholderOnInput: true,
 
   //internals
   _page: 1,
@@ -962,7 +963,7 @@ export default Component.extend({
           this.set('_oldInputValue', this.get('inputValue'));
         }
 
-        if (isEmpty(this.get('internalSelectedList'))) {
+        if (isEmpty(this.get('internalSelectedList')) && this.get('hidePlaceholderOnInput') === true) {
           //there is no selection and perhaps placeholder is shown - so we must clear the placeholder
           this.set('inputValue', '');
         }
