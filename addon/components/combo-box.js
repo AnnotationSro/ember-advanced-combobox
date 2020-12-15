@@ -177,7 +177,6 @@ export default Component.extend({
   onDropdownIconClicked() {
     return true;
   },
-  hidePlaceholderOnInput: true,
 
   //internals
   _page: 1,
@@ -195,6 +194,8 @@ export default Component.extend({
   _emberAdvancedComboboxHideDropdownListenerFn: null,
   _temporaryDisableCloseListener: false,
   _temporaryDisableCloseListenerTimer: false,
+	_inputFocussed: false,
+	_dropdownButtonClicked:false,
 
   sortedValueList: sort('valueList', function(a, b) {
     let orderBy = this.get('orderBy');
@@ -346,8 +347,8 @@ export default Component.extend({
 
       })
     });
-
   },
+
   destroyFocusHandler() {
     let $element = $(this.element);
     $element.off('focusin');
@@ -946,6 +947,10 @@ export default Component.extend({
       return;
     }
 
+    if (this.isComboFocused === true){
+		this.set('_dropdownButtonClicked', false); //reset to default value
+	}
+
     if (this.get('showDropdownOnClick') === true) {
       if (this.get('isComboFocused') === true) {
         //may be called twice - when user click into combobox - dropdown will be shown for the 1st time
@@ -963,7 +968,7 @@ export default Component.extend({
           this.set('_oldInputValue', this.get('inputValue'));
         }
 
-        if (isEmpty(this.get('internalSelectedList')) && this.get('hidePlaceholderOnInput') === true) {
+        if (this.isComboFocused === true && isEmpty(this.get('internalSelectedList')) && this._dropdownButtonClicked === false) {
           //there is no selection and perhaps placeholder is shown - so we must clear the placeholder
           this.set('inputValue', '');
         }
@@ -1272,6 +1277,8 @@ export default Component.extend({
     } else {
       //selection is not accepted -> revert internal selection
       this.set('internalSelectedList', this._itemKeysListToItemObjects(this.get('oldInternalSelectionKeys')));
+		this.createSelectedLabel(this.get('internalSelectedList'));
+		this.set('inputValue', this.get('selectedValueLabel'));
     }
 
     // let noValueLabel = this.get('noValueLabel');
@@ -1589,6 +1596,7 @@ export default Component.extend({
       if (this.get('_disabledCombobox')) {
         return;
       }
+      this.set('_dropdownButtonClicked', true);
 
       let canOpenDropdown = this.onDropdownIconClicked();
       if (canOpenDropdown === false) {
