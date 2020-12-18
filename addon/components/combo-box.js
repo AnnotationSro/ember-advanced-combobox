@@ -266,7 +266,8 @@ export default Component.extend({
       }
       if (this.get('labelOnly') === true && isEmpty(this.get('internalSelectedList'))) {
         var chooseLabel = isPresent(this.get('chooseLabel')) ? this.get('chooseLabel') : this.get('configurationService').getChooseLabel();
-        if (this.get('inputValue') === chooseLabel) {
+        var emptySelectionLabel = isPresent(this.get('emptySelectionLabel')) ? this.get('emptySelectionLabel') : this.get('configurationService').getEmptySelectionLabel();
+        if (this.get('inputValue') === chooseLabel || this.get('inputValue') === emptySelectionLabel) {
           return '';
         }
       }
