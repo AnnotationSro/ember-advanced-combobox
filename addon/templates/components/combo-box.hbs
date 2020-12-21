@@ -47,7 +47,7 @@
     </div>
     {{#if isInputEditable}}
     <div class="filter-wrapper">
-      {{input value=inputValue class="input-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
+      {{input value=filterQuery class="input-filter" placeholder=mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
       <i class="icon {{font-icon "mobile-filter"}}" aria-hidden="true"></i>
     </div>
     {{/if}}

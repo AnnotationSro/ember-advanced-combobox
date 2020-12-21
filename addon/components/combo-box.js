@@ -194,8 +194,8 @@ export default Component.extend({
   _emberAdvancedComboboxHideDropdownListenerFn: null,
   _temporaryDisableCloseListener: false,
   _temporaryDisableCloseListenerTimer: false,
-	_inputFocussed: false,
-	_dropdownButtonClicked:false,
+  _inputFocussed: false,
+  _dropdownButtonClicked: false,
 
   sortedValueList: sort('valueList', function(a, b) {
     let orderBy = this.get('orderBy');
@@ -676,7 +676,7 @@ export default Component.extend({
     }
   }),
 
-  filteredValueList: computed('inputValue', 'sortedValueList.[]', 'valueList.[]', function() {
+  filteredValueList: computed('inputValue', 'filterQuery', 'sortedValueList.[]', 'valueList.[]', function() {
     let valueList = null;
     if (isPresent(this.get('orderBy'))) {
       valueList = this.get('sortedValueList');
@@ -692,7 +692,13 @@ export default Component.extend({
       return valueList;
     }
 
-    var filterQuery = this.get('inputValue');
+    var filterQuery = null;
+    if (this.get('mobileDropdownVisible') === true) {
+      filterQuery = this.get('filterQuery');
+    } else {
+      filterQuery = this.get('inputValue');
+    }
+
     if (isEmpty(filterQuery)) {
       //no filter is entered
       return valueList;
@@ -948,9 +954,9 @@ export default Component.extend({
       return;
     }
 
-    if (this.isComboFocused === true){
-		this.set('_dropdownButtonClicked', false); //reset to default value
-	}
+    if (this.isComboFocused === true) {
+      this.set('_dropdownButtonClicked', false); //reset to default value
+    }
 
     if (this.get('showDropdownOnClick') === true) {
       if (this.get('isComboFocused') === true) {
@@ -1278,8 +1284,8 @@ export default Component.extend({
     } else {
       //selection is not accepted -> revert internal selection
       this.set('internalSelectedList', this._itemKeysListToItemObjects(this.get('oldInternalSelectionKeys')));
-		this.createSelectedLabel(this.get('internalSelectedList'));
-		this.set('inputValue', this.get('selectedValueLabel'));
+      this.createSelectedLabel(this.get('internalSelectedList'));
+      this.set('inputValue', this.get('selectedValueLabel'));
     }
 
     // let noValueLabel = this.get('noValueLabel');
