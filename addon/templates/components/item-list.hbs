@@ -1,6 +1,6 @@
 {{#each filteredValueList as |value index|}}
   <li
-    class={{concat "dropdown-item" (if (eq index preselectedDropdownItem) ' selected')}}
+    class={{concat "dropdown-item" (if (and (eq multiselect false) (eq index preselectedDropdownItem)) ' selected')}}
     {{action 'actionItemSelect' value bubbles=false}}
     title={{combo-item-label value itemLabel}}
     role="button"
