@@ -379,6 +379,11 @@ export default Component.extend({
 
     //initInputClickHandler
     $(this.element).find(' *').on('touchstart', (event) => {
+    	let target = event.target;
+    	if (event.target.classList.contains('dropdown-icon') || $(event.target).closest('.dropdown-icon').length!==0){
+    		//let ember's action to handle button click
+    		return;
+		}
       event.stopPropagation();
       event.preventDefault();
       if (this.get('_disabledCombobox') || this.get('labelOnly') === true) {
