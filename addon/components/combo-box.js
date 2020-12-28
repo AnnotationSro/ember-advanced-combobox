@@ -1623,7 +1623,11 @@ export default Component.extend({
         if (isPresent(this.get('lazyCallback'))) {
           // this.setLazyDebounce('', true);
           this.set('valueList', []);
-          this._showDropdown();
+			if (this.get('configurationService.isTouchDevice') === true) {
+				this._showMobileDropdown();
+			} else {
+				this._showDropdown();
+			}
           return;
         }
         this.triggerJsEvent('ember-advanced-combobox-hide-dropdown');
