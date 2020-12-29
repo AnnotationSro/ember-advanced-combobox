@@ -298,6 +298,10 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
 
     onDisabledCallback(disabled){
       console.log('disabled', disabled);
+    },
+    onDropdownIconClicked(){
+      console.log('onDropdownIconClicked----');
+      return false;
     }
   }
 });

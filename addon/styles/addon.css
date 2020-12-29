@@ -68,6 +68,10 @@
   outline: none;
 }
 
+.advanced-combo-box .dropdown .multi-dropdown-wrapper {
+  display: inline-block;
+}
+
 .ember-modal-dialog.combobox-mobile-dialog {
   padding: 0;
   min-width: 100px;
