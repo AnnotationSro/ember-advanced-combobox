@@ -51,14 +51,14 @@ import $ from 'cash-dom';
 function scrollTop($element, step) {
 	var start = window.pageYOffset;
 	var count = 0;
-	var intervalRef = setInterval((function(interval, curOffset) {
+  $element[0].scrollTo(0, 0);
+  var intervalRef = setInterval((function(interval, curOffset) {
 		return function() {
 			$element.on("scroll.stopAnimation", function() {
 				$element.off("scroll.stopAnimation");
 				clearInterval(intervalRef);
 			})
 			curOffset -= (interval * step);
-			$element[0].scrollTo(0, curOffset);
 			count++;
 			if (count > 150 || curOffset < 0) {
 				$element.off("scroll.stopAnimation");
