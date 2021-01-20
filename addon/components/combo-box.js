@@ -1159,6 +1159,9 @@ export default Component.extend({
 			showScrollIndicator();
 
 			function showScrollIndicator() {
+				if (isNone($mobileDropdown) && isNone($mobileDropdown[0])){
+					return;
+				}
 				if (Math.round($mobileDropdown[0].scrollHeight - $mobileDropdown[0].scrollTop) == Math.round($mobileDropdown.outerHeight())) {
 					$scrollIndicatorBottom.removeClass("overflow-scroll-bottom");
 				} else {
