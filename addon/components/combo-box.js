@@ -552,14 +552,15 @@ export default Component.extend({
 			if (moveDown === true) {
 				//move down
 				if ($dropdown.height() < $item.position().top + $item.height()) {
-          $dropdown[0].scrollTo(0, 0);
-        }
+					var scrollTop = (itemIndex - (Math.floor($dropdown.height() / $item.height())) + 1) * $item.height();
+          $dropdown[0].scrollTo(0, scrollTop);
+				}
 			}
 			if (moveDown === false) {
 				//move up
 				if ($item.position().top - $item.height() * 2 < $item.height()) {
-          $dropdown[0].scrollTo(0, 0);
-        }
+          $dropdown[0].scrollTo(0, itemIndex * $item.height());
+				}
 			}
 		}
 	},
