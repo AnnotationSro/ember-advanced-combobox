@@ -91,7 +91,7 @@ function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
 
   $dropdown[0].scrollTo(0, 0);
 
-  function calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) {
+	function calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) {
 		let inputBottom = $input[0].getBoundingClientRect().bottom;
 		let inputTop = $input[0].getBoundingClientRect().top;
 
