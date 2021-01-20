@@ -47,27 +47,6 @@ import {
 } from '@ember/object/observers';
 import $ from 'cash-dom';
 
-
-function scrollTop($element, step) {
-	var start = window.pageYOffset;
-	var count = 0;
-  $element[0].scrollTo(0, 0);
-  var intervalRef = setInterval((function(interval, curOffset) {
-		return function() {
-			$element.on("scroll.stopAnimation", function() {
-				$element.off("scroll.stopAnimation");
-				clearInterval(intervalRef);
-			})
-			curOffset -= (interval * step);
-			count++;
-			if (count > 150 || curOffset < 0) {
-				$element.off("scroll.stopAnimation");
-				clearInterval(intervalRef)
-			}
-		}
-	})(step, start--), 50);
-}
-
 function getObjectFromArray(array, index) {
 	if (array.objectAt) {
 		return array.objectAt(index);
@@ -110,9 +89,9 @@ function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
 		}
 	}
 
-	scrollTop($dropdown, oldScrollPosition);
+  $dropdown[0].scrollTo(0, 0);
 
-	function calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) {
+  function calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) {
 		let inputBottom = $input[0].getBoundingClientRect().bottom;
 		let inputTop = $input[0].getBoundingClientRect().top;
 
@@ -573,15 +552,14 @@ export default Component.extend({
 			if (moveDown === true) {
 				//move down
 				if ($dropdown.height() < $item.position().top + $item.height()) {
-					var scrollTop = (itemIndex - (Math.floor($dropdown.height() / $item.height())) + 1) * $item.height();
-					scrollTop($dropdown, scrollTop);
-				}
+          $dropdown[0].scrollTo(0, 0);
+        }
 			}
 			if (moveDown === false) {
 				//move up
 				if ($item.position().top - $item.height() * 2 < $item.height()) {
-					scrollTop($dropdown, itemIndex * $item.height());
-				}
+          $dropdown[0].scrollTo(0, 0);
+        }
 			}
 		}
 	},
