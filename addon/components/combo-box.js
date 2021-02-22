@@ -7,7 +7,7 @@ import {
 } from '@ember/runloop';
 import {
 	isHTMLSafe
-} from '@ember/string';
+} from '@ember/template';
 import {
 	on
 } from '@ember/object/evented';
