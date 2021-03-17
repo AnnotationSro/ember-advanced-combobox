@@ -1,10 +1,10 @@
 import { assign } from '@ember/polyfills';
 
 let CONFIG_PROPERTIES = {
-  emptySelectionLabel: "",
-  chooseLabel: "Choose:",
-  multiselectValueLabel: "Selected items: ",
-  asyncLoaderStartLabel: "Loading...",
+  emptySelectionLabel: '',
+  chooseLabel: 'Choose:',
+  multiselectValueLabel: 'Selected items:',
+  asyncLoaderStartLabel: 'Loading...',
   emptyValueList: 'No items',
   mobileFilterPlaceholder: 'Enter filter here',
   mobileOkButton: 'Confirm',
@@ -17,17 +17,17 @@ let CONFIG_PROPERTIES = {
     'checkbox-checked': 'fa fa-check-square-o',
     'checkbox-unchecked': 'fa fa-square-o',
     loading: 'fa fa-circle-o-notch fa-spin fa-fw',
-    'mobile-filter': 'fa fa-search'
+    'mobile-filter': 'fa fa-search',
   },
-  onDisabledCallback(){}
+  onDisabledCallback() {},
 };
 
 export default {
   load(config) {
-    CONFIG_PROPERTIES = assign({}, CONFIG_PROPERTIES, config)
+    CONFIG_PROPERTIES = assign({}, CONFIG_PROPERTIES, config);
   },
 
-  getConfig(){
+  getConfig() {
     return CONFIG_PROPERTIES;
-  }
+  },
 };

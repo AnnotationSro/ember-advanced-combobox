@@ -1,10 +1,13 @@
+import classic from 'ember-classic-decorator';
+import { inject as service } from '@ember/service';
 import { isPresent } from '@ember/utils';
 import { assert } from '@ember/debug';
-import { inject as service } from '@ember/service';
 import Helper from '@ember/component/helper';
 
-export default Helper.extend({
-  configurationService: service('adv-combobox-configuration-service'),
+@classic
+export default class FontIcon extends Helper {
+  @service('adv-combobox-configuration-service')
+  configurationService;
 
   compute(params) {
     let [iconClassName, customIconClass] = params;
@@ -15,4 +18,4 @@ export default Helper.extend({
 
     return icon;
   }
-});
+}

@@ -2,58 +2,63 @@
 /* eslint-disable*/
 
 import $ from 'cash-dom';
-import {
-  Promise as EmberPromise
-} from 'rsvp';
+import { Promise as EmberPromise } from 'rsvp';
 import fetch from 'fetch';
-import {
-  isNone,
-  isPresent
-} from '@ember/utils';
-import {
-  inject as service
-} from '@ember/service';
+import { isNone, isPresent } from '@ember/utils';
+import { inject as service } from '@ember/service';
 import Controller from '@ember/controller';
 
 export default Controller.extend({
-
-  comboValueList: [{
-    a: null,
-    b: 'ja som prazdny'
-  },{
-    a: 'hello1',
-    b: "a"
-  }, {
-    a: 'hello3',
-    b: "c"
-  }, {
-    a: 'hello2',
-    b: "b"
-  }, {
-    a: 'hello21',
-    b: "bb"
-  },{
-   a: 'xhello21',
-   b: "prvy"
- },{
-  a: 'xhello211',
-  b: "prvy2"
-},{
- a: 'xhello211',
- b: "prvy3"
-},{
- a: 'xhello2111',
- b: "prvy4"
-},{
- a: 'xhello21111',
- b: "prvy5"
-},{
- a: 'xhello211111',
- b: "prvy6"
-},{
- a: 'xhello2111111a',
- b: "prvy7"
-}],
+  comboValueList: [
+    {
+      a: null,
+      b: 'ja som prazdny',
+    },
+    {
+      a: 'hello1',
+      b: 'a',
+    },
+    {
+      a: 'hello3',
+      b: 'c',
+    },
+    {
+      a: 'hello2',
+      b: 'b',
+    },
+    {
+      a: 'hello21',
+      b: 'bb',
+    },
+    {
+      a: 'xhello21',
+      b: 'prvy',
+    },
+    {
+      a: 'xhello211',
+      b: 'prvy2',
+    },
+    {
+      a: 'xhello211',
+      b: 'prvy3',
+    },
+    {
+      a: 'xhello2111',
+      b: 'prvy4',
+    },
+    {
+      a: 'xhello21111',
+      b: 'prvy5',
+    },
+    {
+      a: 'xhello211111',
+      b: 'prvy6',
+    },
+    {
+      a: 'xhello2111111a',
+      b: 'prvy7',
+    },
+  ],
   comboValueListMany: [],
   comboSelectedSingle: null,
   comboPreSelectedSingle: null,
@@ -64,10 +69,12 @@ export default Controller.extend({
   oneItemSelectedSingle1: null,
   oneItemSelectedSingle: null,
   comboSelectedSingleAsync: null,
-  oneItemValueList: [{
-    a: 'hello',
-    b: 'I am the only one here'
-  }],
+  oneItemValueList: [
+    {
+      a: 'hello',
+      b: 'I am the only one here',
+    },
+  ],
   plainArrayValueList: ['a', 'b', 'c', 'd'],
   disabled: false,
   labelOnly: false,
@@ -76,7 +83,7 @@ export default Controller.extend({
 
   showFixedCombo: true,
 
-  myChooseLabel:'ja som myChooseLabel',
+  myChooseLabel: 'ja som myChooseLabel',
 
   comboboxConfig: service('adv-combobox-configuration-service'),
 
@@ -87,32 +94,36 @@ export default Controller.extend({
     for (let i = 0; i < 50; i++) {
       this.get('comboValueListMany').push({
         a: '' + i,
-        b: '' + i
+        b: '' + i,
       });
     }
 
-this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, element)=>{
-  // console.log('I am global onDisabledCallback', disabled, element);
-});
+    this.get('comboboxConfig').setConfiguration(
+      'onDisabledCallback',
+      (disabled, element) => {
+        // console.log('I am global onDisabledCallback', disabled, element);
+      }
+    );
 
-    this.get('comboboxConfig').setConfiguration("emptySelectionLabel", 'choose value');
-    this.get('comboboxConfig').setConfiguration("chooseLabel", 'aa');
-    this.get('comboboxConfig').setConfiguration("icons", {
+    this.get('comboboxConfig').setConfiguration(
+      'emptySelectionLabel',
+      'choose value'
+    );
+    this.get('comboboxConfig').setConfiguration('chooseLabel', 'aa');
+    this.get('comboboxConfig').setConfiguration('icons', {
       dropdown: 'fa fa-chevron-down',
       'checkbox-checked': 'far fa-check-square',
       'checkbox-unchecked': 'far fa-square',
       loading: 'fas fa-circle-notch fa-spin',
-      'mobile-filter': 'fas fa-search'
+      'mobile-filter': 'fas fa-search',
     });
-
   },
 
   actions: {
-
     actionSimpleSelectedCombo(selected) {
       this.set('selectedSimpleCombo', selected.value);
     },
-    actionClearLazyCombo(){
+    actionClearLazyCombo() {
       this.set('comboSelectedLazy', null);
     },
     actionClearSingleCombo() {
@@ -132,11 +143,14 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
 
     onDropdownShow() {
       console.log('onDropdownShow');
-      this.set('complexValuePromise', new EmberPromise((resolve) => {
-        setTimeout(() => {
-          resolve(this.get('comboValueList'));
-        }, 3000);
-      }));
+      this.set(
+        'complexValuePromise',
+        new EmberPromise((resolve) => {
+          setTimeout(() => {
+            resolve(this.get('comboValueList'));
+          }, 3000);
+        })
+      );
     },
 
     onDropdownHide() {
@@ -156,32 +170,50 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
     },
 
     onSelectedCustomDropdownSingle(selectedValues) {
-      this.set('comboSelectedCustomDropdownSingleFormatted', JSON.stringify(selectedValues));
+      this.set(
+        'comboSelectedCustomDropdownSingleFormatted',
+        JSON.stringify(selectedValues)
+      );
       this.set('comboSelectedCustomDropdownSingle', selectedValues.a);
     },
 
     onSelectedPreviewSingle(selectedValues) {
-      this.set('comboSelectedPreviewSingleFormatted', JSON.stringify(selectedValues));
+      this.set(
+        'comboSelectedPreviewSingleFormatted',
+        JSON.stringify(selectedValues)
+      );
       this.set('comboSelectedPreviewSingle', selectedValues.a);
     },
 
     onSelectedNoButton(selectedValues) {
-      this.set('comboSelectedNoButtonFormatted', JSON.stringify(selectedValues));
+      this.set(
+        'comboSelectedNoButtonFormatted',
+        JSON.stringify(selectedValues)
+      );
       this.set('comboSelectedNoButton', selectedValues.a);
     },
 
     onSelectedSingleAsync(selectedValues) {
-      this.set('comboSelectedSingleFormattedasync', JSON.stringify(selectedValues));
+      this.set(
+        'comboSelectedSingleFormattedasync',
+        JSON.stringify(selectedValues)
+      );
       this.set('comboSelectedSingleAsync', selectedValues.a);
     },
 
     onOneItemSelected1(selectedValues) {
-      this.set('oneItemSelectedSingleFormatted1', JSON.stringify(selectedValues));
+      this.set(
+        'oneItemSelectedSingleFormatted1',
+        JSON.stringify(selectedValues)
+      );
       this.set('onOneItemSelected1', selectedValues.a);
     },
 
     onSelectedSingleWithoutWilter(selectedValues) {
-      this.set('comboSelectedSingleFormattedWithoutFilter', JSON.stringify(selectedValues));
+      this.set(
+        'comboSelectedSingleFormattedWithoutFilter',
+        JSON.stringify(selectedValues)
+      );
       this.set('comboSelectedSingleWithoutFilter', selectedValues.a);
     },
 
@@ -192,14 +224,23 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
 
     onPreSelectedSingle(selectedValues) {
       this.set('comboPreSelectedSingle', selectedValues.a);
-      this.set('comboPreSelectedSingleFormatted', JSON.stringify(selectedValues));
+      this.set(
+        'comboPreSelectedSingleFormatted',
+        JSON.stringify(selectedValues)
+      );
     },
 
     onSelectedMulti(selectedValues) {
-      this.set('comboSelectedMulti', selectedValues.map((o) => o.a));
+      this.set(
+        'comboSelectedMulti',
+        selectedValues.map((o) => o.a)
+      );
 
       if (isPresent(selectedValues)) {
-        this.set('comboSelectedMultiFormatted', selectedValues.map((o) => JSON.stringify(o)).join(','));
+        this.set(
+          'comboSelectedMultiFormatted',
+          selectedValues.map((o) => JSON.stringify(o)).join(',')
+        );
       } else {
         this.set('comboSelectedMultiFormatted', null);
       }
@@ -207,7 +248,7 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
     onLazySingle(item) {
       this.set('oneItemSelectedLazyFormatted', JSON.stringify(item));
       let value = null;
-      if (item !== null){
+      if (item !== null) {
         value = item.a;
       }
       this.set('oneItemSelectedLazy', value);
@@ -225,19 +266,23 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
     actionCreateAsyncValueList() {
       let valueList = [
         {
-        a: 'hello2',
-        b: 'b'
-      }, {
-        a: 'hello',
-        b: 'a'
-      }
-    ];
+          a: 'hello2',
+          b: 'b',
+        },
+        {
+          a: 'hello',
+          b: 'a',
+        },
+      ];
 
-      this.set('asyncValueList', new EmberPromise(function(resolve) {
-        setTimeout(function() {
-          resolve(valueList);
-        }, 3000);
-      }));
+      this.set(
+        'asyncValueList',
+        new EmberPromise(function (resolve) {
+          setTimeout(function () {
+            resolve(valueList);
+          }, 3000);
+        })
+      );
     },
 
     actionRemoveValueList() {
@@ -256,52 +301,60 @@ this.get('comboboxConfig').setConfiguration("onDisabledCallback", (disabled, ele
 
     lazyCallback(query, page, pageSize) {
       let a = new EmberPromise((resolve, reject) => {
-        let ajax = fetch(`/api/users?delay=2&page=${page}&pageSize=${pageSize}&query=${query}`).then(data=>data.json());
+        let ajax = fetch(
+          `/api/users?delay=2&page=${page}&pageSize=${pageSize}&query=${query}`
+        ).then((data) => data.json());
         ajax.then((data) => {
           let result = [];
           for (let i = 0; i < data.data.length; i++) {
             result.push({
               a: data.data[i].first_name,
-              b: data.data[i].first_name
+              b: data.data[i].first_name,
             });
           }
-          resolve({'data':result, hasNextPage:data.hasNextPage});
-        })
+          resolve({ data: result, hasNextPage: data.hasNextPage });
+        });
         this.set('lazyCallbackAjax', ajax);
       });
 
       return a;
     },
 
-    lazyCallbackSimpleCombo(query){
+    lazyCallbackSimpleCombo(query) {
       let a = new EmberPromise((resolve, reject) => {
-        let ajax = fetch(`/api/users?delay=2&page=1&pageSize=50&query=${query}`).then(data=>data.json());
-          ajax.then((data) => {
-            let result = [];
-            for (let i = 0; i < data.data.length; i++) {
-              result.push({
-                a: data.data[i].first_name,
-                b: data.data[i].first_name
-              });
-            }
-            resolve({'data':result, hasNextPage:false});
-          });
+        let ajax = fetch(
+          `/api/users?delay=2&page=1&pageSize=50&query=${query}`
+        ).then((data) => data.json());
+        ajax.then((data) => {
+          let result = [];
+          for (let i = 0; i < data.data.length; i++) {
+            result.push({
+              a: data.data[i].first_name,
+              b: data.data[i].first_name,
+            });
+          }
+          resolve({ data: result, hasNextPage: false });
+        });
         this.set('lazyCallbackAjax', ajax);
       });
 
       return a;
     },
 
-    onSelectedPlainArray(selected){
+    onCustomSelected(selected) {
+      this.set('customSelectedCombo', selected);
+    },
+
+    onSelectedPlainArray(selected) {
       this.set('plainArraySelected', selected);
     },
 
-    onDisabledCallback(disabled){
+    onDisabledCallback(disabled) {
       console.log('disabled', disabled);
     },
-    onDropdownIconClicked(){
+    onDropdownIconClicked() {
       console.log('onDropdownIconClicked----');
       return false;
-    }
-  }
+    },
+  },
 });

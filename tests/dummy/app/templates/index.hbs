@@ -6,11 +6,11 @@
   Lazy select (queries server after user types at least 3 characters into filter)
   <br>
   {{combo-box
-    selected=comboSelectedLazy
+    selected=this.comboSelectedLazy
     itemKey='a'
     itemLabel='b'
     onSelected=(action 'onLazySingle')
-    disabled=disabled
+    disabled=this.disabled
     lazyCallback=(action 'lazyCallback')
     abortLazyCallback=(action 'abortLazyCallback')
     minLazyCharacters=2
@@ -19,11 +19,11 @@
   }}
   <br>
   {{combo-box
-    selected=comboSelectedLazy
+    selected=this.comboSelectedLazy
     itemKey='a'
     itemLabel='b'
     onSelected=(action 'onLazySingle')
-    disabled=disabled
+    disabled=this.disabled
     lazyCallback=(action 'lazyCallback')
     abortLazyCallback=(action 'abortLazyCallback')
     minLazyCharacters=2
@@ -33,8 +33,8 @@
 
 
   <div>
-    Raw value: {{comboSelectedLazy}}<br>
-    Formatted: {{oneItemSelectedLazyFormatted}}
+    Raw value: {{this.comboSelectedLazy}}<br>
+    Formatted: {{this.oneItemSelectedLazyFormatted}}
   </div>
 </div>
 <div>
@@ -44,7 +44,7 @@
     lazyCallback=(action 'lazyCallbackSimpleCombo')
     itemKey='a'
     itemLabel='b'
-    selected=selectedSimpleCombo
+    selected=this.selectedSimpleCombo
     onSelected=(action 'actionSimpleSelectedCombo')
     showDropdownButton=false
     showLabelWhenDisabled=false
@@ -67,7 +67,7 @@
     itemKey='a'
     itemLabel='b'
     selected=null
-    valueList=comboValueList
+    valueList=this.comboValueList
     emptySelectionLabel='I am a placeholder'
   }}
 </div>
@@ -78,14 +78,14 @@
 <div>
   Simple combobox with plain array valueList
   {{combo-box
-    valueList=plainArrayValueList
-    selected=plainArraySelected
+    valueList=this.plainArrayValueList
+    selected=this.plainArraySelected
 
     preselectFirst=true
   }}
 </div>
 
-{{plainArraySelected}}
+{{this.plainArraySelected}}
 <p>
 
 </p>
@@ -93,21 +93,21 @@
 <div>
   Combobox with dynamic chooseLabel
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedSingle
+    valueList=this.comboValueList
+    selected=this.comboSelectedSingle
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onSelectedSingle')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
-    emptySelectionLabel=myChooseLabel
+    disabled=this.disabled
+    labelOnly=this.labelOnly
+    emptySelectionLabel=this.myChooseLabel
     onDisabledCallback=(action 'onDisabledCallback')
   }}
 
-  {{input value=myChooseLabel}}
-  {{myChooseLabel}}
+  {{input value=this.myChooseLabel}}
+  {{this.myChooseLabel}}
 </div>
 <p>
 
@@ -118,14 +118,14 @@
   {{combo-box
     canFilter=false
     orderBy='a'
-    valueList=comboValueList
-    selected=comboSelectedSingle
+    valueList=this.comboValueList
+    selected=this.comboSelectedSingle
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onSelectedSingle')
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
     emptySelectionLabel='empty value'
     noValueLabel='hello'
   }}
@@ -138,8 +138,8 @@
 <div>
   Async value
   {{combo-box
-    valuePromise=asyncValueList
-    selected=comboSelectedSingleAsync
+    valuePromise=this.asyncValueList
+    selected=this.comboSelectedSingleAsync
     itemKey='a'
     itemLabel='b'
     multiselect=false
@@ -147,10 +147,10 @@
     onSelected=(action 'onSelectedSingleAsync')
     disabledWhenEmpty=false
     canFilter=false
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
-  {{comboSelectedSingleFormattedAsync}}
+  {{this.comboSelectedSingleFormattedAsync}}
 </div>
 <p>
 
@@ -159,18 +159,18 @@
 <div>
   Single select
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedSingle
+    valueList=this.comboValueList
+    selected=this.comboSelectedSingle
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onSelectedSingle')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
     emptySelectionLabel='empty value'
   }}
-  {{comboSelectedSingleFormatted}}
+  {{this.comboSelectedSingleFormatted}}
   <button {{action 'actionClearSingleCombo'}}>clear</button>
 </div>
 <p>
@@ -180,19 +180,19 @@
 <div>
   Custom selected label
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedPreviewSingle
+    valueList=this.comboValueList
+    selected=this.comboSelectedPreviewSingle
     itemKey='a'
     itemLabel='b'
     itemLabelForSelectedPreview=(action 'customPreviewLabelFn')
     multiselect=false
     onSelected=(action 'onSelectedPreviewSingle')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
     showLabelWhenDisabled=false
   }}
-  {{comboSelectedPreviewSingleFormatted}}
+  {{this.comboSelectedPreviewSingleFormatted}}
 </div>
 <p>
 
@@ -201,17 +201,17 @@
 <div>
   Custom label in dropdown list
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedCustomDropdownSingle
+    valueList=this.comboValueList
+    selected=this.comboSelectedCustomDropdownSingle
     itemKey='a'
     itemLabel=(action 'customDropdownLabelFn')
     multiselect=false
     onSelected=(action 'onSelectedCustomDropdownSingle')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
-  {{comboSelectedCustomDropdownSingleFormatted}}
+  {{this.comboSelectedCustomDropdownSingleFormatted}}
 </div>
 <p>
 
@@ -220,18 +220,18 @@
 <div>
   Without dropdown button
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedNoButton
+    valueList=this.comboValueList
+    selected=this.comboSelectedNoButton
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onSelectedNoButton')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
     showDropdownButton=false
   }}
-  {{comboSelectedNoButtonFormatted}}
+  {{this.comboSelectedNoButtonFormatted}}
 </div>
 <p>
 
@@ -244,17 +244,17 @@
 <div>
   Single select - only 1 item in value list
   {{combo-box
-    valueList=oneItemValueList
-    selected=oneItemSelectedSingle1
+    valueList=this.oneItemValueList
+    selected=this.oneItemSelectedSingle1
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onOneItemSelected1')
     canFilter=false
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
-  {{oneItemSelectedSingleFormatted1}}
+  {{this.oneItemSelectedSingleFormatted1}}
 </div>
 <p>
 
@@ -264,17 +264,17 @@
 <div>
   Single select without filtering
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedSingleWithoutFilter
+    valueList=this.comboValueList
+    selected=this.comboSelectedSingleWithoutFilter
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onSelectedSingleWithoutWilter')
     canFilter=false
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
-  {{comboSelectedSingleFormattedWithoutFilter}}
+  {{this.comboSelectedSingleFormattedWithoutFilter}}
 </div>
 <p>
 
@@ -282,15 +282,15 @@
 <div>
   Async value
   {{combo-box
-    valuePromise=asyncValueList
-    selected=comboSelectedSingleAsync
+    valuePromise=this.asyncValueList
+    selected=this.comboSelectedSingleAsync
     itemKey='a'
     itemLabel='b'
     multiselect=false
     onSelected=(action 'onSelectedSingleAsync')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
     noValueLabel="I am async combobox"
   }}
   {{comboSelectedSingleFormattedAsync}}
@@ -302,18 +302,18 @@
 <div>
   Single select without filtering - preselect
   {{combo-box
-    valueList=comboValueList
-    selected=comboPreSelectedSingle
+    valueList=this.comboValueList
+    selected=this.comboPreSelectedSingle
     itemKey='a'
     itemLabel='b'
     multiselect=false
     preselectFirst=true
     onSelected=(action 'onPreSelectedSingle')
     canFilter=false
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
-  {{comboPreSelectedSingleFormatted}}
+  {{this.comboPreSelectedSingleFormatted}}
 </div>
 <p>
 
@@ -323,17 +323,17 @@
 <div>
   Multi select
   {{combo-box
-    valueList=comboValueList
-    selected=comboSelectedMulti
+    valueList=this.comboValueList
+    selected=this.comboSelectedMulti
     itemKey='a'
     itemLabel='b'
     multiselect=true
     onSelected=(action 'onSelectedMulti')
     canFilter=true
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
-  {{comboSelectedMultiFormatted}}
+  {{this.comboSelectedMultiFormatted}}
 </div>
 <p>
 
@@ -347,7 +347,7 @@
     itemLabel='b'
     multiselect=false
     canFilter=true
-    disabled=disabled
+    disabled=this.disabled
     labelOnly=true
     noValueLabel="I am label only combobox with no value"
   }}
@@ -365,15 +365,15 @@
     itemLabel='b'
     multiselect=false
     canFilter=true
-    disabled=disabled
-    valuePromise=complexValuePromise
-    labelOnly=labelOnlyWithNoValue
+    disabled=this.disabled
+    valuePromise=this.complexValuePromise
+    labelOnly=this.labelOnlyWithNoValue
     noValueLabel="I am label only combobox with no value"
     onDropdownShow=(action 'onDropdownShow')
     onDropdownHide=(action 'onDropdownHide')
   }}
 </div>
-labelOnly: {{labelOnly}}
+labelOnly: {{this.labelOnly}}
 <button {{action 'actionToggleLabelOnlyWithNoValue'}}>Toggle label only for this combobox</button>
 
 <p>
@@ -383,14 +383,14 @@ labelOnly: {{labelOnly}}
   Null valueList
   {{combo-box
     valueList=null
-    selected=comboPreSelectedSingle
+    selected=this.comboPreSelectedSingle
     itemKey='a'
     itemLabel='b'
     multiselect=false
     preselectFirst=true
     canFilter=false
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
   }}
 </div>
 <p>
@@ -402,14 +402,14 @@ labelOnly: {{labelOnly}}
   {{combo-box
     id="noValueLabelCombo"
     valueList=null
-    selected=noValueLabelSelected
+    selected=this.noValueLabelSelected
     itemKey='a'
     itemLabel='b'
     multiselect=false
     preselectFirst=true
     canFilter=false
-    disabled=disabled
-    labelOnly=labelOnly
+    disabled=this.disabled
+    labelOnly=this.labelOnly
     noValueLabel='no value'
   }}
 </div>
@@ -419,12 +419,33 @@ labelOnly: {{labelOnly}}
 <div id="manyItems">
   Many items - automatic scrollbar
   {{combo-box
-    valueList=comboValueListMany
+    valueList=this.comboValueListMany
     itemKey='a'
     itemLabel='b'
     multiselect=false
     canFilter=true
   }}
+</div>
+
+<p>
+
+</p>
+
+<div>
+  Custom value selected
+  {{combo-box
+     itemKey='a'
+    itemLabel='b'
+    valueList=this.comboValueList
+    selected=this.customSelectedCombo
+    confirmInputValueOnBlur=true
+    onSelected=(action 'onCustomSelected')
+    canFilter=true
+    disabled=this.disabled
+    labelOnly=this.labelOnly
+    emptySelectionLabel='empty value'
+  }}
+  {{this.customSelectedCombo.b}}
 </div>
 
 <p>
@@ -444,19 +465,19 @@ labelOnly: {{labelOnly}}
 
 <div class="fixed-positioned-dropdown">
   Single select in fixed container
-  {{#if showFixedCombo}}
+  {{#if this.showFixedCombo}}
     {{combo-box
-      valueList=comboValueList
-      selected=comboSelectedSingle
+      valueList=this.comboValueList
+      selected=this.comboSelectedSingle
       itemKey='a'
       itemLabel='b'
       multiselect=false
       onSelected=(action 'onSelectedSingle')
       canFilter=true
-      disabled=disabled
-      labelOnly=labelOnly
+      disabled=this.disabled
+      labelOnly=this.labelOnly
     }}
-    {{comboSelectedSingleFormatted}}
+    {{this.comboSelectedSingleFormatted}}
   {{/if}}
   <button {{action 'showHideFixed'}}>show/hide fixed panel</button>
 </div>

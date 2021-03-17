@@ -1,93 +1,91 @@
+import classic from 'ember-classic-decorator';
 import Service from '@ember/service';
 import configuration from 'ember-advanced-combobox/configuration';
 
+@classic
+export default class AdvComboboxConfigurationServiceService extends Service {
+  isTouchDevice = false;
 
-export default Service.extend({
+  init() {
+    super.init(...arguments);
 
-isTouchDevice: false,
+    window.addEventListener('touchstart', handleTouch, false);
+    window.addEventListener('mousemove', handleMouse, false);
 
-  init(){
-    this._super(...arguments);
+    let that = this;
 
-		window.addEventListener('touchstart', handleTouch, false);
-		window.addEventListener('mousemove', handleMouse, false);
+    function handleTouch() {
+      window.removeEventListener('touchstart', handleTouch);
+      window.removeEventListener('mousemove', handleMouse);
 
-		let that = this;
+      that.set('isTouchDevice', true);
+    }
 
-		function handleTouch() {
+    function handleMouse() {
+      window.removeEventListener('touchstart', handleTouch);
+      window.removeEventListener('mousemove', handleMouse);
 
-			window.removeEventListener('touchstart', handleTouch);
-			window.removeEventListener('mousemove', handleMouse);
+      that.set('isTouchDevice', false);
+    }
+  }
 
-			that.set('isTouchDevice', true);
-		}
-
-		function handleMouse() {
-
-			window.removeEventListener('touchstart', handleTouch);
-			window.removeEventListener('mousemove', handleMouse);
-
-			that.set('isTouchDevice', false);
-		}
-  },
-
-  setConfiguration(key, value){
+  setConfiguration(key, value) {
     configuration.getConfig()[key] = value;
-  },
+  }
 
-  getComboboxConfiguration(){
+  getComboboxConfiguration() {
     return configuration;
-  },
+  }
 
-  getOnDisabledCallback(){
+  getOnDisabledCallback() {
     return configuration.getConfig().onDisabledCallback;
-  },
+  }
 
-  getIconStyles(){
+  getIconStyles() {
     return configuration.getConfig().icons;
-  },
+  }
 
-  getMinLazyCharacters(){
+  getMinLazyCharacters() {
     return configuration.getConfig().minLazyCharacters;
-  },
+  }
 
-  getLazyDebounceTime(){
+  getLazyDebounceTime() {
     return configuration.getConfig().lazyDebounceTime;
-  },
+  }
 
-  getChooseLabel(){
+  getChooseLabel() {
     return configuration.getConfig().chooseLabel;
-  },
+  }
 
-  getEmptySelectionLabel(){
+  getEmptySelectionLabel() {
     return configuration.getConfig().emptySelectionLabel;
-  },
+  }
 
-  getMultiselectValueLabel(){
+  getMultiselectValueLabel() {
     return configuration.getConfig().multiselectValueLabel;
-  },
+  }
 
-  getAsyncLoaderStartLabel(){
+  getAsyncLoaderStartLabel() {
     return configuration.getConfig().asyncLoaderStartLabel;
-  },
+  }
 
-  getEmptyValueListLabel(){
+  getEmptyValueListLabel() {
     return configuration.getConfig().emptyValueList;
-  },
+  }
 
-  getMobileFilterPlaceholder(){
+  getMobileFilterPlaceholder() {
     return configuration.getConfig().mobileFilterPlaceholder;
-  },
+  }
 
-  getMobileOkButton(){
+  getMobileOkButton() {
     return configuration.getConfig().mobileOkButton;
-  },
+  }
 
-  getMobileCancelButton(){
+  getMobileCancelButton() {
     return configuration.getConfig().mobileCancelButton;
-  },
+  }
 
   getNumberOfShownItems() {
     return configuration.getConfig().numberOfShownItems;
   }
-});
+}

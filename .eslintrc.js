@@ -20,8 +20,11 @@ module.exports = {
     browser: true,
   },
   rules: {
-    "ember/avoid-leaking-state-in-ember-objects": "off",
-    "ember/no-observers": "off",
+    'ember/avoid-leaking-state-in-ember-objects': 'off',
+    'ember/no-observers': 'off',
+    'ember/no-classic-classes': 'off',
+    'ember/require-tagless-components': 'off',
+    'ember/require-computed-property-dependencies': 'off',
   },
   overrides: [
     // node files
