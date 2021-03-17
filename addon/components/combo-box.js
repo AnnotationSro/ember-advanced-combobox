@@ -314,6 +314,9 @@ export default Component.extend({
                 [this.itemKey]: this.inputValue,
                 [this.itemLabel]: this.inputValue,
               };
+              if (isNone(this.valueList)) {
+                this.set('valueList', []);
+              }
               this.valueList.push(objectToSelect);
 
               if (isPresent(objectToSelect)) {
