@@ -310,14 +310,7 @@ export default Component.extend({
               this.inputValue.length > 0
             ) {
               //create dummy item
-              let objectToSelect = {
-                [this.itemKey]: this.inputValue,
-                [this.itemLabel]: this.inputValue,
-              };
-              if (isNone(this.valueList)) {
-                this.set('valueList', []);
-              }
-              this.valueList.push(objectToSelect);
+              let objectToSelect = this.addDummyValueListItem(this.inputValue);
 
               if (isPresent(objectToSelect)) {
                 this._addOrRemoveFromSelected(objectToSelect);
@@ -340,6 +333,23 @@ export default Component.extend({
         }, 0);
       });
     });
+  },
+
+  addDummyValueListItem(item, valueList = this.valueList) {
+    let objectToSelect = {
+      [this.itemKey]: item,
+      [this.itemLabel]: item,
+      dummy: true,
+    };
+    if (isNone(valueList)) {
+      valueList = [];
+    }
+    valueList.push(objectToSelect);
+    return objectToSelect;
+  },
+
+  removeDummyValueListItem(valueList) {
+    return valueList.filter((item) => item.dummy !== true);
   },
 
   destroyFocusHandler() {
@@ -779,6 +789,20 @@ export default Component.extend({
           valueLabel = accentRemovalHelper(String(valueLabel).toLowerCase());
           return valueLabel.indexOf(filterQuery) > -1;
         });
+
+        if (
+          this.mobileDropdownVisible === true &&
+          this.confirmInputValueOnBlur === true
+        ) {
+          let valueList = this.valueList; //this.removeDummyValueListItem(this.valueList);
+          filteredValueList = this.removeDummyValueListItem(filteredValueList);
+          let dummyItem = this.addDummyValueListItem(
+            filterQuery,
+            filteredValueList
+          );
+          valueList.push(dummyItem);
+          this.set('valueList', valueList);
+        }
 
         return filteredValueList;
       }
