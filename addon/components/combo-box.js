@@ -755,12 +755,27 @@ export default Component.extend({
         valueList = this.valueList;
       }
 
-      if (!this.canFilter) {
+      if (!isEmpty(valueList)) {
+        valueList = valueList.filter(
+          (item) =>
+            isPresent(this._getItemKey(item)) &&
+            isPresent(this._getItemLabel(item))
+        );
+      }
+
+      if (!this.canFilter && isNone(this.lazyCallback)) {
         return valueList;
       }
 
       if (isEmpty(valueList)) {
-        return valueList;
+        if (
+          this.mobileDropdownVisible === true &&
+          this.confirmInputValueOnBlur === true
+        ) {
+          valueList = [];
+        } else {
+          return valueList;
+        }
       }
 
       var filterQuery = null;
@@ -794,14 +809,16 @@ export default Component.extend({
           this.mobileDropdownVisible === true &&
           this.confirmInputValueOnBlur === true
         ) {
-          let valueList = this.valueList; //this.removeDummyValueListItem(this.valueList);
+          let valueList = this.valueList ?? []; //this.removeDummyValueListItem(this.valueList);
           filteredValueList = this.removeDummyValueListItem(filteredValueList);
           let dummyItem = this.addDummyValueListItem(
             filterQuery,
             filteredValueList
           );
-          valueList.push(dummyItem);
-          this.set('valueList', valueList);
+          next(this, () => {
+            valueList.push(dummyItem);
+            this.set('valueList', valueList);
+          });
         }
 
         return filteredValueList;
