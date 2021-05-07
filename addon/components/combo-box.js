@@ -785,6 +785,7 @@ export default Component.extend({
         filterQuery = this.inputValue;
       }
 
+      let originalFilterQuery = filterQuery;
       if (isEmpty(filterQuery)) {
         //no filter is entered
         return valueList;
@@ -812,7 +813,7 @@ export default Component.extend({
           let valueList = this.valueList ?? []; //this.removeDummyValueListItem(this.valueList);
           filteredValueList = this.removeDummyValueListItem(filteredValueList);
           let dummyItem = this.addDummyValueListItem(
-            filterQuery,
+            originalFilterQuery,
             filteredValueList
           );
           next(this, () => {
