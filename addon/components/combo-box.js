@@ -1318,7 +1318,7 @@ export default Component.extend({
       showScrollIndicator();
 
       function showScrollIndicator() {
-        if (isNone($mobileDropdown) && isNone($mobileDropdown[0])) {
+        if (isNone($mobileDropdown) || isNone($mobileDropdown[0])) {
           return;
         }
         if (
