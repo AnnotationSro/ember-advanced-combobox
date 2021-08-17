@@ -130,6 +130,7 @@ export default Component.extend({
   onDropdownIconClicked() {
     return true;
   },
+  allowNullKey: false,
 
   //internals
   _page: 1,
@@ -758,7 +759,7 @@ export default Component.extend({
       if (!isEmpty(valueList)) {
         valueList = valueList.filter(
           (item) =>
-            isPresent(this._getItemKey(item)) &&
+            (isPresent(this._getItemKey(item)) || this.allowNullKey) &&
             isPresent(this._getItemLabel(item))
         );
       }
