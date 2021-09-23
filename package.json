@@ -1,6 +1,6 @@
 {
   "name": "ember-advanced-combobox",
-  "version": "3.5.0",
+  "version": "4.0.0",
   "description": "Swiss-knife ember combobox",
   "scripts": {
     "build": "ember build --environment=production",
