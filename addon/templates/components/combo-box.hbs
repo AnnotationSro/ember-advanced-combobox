@@ -2,16 +2,16 @@
 <div class="input-group" tabindex='-1'>
 
   <div class="input-wrapper">
-    {{input class="combo-input"
-            value=this.inputValueDisplayed
-            tabindex=(if this.tabbable '0' '-1')
-            key-up=(action "inputValueChanged")
+    <input  class="combo-input"
+            value={{this.inputValueDisplayed}}
+            tabindex={{if this.tabbable '0' '-1'}}
+            keyUp={{action "inputValueChanged"}}
             autocorrect="off"
             autocapitalize="off"
             autocomplete="off"
             spellcheck="false"
-            placeholder=this.pleceholder
-    }}
+            placeholder={{this.pleceholder}}
+    >
     {{#if this.canShowDropdownButton}}
       <i class="{{font-icon "dropdown" this.dropdownIcon}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
     {{/if}}
@@ -22,18 +22,18 @@
 
 </div>
 <ul class="dropdown dropdown-hidden" tabindex="-1">
-  {{item-list
-      filteredValueList=this.filteredValueList
-      multiselect=this.multiselect
-      internalSelectedList=this.internalSelectedList
-      emptyValueListLabel=this.emptyValueListLabel
-      lazyCallbackInProgress=this.lazyCallbackInProgress
-      valuePromiseResolving=this.valuePromiseResolving
-      asyncLoaderStartLabel=this.asyncLoaderStartLabel
-      itemLabel=this.itemLabel
-      actionItemSelect=(action 'actionItemSelect')
-      preselectedDropdownItem=this.preselectedDropdownItem
-    }}
+  <ItemList
+      @filteredValueList={{this.filteredValueList}}
+      @multiselect={{this.multiselect}}
+      @internalSelectedList={{this.internalSelectedList}}
+      @emptyValueListLabel={{this.emptyValueListLabel}}
+      @lazyCallbackInProgress={{this.lazyCallbackInProgress}}
+      @valuePromiseResolving={{this.valuePromiseResolving}}
+      @asyncLoaderStartLabel={{this.asyncLoaderStartLabel}}
+      @itemLabel={{this.itemLabel}}
+      @actionItemSelect={{action 'actionItemSelect'}}
+      @preselectedDropdownItem={{this.preselectedDropdownItem}}
+  ></ItemList>
 </ul>
 {{#if this.mobileDropdownVisible}}
   {{#modal-dialog
@@ -47,25 +47,25 @@
     </div>
     {{#if this.isInputEditable}}
     <div class="filter-wrapper">
-      {{input value=this.filterQuery class="input-filter" placeholder=this.mobileFilterPlaceholder key-up=(action "inputValueChanged")}}
+      <input value={{this.filterQuery}} class="input-filter" placeholder={{this.mobileFilterPlaceholder}} keyUp={{action "inputValueChanged"}}>
       <i class="icon {{font-icon "mobile-filter"}}" aria-hidden="true"></i>
     </div>
     {{/if}}
     <div class="scroll-indicator scroll-indicator-top"></div>
       <div class="dropdown dropdown-mobile">
 
-        {{item-list
-                      filteredValueList=this.filteredValueList
-                      multiselect=this.multiselect
-                      internalSelectedList=this.internalSelectedList
-                      emptyValueListLabel=this.emptyValueListLabel
-                      lazyCallbackInProgress=this.lazyCallbackInProgress
-                      valuePromiseResolving=this.valuePromiseResolving
-                      asyncLoaderStartLabel=this.asyncLoaderStartLabel
-                      itemLabel=this.itemLabel
-                      actionItemSelect=(action 'actionItemSelect')
-                      preselectedDropdownItem=this.preselectedDropdownItem
-                    }}
+        <ItemList
+                      @filteredValueList={{this.filteredValueList}}
+                      @multiselect={{this.multiselect}}
+                      @internalSelectedList={{this.internalSelectedList}}
+                      @emptyValueListLabel={{this.emptyValueListLabel}}
+                      @lazyCallbackInProgress={{this.lazyCallbackInProgress}}
+                      @valuePromiseResolving={{this.valuePromiseResolving}}
+                      @asyncLoaderStartLabel={{this.asyncLoaderStartLabel}}
+                      @itemLabel={{this.itemLabel}}
+                      @actionItemSelect={{action 'actionItemSelect'}}
+                      @preselectedDropdownItem={{this.preselectedDropdownItem}}
+        ></ItemList>
       </div>
       <div class="scroll-indicator scroll-indicator-bottom"></div>
     <div class="footer">
