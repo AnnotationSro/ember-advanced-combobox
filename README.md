@@ -28,6 +28,9 @@ We use [BrowserStack](https://www.browserstack.com/) to make sure this addon wor
 ember install ember-advanced-combobox
 ```
 
+**Since this addon depends on ember-auto-import 2, any app that uses ember-advanced-combobox also needs to depend on ember-auto-import 2.**
+
+
 This addon uses FontAwesome by default - **at the moment you have to provide it for yourself** (this addon does not install it for you).
 You can however use any font icon set you want, but do not forget to configure this addon (more in section *Global configuration* -> propery *icons*)
 
