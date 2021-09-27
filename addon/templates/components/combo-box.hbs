@@ -2,16 +2,16 @@
 <div class="input-group" tabindex='-1'>
 
   <div class="input-wrapper">
-    <input  class="combo-input"
-            value={{this.inputValueDisplayed}}
+    <Input  class="combo-input"
+            @value={{this.inputValueDisplayed}}
             tabindex={{if this.tabbable '0' '-1'}}
-            keyUp={{action "inputValueChanged"}}
+            @keyUp={{action "inputValueChanged"}}
             autocorrect="off"
             autocapitalize="off"
             autocomplete="off"
             spellcheck="false"
             placeholder={{this.pleceholder}}
-    >
+    ></Input>
     {{#if this.canShowDropdownButton}}
       <i class="{{font-icon "dropdown" this.dropdownIcon}} dropdown-icon" aria-hidden="true" {{action 'actionDropdownButton' bubbles=false}} role="button" tabindex="-1"></i>
     {{/if}}
