@@ -938,7 +938,7 @@ export default Component.extend({
               this.set('valueList', newValueList);
             }
           }
-
+					this.set('_oldInputValue', null)
           this.notifyPropertyChange('sortedValueList');
         });
       }
