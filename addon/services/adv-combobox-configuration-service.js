@@ -4,88 +4,103 @@ import configuration from 'ember-advanced-combobox/configuration';
 
 @classic
 export default class AdvComboboxConfigurationServiceService extends Service {
-  isTouchDevice = false;
+	isTouchDevice = false;
+	comboboxObjects = {};
 
-  init() {
-    super.init(...arguments);
+	init() {
+		super.init(...arguments);
 
-    window.addEventListener('touchstart', handleTouch, false);
-    window.addEventListener('mousemove', handleMouse, false);
+		window.addEventListener('touchstart', handleTouch, false);
+		window.addEventListener('mousemove', handleMouse, false);
 
-    let that = this;
+		let that = this;
 
-    function handleTouch() {
-      window.removeEventListener('touchstart', handleTouch);
-      window.removeEventListener('mousemove', handleMouse);
+		function handleTouch() {
+			window.removeEventListener('touchstart', handleTouch);
+			window.removeEventListener('mousemove', handleMouse);
 
-      that.set('isTouchDevice', true);
-    }
+			that.set('isTouchDevice', true);
+		}
 
-    function handleMouse() {
-      window.removeEventListener('touchstart', handleTouch);
-      window.removeEventListener('mousemove', handleMouse);
+		function handleMouse() {
+			window.removeEventListener('touchstart', handleTouch);
+			window.removeEventListener('mousemove', handleMouse);
 
-      that.set('isTouchDevice', false);
-    }
-  }
+			that.set('isTouchDevice', false);
+		}
+	}
 
-  setConfiguration(key, value) {
-    configuration.getConfig()[key] = value;
-  }
 
-  getComboboxConfiguration() {
-    return configuration;
-  }
+	getComboboxObject(comboboxId){
+		return this.comboboxObjects[comboboxId];
+	}
 
-  getOnDisabledCallback() {
-    return configuration.getConfig().onDisabledCallback;
-  }
+	_registerComboboxObject(comboboxId){
+		this.comboboxObjects[comboboxId] = {};
+		return this.getComboboxObject(comboboxId);
+	}
 
-  getIconStyles() {
-    return configuration.getConfig().icons;
-  }
+	_unregisterComboboxObject(comboboxId){
+		delete this.comboboxObjects[comboboxId];
+	}
 
-  getMinLazyCharacters() {
-    return configuration.getConfig().minLazyCharacters;
-  }
+	setConfiguration(key, value) {
+		configuration.getConfig()[key] = value;
+	}
 
-  getLazyDebounceTime() {
-    return configuration.getConfig().lazyDebounceTime;
-  }
+	getComboboxConfiguration() {
+		return configuration;
+	}
 
-  getChooseLabel() {
-    return configuration.getConfig().chooseLabel;
-  }
+	getOnDisabledCallback() {
+		return configuration.getConfig().onDisabledCallback;
+	}
 
-  getEmptySelectionLabel() {
-    return configuration.getConfig().emptySelectionLabel;
-  }
+	getIconStyles() {
+		return configuration.getConfig().icons;
+	}
 
-  getMultiselectValueLabel() {
-    return configuration.getConfig().multiselectValueLabel;
-  }
+	getMinLazyCharacters() {
+		return configuration.getConfig().minLazyCharacters;
+	}
 
-  getAsyncLoaderStartLabel() {
-    return configuration.getConfig().asyncLoaderStartLabel;
-  }
+	getLazyDebounceTime() {
+		return configuration.getConfig().lazyDebounceTime;
+	}
 
-  getEmptyValueListLabel() {
-    return configuration.getConfig().emptyValueList;
-  }
+	getChooseLabel() {
+		return configuration.getConfig().chooseLabel;
+	}
 
-  getMobileFilterPlaceholder() {
-    return configuration.getConfig().mobileFilterPlaceholder;
-  }
+	getEmptySelectionLabel() {
+		return configuration.getConfig().emptySelectionLabel;
+	}
 
-  getMobileOkButton() {
-    return configuration.getConfig().mobileOkButton;
-  }
+	getMultiselectValueLabel() {
+		return configuration.getConfig().multiselectValueLabel;
+	}
 
-  getMobileCancelButton() {
-    return configuration.getConfig().mobileCancelButton;
-  }
+	getAsyncLoaderStartLabel() {
+		return configuration.getConfig().asyncLoaderStartLabel;
+	}
 
-  getNumberOfShownItems() {
-    return configuration.getConfig().numberOfShownItems;
-  }
+	getEmptyValueListLabel() {
+		return configuration.getConfig().emptyValueList;
+	}
+
+	getMobileFilterPlaceholder() {
+		return configuration.getConfig().mobileFilterPlaceholder;
+	}
+
+	getMobileOkButton() {
+		return configuration.getConfig().mobileOkButton;
+	}
+
+	getMobileCancelButton() {
+		return configuration.getConfig().mobileCancelButton;
+	}
+
+	getNumberOfShownItems() {
+		return configuration.getConfig().numberOfShownItems;
+	}
 }
