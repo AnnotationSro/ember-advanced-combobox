@@ -47,7 +47,7 @@
     </div>
     {{#if this.isInputEditable}}
     <div class="filter-wrapper">
-      <Input @value={{this.filterQuery}} class="input-filter" @placeholder={{this.mobileFilterPlaceholder}} @keyUp={{action "inputValueChanged"}}>
+      <Input @value={{this.inputValueDisplayed}} class="input-filter" @placeholder={{this.mobileFilterPlaceholder}} @keyUp={{action "inputValueChanged"}}>
       </Input>
       <i class="icon {{font-icon "mobile-filter"}}" aria-hidden="true"></i>
     </div>

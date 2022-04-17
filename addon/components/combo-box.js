@@ -1774,7 +1774,7 @@ export default Component.extend({
 
 	actions: {
 		inputValueChanged(event) {
-			let input = this.inputValue;
+			let input = this.inputValue ;
 			if (this.mobileDropdownVisible === false && event.key.length > 1) {
 				//some non printable character was pressed - ignore it, otherwise lazyCallback may be triggered
 				return;
