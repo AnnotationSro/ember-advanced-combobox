@@ -1,50 +1,17 @@
-import {
-  debounce,
-  next,
-  once,
-  schedule,
-  scheduleOnce
-} from '@ember/runloop';
-import {
-  isHTMLSafe
-} from '@ember/template';
-import {
-  on
-} from '@ember/object/evented';
-import {
-  getOwner
-} from '@ember/application';
-import {
-  computed,
-  get,
-  observer
-} from '@ember/object';
-import {
-  sort
-} from '@ember/object/computed';
-import {
-  inject as service
-} from '@ember/service';
-import {
-  A
-} from '@ember/array';
+import { debounce, next, once, schedule, scheduleOnce } from '@ember/runloop';
+import { isHTMLSafe } from '@ember/template';
+import { on } from '@ember/object/evented';
+import { getOwner } from '@ember/application';
+import { computed, get, observer } from '@ember/object';
+import { sort } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import { A } from '@ember/array';
 import Component from '@ember/component';
-import {
-  isEmpty,
-  isNone,
-  isPresent
-} from '@ember/utils';
+import { isEmpty, isNone, isPresent } from '@ember/utils';
 import layout from '../templates/components/combo-box';
-import {
-  accentRemovalHelper
-} from '../helpers/accent-removal-helper';
-import {
-  comboItemLabel
-} from '../helpers/combo-item-label';
-import {
-  addObserver,
-  removeObserver
-} from '@ember/object/observers';
+import { accentRemovalHelper } from '../helpers/accent-removal-helper';
+import { comboItemLabel } from '../helpers/combo-item-label';
+import { addObserver, removeObserver } from '@ember/object/observers';
 import $ from 'cash-dom';
 
 function getObjectFromArray(array, index) {
@@ -71,7 +38,8 @@ function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
     //dropdown is below the input
     if (dropdownTop + dropdownHeight >= window.innerHeight) {
       $dropdown.css({
-        maxHeight: calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) +
+        maxHeight:
+          calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) +
           'px',
       });
     } else {
@@ -82,7 +50,8 @@ function adjustDropdownMaxHeight($dropdown, $input, maxDropdownHeight) {
   } else {
     if (dropdownHeight >= dropdownBottom) {
       $dropdown.css({
-        maxHeight: calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) +
+        maxHeight:
+          calculateMaxDropdownHeight($dropdown, $input, maxDropdownHeight) +
           'px',
       });
     } else {
@@ -184,7 +153,7 @@ export default Component.extend({
   _inputFocussed: false,
   _dropdownButtonClicked: false,
 
-  sortedValueList: sort('valueList', function(a, b) {
+  sortedValueList: sort('valueList', function (a, b) {
     let orderBy = this.orderBy;
     if (isNone(orderBy)) {
       //no sorting - it would be nice to completely disable this computed property somehow...
@@ -192,11 +161,11 @@ export default Component.extend({
     }
     let orderString1 = get(a, orderBy);
     let orderString2 = get(b, orderBy);
-    return orderString1 < orderString2 ?
-      -1 :
-      orderString1 > orderString2 ?
-      1 :
-      0;
+    return orderString1 < orderString2
+      ? -1
+      : orderString1 > orderString2
+      ? 1
+      : 0;
   }),
 
   getMinLazyCharacters() {
@@ -208,7 +177,7 @@ export default Component.extend({
     );
   },
 
-  _isTesting: computed(function() {
+  _isTesting: computed(function () {
     let config = getOwner(this).resolveRegistration('config:environment');
     return config.environment === 'test';
   }),
@@ -216,7 +185,7 @@ export default Component.extend({
   canShowDropdownButton: computed(
     'showDropdownButton',
     'lazyCallbackInProgress',
-    function() {
+    function () {
       return this.showDropdownButton && !this.lazyCallbackInProgress;
     }
   ),
@@ -224,7 +193,7 @@ export default Component.extend({
   hasEmptySelectionClass: computed(
     'isEmptySelectionLabelVisible',
     'dropdownVisible',
-    function() {
+    function () {
       if (this.dropdownVisible === true) {
         return false;
       }
@@ -235,7 +204,7 @@ export default Component.extend({
   init() {
     this._super(...arguments);
 
-    this.comboboxId = `combobox-${Math.random()}-${+ new Date()}`;
+    this.comboboxId = `combobox-${Math.random()}-${+new Date()}`;
 
     this.initSelectedValues(true);
 
@@ -275,12 +244,12 @@ export default Component.extend({
         return '';
       }
       if (this.labelOnly === true && isEmpty(this.internalSelectedList)) {
-        var chooseLabel = isPresent(this.chooseLabel) ?
-          this.chooseLabel :
-          this.configurationService.getChooseLabel();
-        var emptySelectionLabel = isPresent(this.emptySelectionLabel) ?
-          this.emptySelectionLabel :
-          this.configurationService.getEmptySelectionLabel();
+        var chooseLabel = isPresent(this.chooseLabel)
+          ? this.chooseLabel
+          : this.configurationService.getChooseLabel();
+        var emptySelectionLabel = isPresent(this.emptySelectionLabel)
+          ? this.emptySelectionLabel
+          : this.configurationService.getEmptySelectionLabel();
         if (
           this.inputValue === chooseLabel ||
           this.inputValue === emptySelectionLabel
@@ -295,7 +264,7 @@ export default Component.extend({
   // eslint-disable-next-line ember/no-on-calls-in-components
   disabledObserver: on(
     'init',
-    observer('_disabledCombobox', 'labelOnly', function() {
+    observer('_disabledCombobox', 'labelOnly', function () {
       once(this, 'callOnDisabledCallback');
     })
   ),
@@ -316,7 +285,7 @@ export default Component.extend({
         return;
       }
       if (this.isComboFocused === false) {
-        scheduleOnce('afterRender', this, function() {
+        scheduleOnce('afterRender', this, function () {
           $element.find('input').trigger('focus');
         });
       }
@@ -398,11 +367,13 @@ export default Component.extend({
     this._super(...arguments);
 
     this.onComboInitialized(this.comboboxId);
-    let comboboxObject = this.configurationService._registerComboboxObject(this.comboboxId);
+    let comboboxObject = this.configurationService._registerComboboxObject(
+      this.comboboxId
+    );
     let that = this;
-    comboboxObject.clearOldInputValue = function() {
+    comboboxObject.clearOldInputValue = function () {
       that.set('_oldInputValue', null);
-    }
+    };
 
     let $element = $(this.element);
     if (this.labelOnly === false) {
@@ -489,7 +460,6 @@ export default Component.extend({
   willDestroyElement() {
     this._super(...arguments);
 
-
     this.configurationService._unregisterComboboxObject(this.comboboxId);
     this._destroyDropdownCloseListeners();
     this.destroyFocusHandler();
@@ -513,9 +483,9 @@ export default Component.extend({
   },
 
   emberAdvancedComboboxHideDropdownListener(event) {
-    let doNotHideComboboxId = isPresent(event.detail) ?
-      event.detail.elementId :
-      null;
+    let doNotHideComboboxId = isPresent(event.detail)
+      ? event.detail.elementId
+      : null;
     if (
       this.dropdownVisible === true &&
       isPresent(doNotHideComboboxId) &&
@@ -591,7 +561,7 @@ export default Component.extend({
       .find('.dropdown .dropdown-item')
       .off('mouseover.keyboard-item');
 
-    scheduleOnce('afterRender', this, function() {
+    scheduleOnce('afterRender', this, function () {
       next(this, () => {
         let $items = $(this.element).find('.dropdown .dropdown-item');
         $items.on('mouseover.keyboard-item', (e) => {
@@ -675,7 +645,7 @@ export default Component.extend({
     setTimeout(() => {
       $(this.element)
         .find('.dropdown')
-        .on('scroll.pagination', function() {
+        .on('scroll.pagination', function () {
           if (scrollEnabled === false) {
             //this is to prevent infinite loop when new items are fetched for the next page and dropdown is adjusting its position
             // return;
@@ -683,7 +653,7 @@ export default Component.extend({
 
           if (
             $(this)[0].scrollTop + $(this).innerHeight() >=
-            $(this)[0].scrollHeight &&
+              $(this)[0].scrollHeight &&
             that.get('lazyCallbackInProgress') === false
           ) {
             scrollEnabled = false;
@@ -696,18 +666,15 @@ export default Component.extend({
   },
 
   //if 'itemLabelForSelectedPreview' is defined, 'itemLabelForSelectedPreview' is used, otherwise 'itemLabel' is used
-  internalItemLabelForSelectedPreview: computed(
+  internalItemLabelForSelectedPreview: computed.or(
     'itemLabelForSelectedPreview',
-    'itemLabel',
-    function() {
-      return this.itemLabelForSelectedPreview || this.itemLabel;
-    }
+    'itemLabel'
   ),
 
   // eslint-disable-next-line ember/no-on-calls-in-components
   disabledComboboxObserver: on(
     'init',
-    observer('_disabledCombobox', 'showLabelWhenDisabled', function() {
+    observer('_disabledCombobox', 'showLabelWhenDisabled', function () {
       if (this.lazyCallbackInProgress === true) {
         return;
       }
@@ -725,7 +692,7 @@ export default Component.extend({
     'labelOnly',
     '_disabledCombobox',
     'isComboFocused',
-    function() {
+    function () {
       if (this.labelOnly || this._disabledCombobox) {
         return false;
       }
@@ -760,7 +727,7 @@ export default Component.extend({
     }
   },
 
-  labelOnlyObserver: observer('labelOnly', function() {
+  labelOnlyObserver: observer('labelOnly', function () {
     let selectedItems = this.internalSelectedList;
     if (this.labelOnly) {
       this._handleLabelOnlyNoValue();
@@ -781,7 +748,7 @@ export default Component.extend({
     }
   }),
 
-  inputValueObserver: observer('inputValue', function() {
+  inputValueObserver: observer('inputValue', function () {
     if (isPresent(this.lazyCallback) && this.simpleCombobox === false) {
       // this._hideDropdown(false, false);
     }
@@ -792,7 +759,7 @@ export default Component.extend({
     'filterQuery',
     'sortedValueList.[]',
     'valueList.[]',
-    function() {
+    function () {
       let valueList = null;
       if (isPresent(this.orderBy)) {
         valueList = this.sortedValueList;
@@ -803,8 +770,8 @@ export default Component.extend({
       if (!isEmpty(valueList)) {
         valueList = valueList.filter(
           (item) =>
-          (isPresent(this._getItemKey(item)) || this.allowNullKey) &&
-          isPresent(this._getItemLabel(item))
+            (isPresent(this._getItemKey(item)) || this.allowNullKey) &&
+            isPresent(this._getItemLabel(item))
         );
       }
 
@@ -825,7 +792,7 @@ export default Component.extend({
 
       var filterQuery = null;
       if (this.mobileDropdownVisible === true) {
-        filterQuery = this.filterQuery;
+        filterQuery = this.inputValueDisplayed;
       } else {
         filterQuery = this.inputValue;
       }
@@ -933,7 +900,7 @@ export default Component.extend({
     return itemsLength;
   },
 
-  selectedObserver: observer('selected', function() {
+  selectedObserver: observer('selected', function () {
     let selected = this.selected;
     if (isEmpty(selected)) {
       this.set('internalSelectedList', A([]));
@@ -958,7 +925,7 @@ export default Component.extend({
   // eslint-disable-next-line ember/no-on-calls-in-components
   valuePromiseObserver: on(
     'init',
-    observer('valuePromise', function() {
+    observer('valuePromise', function () {
       if (this.valuePromise) {
         this.set('valuePromiseResolving', true);
         if (this.dropdownVisible === false) {
@@ -988,7 +955,7 @@ export default Component.extend({
     })
   ),
 
-  valueListObserver: observer('valueList.[]', function() {
+  valueListObserver: observer('valueList.[]', function () {
     if (this.simpleCombobox === true) {
       return;
     }
@@ -1017,9 +984,9 @@ export default Component.extend({
       !this.mobileDropdownVisible &&
       isNone(this.lazyCallback)
     ) {
-      let chooseLabel = isPresent(this.chooseLabel) ?
-        this.chooseLabel :
-        this.configurationService.getChooseLabel();
+      let chooseLabel = isPresent(this.chooseLabel)
+        ? this.chooseLabel
+        : this.configurationService.getChooseLabel();
       if (this.showChooseLabel === false) {
         chooseLabel = null;
       }
@@ -1060,7 +1027,7 @@ export default Component.extend({
     'labelOnly',
     'noValueLabel',
     'lazyCallback',
-    function() {
+    function () {
       if (this.disabled) {
         return true;
       }
@@ -1082,7 +1049,7 @@ export default Component.extend({
     }
   ),
 
-  isInputEditable: computed('canFilter', 'lazyCallback', function() {
+  isInputEditable: computed('canFilter', 'lazyCallback', function () {
     return this.canFilter === true || isPresent(this.lazyCallback);
   }),
 
@@ -1096,7 +1063,7 @@ export default Component.extend({
       'valueList.[]',
       'canFilter',
       'lazyCallback',
-      function() {
+      function () {
         let notClickable = false;
         if (this._disabledCombobox) {
           notClickable = true;
@@ -1111,7 +1078,7 @@ export default Component.extend({
           notClickable = true;
         }
 
-        scheduleOnce('afterRender', this, function() {
+        scheduleOnce('afterRender', this, function () {
           $(this.element).find('.combo-input').prop('readonly', notClickable);
           $(this.element).find('.input-wrapper').attr('readonly', notClickable);
         });
@@ -1119,13 +1086,13 @@ export default Component.extend({
     )
   ),
 
-  filterObserver: observer('inputValue', function() {
+  filterObserver: observer('inputValue', function () {
     if (this.dropdownVisible && this.canFilter) {
       this._changeDropdownPosition();
     }
   }),
   //
-  comboFocusedObserver: observer('isComboFocused', function() {
+  comboFocusedObserver: observer('isComboFocused', function () {
     if (this._disabledCombobox === true || this.labelOnly === true) {
       return;
     }
@@ -1163,23 +1130,23 @@ export default Component.extend({
     }
   }),
 
-  asyncLoaderStartLabel: computed(function() {
+  asyncLoaderStartLabel: computed(function () {
     return this.configurationService.getAsyncLoaderStartLabel();
   }),
 
-  emptyValueListLabel: computed(function() {
+  emptyValueListLabel: computed(function () {
     return this.configurationService.getEmptyValueListLabel();
   }),
 
-  mobileFilterPlaceholder: computed(function() {
+  mobileFilterPlaceholder: computed(function () {
     return this.configurationService.getMobileFilterPlaceholder();
   }),
 
-  mobileOkButton: computed(function() {
+  mobileOkButton: computed(function () {
     return this.configurationService.getMobileOkButton();
   }),
 
-  mobileCancelButton: computed(function() {
+  mobileCancelButton: computed(function () {
     return this.configurationService.getMobileCancelButton();
   }),
 
@@ -1330,7 +1297,7 @@ export default Component.extend({
 
     $('body').addClass('ember-advanced-combobox-modal-active ');
 
-    schedule('afterRender', this, function() {
+    schedule('afterRender', this, function () {
       const $mobileDropdown = $(this.element).find(
         '.combobox-mobile-dialog .dropdown'
       );
@@ -1348,7 +1315,7 @@ export default Component.extend({
           window.clearTimeout(debounce_timer);
         }
 
-        debounce_timer = window.setTimeout(function() {
+        debounce_timer = window.setTimeout(function () {
           showScrollIndicator();
         }, 100);
       });
@@ -1393,7 +1360,7 @@ export default Component.extend({
         }
         if (
           $dialogDropdown[0].scrollTop + $dialogDropdown.innerHeight() >=
-          $dialogDropdown[0].scrollHeight - 200 &&
+            $dialogDropdown[0].scrollHeight - 200 &&
           this.lazyCallbackInProgress === false
         ) {
           this.fetchNextPage(() => {});
@@ -1411,9 +1378,9 @@ export default Component.extend({
       // }
     } else {
       if (isNone(this.lazyCallback)) {
-        let chooseLabel = isPresent(this.chooseLabel) ?
-          this.chooseLabel :
-          this.configurationService.getChooseLabel();
+        let chooseLabel = isPresent(this.chooseLabel)
+          ? this.chooseLabel
+          : this.configurationService.getChooseLabel();
         if (this.showChooseLabel === false) {
           chooseLabel = null;
         }
@@ -1429,7 +1396,7 @@ export default Component.extend({
   },
 
   _changeDropdownPosition() {
-    scheduleOnce('afterRender', this, function() {
+    scheduleOnce('afterRender', this, function () {
       let $element = $(this.element);
       let $dropdown = $element.find('.dropdown');
       let $input = $element.find('.combo-input');
@@ -1545,9 +1512,9 @@ export default Component.extend({
         ) {
           label =
             isPresent(this.emptySelectionLabel) ||
-            this.emptySelectionLabel === '' ?
-            this.emptySelectionLabel :
-            this.configurationService.getEmptySelectionLabel();
+            this.emptySelectionLabel === ''
+              ? this.emptySelectionLabel
+              : this.configurationService.getEmptySelectionLabel();
           isEmptySelectionLabelVisible = true;
         }
       }
@@ -1696,7 +1663,7 @@ export default Component.extend({
     if (this.getValueListLength() === 1) {
       //only 1 item in value list
       //
-      next(this, function() {
+      next(this, function () {
         selectFirstItem.bind(this)();
       });
       return;
@@ -1704,7 +1671,7 @@ export default Component.extend({
 
     if (this.preselectFirst === true) {
       //preselect item
-      next(this, function() {
+      next(this, function () {
         selectFirstItem.bind(this)();
       });
       return;
@@ -1743,9 +1710,9 @@ export default Component.extend({
   ) {
     this.cancelLazyDebounce();
 
-    let chooseLabel = isPresent(this.chooseLabel) ?
-      this.chooseLabel :
-      this.configurationService.getChooseLabel();
+    let chooseLabel = isPresent(this.chooseLabel)
+      ? this.chooseLabel
+      : this.configurationService.getChooseLabel();
 
     if (this.showChooseLabel === true && inputValue === chooseLabel) {
       inputValue = '';
