@@ -256,6 +256,17 @@ export default Component.extend({
         ) {
           return '';
         }
+
+        //set this.noValueLabel as inputDisplayValue, if its readonly mode and with empty list
+        let noValueLabel = this.noValueLabel;
+        if (
+          isEmpty(this.valueList) &&
+          isPresent(noValueLabel) &&
+          noValueLabel.length > 0 &&
+          this.labelOnly === true
+        ) {
+          return this.noValueLabel;
+        }
       }
       return this.inputValue;
     },
