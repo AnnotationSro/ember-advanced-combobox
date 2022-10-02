@@ -19,6 +19,8 @@ Ember combobox that can (beside others):
 
 We use [BrowserStack](https://www.browserstack.com/) to make sure this addon works on all browsers.
 
+## Deprecation warning
+I am sorry, but this addon is no longer actively developed and thus support for this addon will be very limited. This addon was created out of neccesity to create advanced combobox experience that would fit our customer's complex and sometimes weird requirements. However we no longer need this functionality and thus we have no longer time to actively support this addon. 
 
 ## Installation
 
